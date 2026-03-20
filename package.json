@@ -1,0 +1,14 @@
+{
+  "name": "dishio-campaign-preview",
+  "version": "1.0.0",
+  "description": "Dishio Campaign Preview Tool - Create, manage, and share campaign previews with clients",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  }
+}

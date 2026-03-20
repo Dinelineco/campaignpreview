@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campaign Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Dishio Official Brand Colors */
+  --dishio-yellow: #FFD900;
+  --dishio-yellow-light: #FFE644;
+  --dishio-yellow-dim: rgba(255,217,0,0.12);
+  --dishio-green: #009B00;
+  --dishio-green-light: #00FF88;
+  --dishio-green-dark: #007B00;
+  --dishio-green-bg: rgba(0,155,0,0.12);
+  --dishio-blue: #0033A4;
+  --dishio-blue-bg: rgba(0,51,164,0.12);
+  --dishio-malachite: #00FF88;
+  --dishio-dark: #000000;
+  --dishio-dark-card: #0D0D0D;
+  --dishio-dark-surface: #1A1A1A;
+  --dishio-dark-border: #2A2A2A;
+  --dishio-text: #FFFFFF;
+  --dishio-text-muted: #888888;
+  --dishio-text-secondary: #AAAAAA;
+  /* Utility colors */
+  --approve-green: #00FF88;
+  --approve-green-bg: rgba(0,255,136,0.12);
+  --pending-yellow: #FFD900;
+  --pending-yellow-bg: rgba(255,217,0,0.12);
+  --reject-red: #EF4444;
+  --reject-red-bg: rgba(239,68,68,0.12);
+  --purple: #A855F7;
+  --purple-bg: rgba(168,85,247,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #000000;
+  color: var(--dishio-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image: linear-gradient(180deg, #000000 0%, #0A0A0A 30%, #111111 60%, #0A0A0A 85%, #000000 100%);
+}
+
+/* === HEADER === */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--dishio-dark-border);
+  padding: 0 40px;
+}
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.logo-svg {
+  height: 28px;
+  width: auto;
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.header-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: var(--dishio-dark-surface);
+  border: 1px solid var(--dishio-dark-border);
+  font-size: 13px;
+  color: var(--dishio-text-muted);
+}
+.header-badge .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dishio-malachite);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.btn-primary {
+  padding: 10px 22px;
+  border-radius: 100px;
+  background: var(--dishio-yellow);
+  color: var(--dishio-dark);
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary:hover { background: var(--dishio-yellow-light); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,217,0,0.3); }
+
+/* === HERO === */
+.hero {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 40px 40px;
+}
+.hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 48px;
+}
+.hero-left { flex: 1; }
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: linear-gradient(135deg, var(--dishio-green), var(--dishio-green-light));
+  color: var(--dishio-dark);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--dishio-yellow), var(--dishio-green-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-subtitle {
+  font-size: 17px;
+  color: var(--dishio-text-muted);
+  max-width: 500px;
+}
+.hero-right {
+  display: flex;
+  gap: 16px;
+}
+.stat-card {
+  background: var(--dishio-dark-card);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  min-width: 160px;
+  text-align: center;
+  transition: var(--transition);
+}
+.stat-card:hover { border-color: var(--dishio-green); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,155,0,0.15); }
+.stat-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--dishio-yellow);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 12px; color: var(--dishio-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* === PROGRESS BAR === */
+.progress-bar-container {
+  max-width: 1400px;
+  margin: 0 auto 48px;
+  padding: 0 40px;
+}
+.progress-wrapper {
+  background: var(--dishio-dark-card);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  padding: 24px 32px;
+}
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.progress-title { font-size: 14px; font-weight: 600; color: var(--dishio-text-secondary); }
+.progress-pct { font-size: 24px; font-weight: 800; color: var(--dishio-yellow); }
+.progress-track {
+  height: 8px;
+  background: var(--dishio-dark-surface);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--dishio-green), var(--dishio-green-light));
+  border-radius: 100px;
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.progress-legend {
+  display: flex;
+  gap: 24px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--dishio-text-muted);
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* === TABS NAV === */
+.tabs-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.tabs-nav {
+  display: flex;
+  gap: 4px;
+  background: var(--dishio-dark-card);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  padding: 6px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+}
+.tab-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--dishio-text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+.tab-btn:hover { color: var(--dishio-text); background: var(--dishio-dark-surface); }
+.tab-btn.active {
+  background: var(--dishio-yellow);
+  color: var(--dishio-dark);
+}
+.tab-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tab-count {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.15);
+  font-weight: 700;
+}
+.tab-btn.active .tab-count { background: rgba(255,255,255,0.25); }
+
+/* === SECTIONS === */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.section {
+  max-width: 1400px;
+  margin: 0 auto 32px;
+  padding: 0 40px;
+}
+.section-card {
+  background: var(--dishio-dark-card);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--dishio-dark-border);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.section-header:hover { background: var(--dishio-dark-surface); }
+.section-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.section-title { font-size: 16px; font-weight: 700; }
+.section-subtitle { font-size: 12px; color: var(--dishio-text-muted); margin-top: 2px; }
+.section-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-badge {
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--dishio-text-muted);
+  transition: var(--transition);
+}
+.section-header.open .chevron { transform: rotate(180deg); }
+
+.section-body {
+  padding: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s;
+}
+.section-body.open {
+  max-height: 3000px;
+  padding: 24px 28px;
+}
+
+/* === TABLE === */
+.preview-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.preview-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--dishio-text-muted);
+  background: var(--dishio-dark-surface);
+  border-bottom: 1px solid var(--dishio-dark-border);
+}
+.preview-table thead th:first-child { border-radius: var(--radius-xs) 0 0 0; }
+.preview-table thead th:last-child { border-radius: 0 var(--radius-xs) 0 0; }
+.preview-table tbody td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--dishio-dark-border);
+  vertical-align: middle;
+}
+.preview-table tbody tr:last-child td { border-bottom: none; }
+.preview-table tbody tr { transition: var(--transition); }
+.preview-table tbody tr:hover { background: var(--dishio-dark-surface); }
+
+.copy-text {
+  color: var(--dishio-text-secondary);
+  line-height: 1.5;
+  max-width: 500px;
+}
+.char-count {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.char-count.ok { background: var(--dishio-green-bg); color: var(--dishio-green); }
+.char-count.warn { background: var(--dishio-yellow-bg); color: var(--dishio-yellow); }
+.char-count.over { background: var(--dishio-red-bg); color: var(--dishio-red); }
+
+/* Approval toggles */
+.approval-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toggle-track {
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--dishio-dark-surface);
+  border: 2px solid var(--dishio-dark-border);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+.toggle-track.approved { background: var(--dishio-malachite); border-color: var(--dishio-malachite); }
+.toggle-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: var(--transition);
+}
+.toggle-track.approved .toggle-thumb { left: 22px; }
+.toggle-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dishio-text-muted);
+}
+.toggle-track.approved + .toggle-label { color: var(--dishio-malachite); }
+
+/* Notes input */
+.notes-input {
+  width: 100%;
+  min-width: 180px;
+  padding: 8px 12px;
+  background: var(--dishio-dark-surface);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius-xs);
+  color: var(--dishio-text);
+  font-family: inherit;
+  font-size: 13px;
+  resize: none;
+  transition: var(--transition);
+}
+.notes-input:focus {
+  outline: none;
+  border-color: var(--dishio-green);
+  box-shadow: 0 0 0 3px rgba(0,155,0,0.2);
+}
+.notes-input::placeholder { color: var(--dishio-text-muted); }
+
+/* === AD PREVIEW MOCKUPS === */
+.ad-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+.ad-mockup {
+  background: var(--dishio-dark-surface);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.ad-mockup:hover { border-color: var(--dishio-green); transform: translateY(-2px); box-shadow: var(--shadow); }
+.ad-mockup-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--dishio-dark-border);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dishio-text-muted);
+}
+.ad-mockup-header .platform-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.ad-mockup-body { padding: 20px; }
+
+/* Google Search Ad mockup */
+.google-search-mockup {
+  background: #1a1a2e;
+  border-radius: var(--radius-sm);
+  padding: 20px;
+}
+.gs-url { font-size: 13px; color: var(--dishio-text-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+.gs-url .favicon { width: 18px; height: 18px; background: var(--dishio-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.gs-headline { font-size: 18px; color: #8AB4F8; font-weight: 400; margin-bottom: 6px; cursor: pointer; line-height: 1.3; }
+.gs-headline:hover { text-decoration: underline; }
+.gs-description { font-size: 13px; color: #BDC1C6; line-height: 1.5; }
+.gs-ad-badge { display: inline-block; font-size: 11px; font-weight: 700; color: #000; background: #F1C40F; padding: 1px 6px; border-radius: 3px; margin-right: 6px; }
+
+/* Meta Ad mockup */
+.meta-ad-mockup {
+  background: #1a1a2e;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.meta-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.meta-avatar { width: 36px; height: 36px; background: var(--dishio-yellow); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: var(--dishio-dark); }
+.meta-name { font-size: 14px; font-weight: 600; color: #E4E6EB; }
+.meta-sponsored { font-size: 12px; color: #B0B3B8; }
+.meta-image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--dishio-dark-surface), var(--dishio-dark-card)); display: flex; align-items: center; justify-content: center; }
+.meta-image-placeholder { font-size: 48px; opacity: 0.2; }
+.meta-body { padding: 12px 16px; }
+.meta-text { font-size: 14px; color: #E4E6EB; margin-bottom: 10px; line-height: 1.4; }
+.meta-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.meta-cta-text { font-size: 12px; color: #B0B3B8; }
+.meta-cta-btn { padding: 6px 16px; background: #E4E6EB; color: #000; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
+
+/* PMax mockup */
+.pmax-mockup {
+  background: #1a1a2e;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.pmax-visual {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #2a1a3e, #1a2a3e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.pmax-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+}
+.pmax-overlay h4 { font-size: 16px; color: white; font-weight: 600; }
+.pmax-overlay p { font-size: 12px; color: rgba(255,255,255,0.7); }
+.pmax-bottom {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pmax-cta { padding: 8px 20px; background: var(--dishio-yellow); color: var(--dishio-dark); border: none; border-radius: 100px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+/* Video section */
+.video-card {
+  background: var(--dishio-dark-surface);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.video-card:hover { border-color: var(--dishio-green); }
+.video-placeholder {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #1a1a2e, #2a1a3e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.play-btn {
+  width: 56px;
+  height: 56px;
+  background: rgba(255,217,0,0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.play-btn:hover { transform: scale(1.1); background: var(--dishio-yellow); }
+.play-btn svg { width: 24px; height: 24px; fill: var(--dishio-dark); margin-left: 3px; }
+.video-info { padding: 16px; }
+.video-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.video-meta { font-size: 12px; color: var(--dishio-text-muted); }
+
+/* Link preview */
+.link-preview-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--dishio-dark-surface);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  transition: var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.link-preview-card:hover { border-color: var(--dishio-green); transform: translateX(4px); }
+.link-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 22px;
+}
+.link-info { flex: 1; }
+.link-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.link-url { font-size: 12px; color: var(--dishio-text-muted); word-break: break-all; }
+.link-arrow { font-size: 18px; color: var(--dishio-text-muted); transition: var(--transition); }
+.link-preview-card:hover .link-arrow { color: var(--dishio-green-light); transform: translateX(4px); }
+
+/* === FOOTER === */
+.footer {
+  max-width: 1400px;
+  margin: 48px auto 0;
+  padding: 32px 40px;
+  border-top: 1px solid var(--dishio-dark-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-left { font-size: 13px; color: var(--dishio-text-muted); }
+.footer-right { display: flex; gap: 12px; }
+.footer-btn {
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+}
+.footer-btn.secondary {
+  background: var(--dishio-dark-surface);
+  color: var(--dishio-text);
+  border: 1px solid var(--dishio-dark-border);
+}
+.footer-btn.secondary:hover { border-color: var(--dishio-text-muted); }
+.footer-btn.primary { background: var(--dishio-yellow); color: var(--dishio-dark); font-weight: 700; }
+.footer-btn.primary:hover { background: var(--dishio-yellow-light); box-shadow: 0 4px 20px rgba(255,217,0,0.3); }
+
+/* Empty state */
+.empty-row td {
+  text-align: center;
+  padding: 40px !important;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.empty-icon { font-size: 32px; opacity: 0.3; }
+.empty-text { font-size: 14px; color: var(--dishio-text-muted); }
+.empty-hint { font-size: 12px; color: var(--dishio-text-muted); opacity: 0.6; }
+
+/* Add row button */
+.add-row-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 2px dashed var(--dishio-dark-border);
+  border-radius: var(--radius-sm);
+  color: var(--dishio-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 12px;
+}
+.add-row-btn:hover { border-color: var(--dishio-green); color: var(--dishio-green-light); background: rgba(0,155,0,0.08); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header { padding: 0 20px; }
+  .hero { padding: 40px 20px 20px; }
+  .hero-top { flex-direction: column; }
+  .hero h1 { font-size: 32px; }
+  .hero-right { flex-wrap: wrap; }
+  .section, .tabs-container, .progress-bar-container { padding: 0 20px; }
+  .tabs-nav { overflow-x: auto; }
+  .ad-preview-grid { grid-template-columns: 1fr; }
+  .footer { flex-direction: column; gap: 16px; text-align: center; }
+}
+
+/* Editable cell highlight */
+.editable-cell {
+  cursor: text;
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  transition: var(--transition);
+  min-height: 24px;
+}
+.editable-cell:hover { background: var(--dishio-dark-surface); }
+.editable-cell:focus {
+  outline: none;
+  background: var(--dishio-dark-surface);
+  box-shadow: 0 0 0 2px var(--dishio-yellow);
+}
+.editable-cell[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--dishio-text-muted);
+  opacity: 0.5;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-in { animation: fadeIn 0.5s ease forwards; }
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  padding: 14px 24px;
+  background: var(--dishio-malachite);
+  color: var(--dishio-dark);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: var(--transition);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="#">
+      <svg class="logo-svg" width="140" height="32" viewBox="0 0 280 64" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <!-- Dishio spinner icon - 12 elements in a circle -->
+        <g transform="translate(32,32)">
+          <!-- 12 o'clock - capsule -->
+          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(0)"/>
+          <!-- 1 o'clock - circle -->
+          <circle cx="11" cy="-19" r="5"/>
+          <!-- 2 o'clock - capsule -->
+          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(60)"/>
+          <!-- 3 o'clock - circle -->
+          <circle cx="22" cy="0" r="6.5"/>
+          <!-- 4 o'clock - capsule -->
+          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(120)"/>
+          <!-- 5 o'clock - circle -->
+          <circle cx="11" cy="19" r="5.5"/>
+          <!-- 6 o'clock - capsule -->
+          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(180)"/>
+          <!-- 7 o'clock - circle -->
+          <circle cx="-11" cy="19" r="5"/>
+          <!-- 8 o'clock - capsule -->
+          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(240)"/>
+          <!-- 9 o'clock - circle -->
+          <circle cx="-22" cy="0" r="6"/>
+          <!-- 10 o'clock - capsule -->
+          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(300)"/>
+          <!-- 11 o'clock - circle -->
+          <circle cx="-11" cy="-19" r="4.5"/>
+        </g>
+        <!-- DISHIO wordmark -->
+        <!-- D -->
+        <rect x="80" y="16" width="6" height="32" rx="1"/>
+        <path d="M86,20 Q104,20 104,32 Q104,44 86,44 L86,38 Q97,38 97,32 Q97,26 86,26 Z"/>
+        <!-- I -->
+        <rect x="110" y="16" width="6" height="32" rx="1"/>
+        <!-- S -->
+        <path d="M126,22 Q126,16 136,16 Q146,16 146,22 Q146,28 136,30 Q126,32 126,38 Q126,48 136,48 Q146,48 146,42" stroke="white" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <!-- H -->
+        <rect x="156" y="16" width="6" height="32" rx="1"/>
+        <rect x="174" y="16" width="6" height="32" rx="1"/>
+        <rect x="162" y="28" width="12" height="6" rx="1"/>
+        <!-- I -->
+        <rect x="190" y="16" width="6" height="32" rx="1"/>
+        <!-- O -->
+        <circle cx="214" cy="32" r="14" stroke="white" stroke-width="6" fill="none"/>
+        <rect x="220" y="14" width="12" height="8" fill="black"/>
+      </svg>
+    </a>
+    <div class="header-meta">
+      <div class="header-badge">
+        <span class="dot"></span>
+        Campaign Preview
+      </div>
+      <button class="btn-primary" onclick="submitAllApprovals()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        Submit Approvals
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-top">
+    <div class="hero-left">
+      <div class="hero-label">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Campaign Preview
+      </div>
+      <h1>
+        <span class="accent" id="clientName" contenteditable="true" spellcheck="false">Restaurant Name</span><br>
+        Ad Copy Review
+      </h1>
+      <p class="hero-subtitle">Review and approve ad copy across Google, Meta, and Dishio campaigns. Click any text field to edit, toggle approvals, and add notes.</p>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--dishio-text-muted)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Account Manager: <strong style="color:var(--dishio-text-secondary)" id="accountManagerName">—</strong>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card">
+        <div class="stat-number" id="totalItems">0</div>
+        <div class="stat-label">Total Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="approvedItems" style="color: var(--dishio-malachite);">0</div>
+        <div class="stat-label">Approved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="pendingItems" style="color: var(--dishio-yellow);">0</div>
+
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Progress Bar -->
+<div class="progress-bar-container">
+  <div class="progress-wrapper">
+    <div class="progress-header">
+      <span class="progress-title">Overall Approval Progress</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <div class="progress-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--dishio-malachite)"></div> Approved</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--dishio-yellow)"></div> Pending Review</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--reject-red)"></div> Needs Edits</div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs-container">
+  <div class="tabs-nav" id="tabsNav">
+    <button class="tab-btn active" data-tab="google">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      </span>
+      Google
+      <span class="tab-count" id="googleCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="meta">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      </span>
+      Meta
+      <span class="tab-count" id="metaCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="dishio">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </span>
+      Dishio
+      <span class="tab-count" id="dishioCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="videos">
+      <span class="tab-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+      </span>
+      Videos
+      <span class="tab-count" id="videosCount">0</span>
+    </button>
+  </div>
+</div>
+
+<!-- GOOGLE TAB -->
+<div class="tab-content active" id="tab-google">
+
+  <!-- Headlines -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-blue-bg); color: var(--dishio-blue);">H</div>
+          <div>
+            <div class="section-title">Google Headlines</div>
+            <div class="section-subtitle">Character limit: 30 &nbsp;|&nbsp; Used in Search & PMax campaigns</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <div class="section-badge" style="background: var(--dishio-blue-bg); color: var(--dishio-blue);" id="headlineBadge">0 items</div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="headlinesBody">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:40%">Headline Copy</th>
+              <th style="width:12%">Characters</th>
+              <th style="width:13%">Approval</th>
+              <th style="width:30%">Notes / Edits</th>
+            </tr>
+          </thead>
+          <tbody id="headlinesTableBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('headlines', 30)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add Headline
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Long Headlines -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-purple-bg); color: var(--dishio-purple);">LH</div>
+          <div>
+            <div class="section-title">Google Long Headlines</div>
+            <div class="section-subtitle">Character limit: 90 &nbsp;|&nbsp; Used in PMax & Demand Gen</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <div class="section-badge" style="background: var(--dishio-purple-bg); color: var(--dishio-purple);" id="longHeadlineBadge">0 items</div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="longHeadlinesBody">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:40%">Long Headline Copy</th>
+              <th style="width:12%">Characters</th>
+              <th style="width:13%">Approval</th>
+              <th style="width:30%">Notes / Edits</th>
+            </tr>
+          </thead>
+          <tbody id="longHeadlinesTableBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('longHeadlines', 90)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add Long Headline
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Descriptions -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-green-bg); color: var(--dishio-green);">D</div>
+          <div>
+            <div class="section-title">Google Descriptions</div>
+            <div class="section-subtitle">Character limit: 90 &nbsp;|&nbsp; Used in Search, PMax & Demand Gen</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <div class="section-badge" style="background: var(--dishio-green-bg); color: var(--dishio-green);" id="descriptionBadge">0 items</div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="descriptionsBody">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:40%">Description Copy</th>
+              <th style="width:12%">Characters</th>
+              <th style="width:13%">Approval</th>
+              <th style="width:30%">Notes / Edits</th>
+            </tr>
+          </thead>
+          <tbody id="descriptionsTableBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('descriptions', 90)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add Description
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Google Ad Preview -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-yellow-bg); color: var(--dishio-yellow);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Live Ad Previews</div>
+            <div class="section-subtitle">See how ads will appear on Google Search and PMax</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body" id="googlePreviewBody">
+        <div class="ad-preview-grid" id="googleAdPreviews"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- META TAB -->
+<div class="tab-content" id="tab-meta">
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-blue-bg); color: var(--dishio-blue);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Meta Campaign Preview Links</div>
+            <div class="section-subtitle">Facebook & Instagram ad previews for approval</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="metaBody">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:30%">Campaign / Ad Set</th>
+              <th style="width:25%">Preview Link</th>
+              <th style="width:12%">Approval</th>
+              <th style="width:28%">Notes / Suggested Edits</th>
+            </tr>
+          </thead>
+          <tbody id="metaTableBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addMetaRow()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add Meta Campaign
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DISHIO TAB -->
+<div class="tab-content" id="tab-dishio">
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: linear-gradient(135deg, var(--dishio-yellow), var(--dishio-green)); color: white;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Dishio Smart Site</div>
+            <div class="section-subtitle">Review the Dishio-powered digital experience</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="dishioBody">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:30%">Smart Site Page</th>
+              <th style="width:25%">Preview Link</th>
+              <th style="width:12%">Approval</th>
+              <th style="width:28%">Notes / Suggested Edits</th>
+            </tr>
+          </thead>
+          <tbody id="dishioTableBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addDishioRow()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add Smart Site Link
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEOS TAB -->
+<div class="tab-content" id="tab-videos">
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-red-bg); color: var(--dishio-red);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Video Assets</div>
+            <div class="section-subtitle">Video creative for PMax & Meta campaigns</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="videosBody">
+        <table class="preview-table">
+          <thead>
+            <tr>
+              <th style="width:5%">#</th>
+              <th style="width:30%">Video Title</th>
+              <th style="width:25%">Video Link</th>
+              <th style="width:12%">Approval</th>
+              <th style="width:28%">Notes / Suggested Edits</th>
+            </tr>
+          </thead>
+          <tbody id="videosTableBody"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addVideoRow()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Add Video
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-left">
+  <svg width="80" height="18" viewBox="0 0 280 64" fill="#888" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(32,32)">
+      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(0)"/>
+      <circle cx="11" cy="-19" r="5"/>
+      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(60)"/>
+      <circle cx="22" cy="0" r="6.5"/>
+      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(120)"/>
+      <circle cx="11" cy="19" r="5.5"/>
+      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(180)"/>
+      <circle cx="-11" cy="19" r="5"/>
+      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(240)"/>
+      <circle cx="-22" cy="0" r="6"/>
+      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(300)"/>
+      <circle cx="-11" cy="-19" r="4.5"/>
+    </g>
+    <rect x="80" y="16" width="6" height="32" rx="1"/>
+    <path d="M86,20 Q104,20 104,32 Q104,44 86,44 L86,38 Q97,38 97,32 Q97,26 86,26 Z"/>
+    <rect x="110" y="16" width="6" height="32" rx="1"/>
+    <path d="M126,22 Q126,16 136,16 Q146,16 146,22 Q146,28 136,30 Q126,32 126,38 Q126,48 136,48 Q146,48 146,42" stroke="#888" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <rect x="156" y="16" width="6" height="32" rx="1"/>
+    <rect x="174" y="16" width="6" height="32" rx="1"/>
+    <rect x="162" y="28" width="12" height="6" rx="1"/>
+    <rect x="190" y="16" width="6" height="32" rx="1"/>
+    <circle cx="214" cy="32" r="14" stroke="#888" stroke-width="6" fill="none"/>
+    <rect x="220" y="14" width="12" height="8" fill="black"/>
+  </svg>
+  <span style="margin-left:8px">Campaign Preview Tool</span>
+</div>
+  <div class="footer-right">
+    <button class="footer-btn secondary" onclick="exportData()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Export JSON
+    </button>
+    <button class="footer-btn primary" onclick="submitAllApprovals()">
+      Submit All Approvals
+    </button>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+  <span id="toastText">Saved!</span>
+</div>
+
+<script>
+// ========== DATA STORE ==========
+const data = {
+  clientName: 'Restaurant Name',
+  headlines: [],
+  longHeadlines: [],
+  descriptions: [],
+  meta: [],
+  dishio: [],
+  videos: []
+};
+
+// ========== TABS ==========
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ========== SECTION TOGGLE ==========
+function toggleSection(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ========== RENDER FUNCTIONS ==========
+function charCountClass(len, max) {
+  if (len === 0) return '';
+  if (len <= max) return 'ok';
+  if (len <= max + 5) return 'warn';
+  return 'over';
+}
+
+function renderCopyRow(item, index, section, maxChars) {
+  const len = item.text.length;
+  const cls = charCountClass(len, maxChars);
+  return `<tr class="animate-in" style="animation-delay:${index*50}ms">
+    <td style="color:var(--dishio-text-muted);font-weight:600">${index + 1}</td>
+    <td>
+      <div class="editable-cell copy-text" contenteditable="true" data-section="${section}" data-index="${index}" data-field="text" data-placeholder="Enter copy here..." oninput="onCopyEdit(this, ${maxChars})" onblur="saveCopyEdit(this)">${item.text}</div>
+    </td>
+    <td><span class="char-count ${cls}">${len} / ${maxChars}</span></td>
+    <td>
+      <div class="approval-toggle">
+        <div class="toggle-track ${item.approved ? 'approved' : ''}" onclick="toggleApproval('${section}', ${index})">
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label">${item.approved ? 'Approved' : 'Pending'}</span>
+      </div>
+    </td>
+    <td><textarea class="notes-input" rows="1" placeholder="Add notes or suggested edits..." oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea></td>
+  </tr>`;
+}
+
+function renderLinkRow(item, index, section) {
+  return `<tr class="animate-in" style="animation-delay:${index*50}ms">
+    <td style="color:var(--dishio-text-muted);font-weight:600">${index + 1}</td>
+    <td>
+      <div class="editable-cell" contenteditable="true" data-section="${section}" data-index="${index}" data-field="name" data-placeholder="Enter name..." onblur="saveLinkEdit(this, '${section}')">${item.name}</div>
+    </td>
+    <td>
+      <div class="editable-cell" contenteditable="true" data-section="${section}" data-index="${index}" data-field="url" data-placeholder="Paste URL..." onblur="saveLinkEdit(this, '${section}')" style="font-size:12px;color:var(--dishio-text-muted);word-break:break-all">${item.url}</div>
+      ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" style="font-size:11px;color:var(--dishio-green-light);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:4px">Open Preview <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>` : ''}
+    </td>
+    <td>
+      <div class="approval-toggle">
+        <div class="toggle-track ${item.approved ? 'approved' : ''}" onclick="toggleApproval('${section}', ${index})">
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label">${item.approved ? 'Approved' : 'Pending'}</span>
+      </div>
+    </td>
+    <td><textarea class="notes-input" rows="1" placeholder="Add notes or suggested edits..." oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea></td>
+  </tr>`;
+}
+
+function renderAll() {
+  // Headlines
+  const hb = document.getElementById('headlinesTableBody');
+  hb.innerHTML = data.headlines.length ? data.headlines.map((h, i) => renderCopyRow(h, i, 'headlines', 30)).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">H</div><div class="empty-text">No headlines yet</div><div class="empty-hint">Click "Add Headline" to get started</div></div></td></tr>';
+
+  // Long Headlines
+  const lb = document.getElementById('longHeadlinesTableBody');
+  lb.innerHTML = data.longHeadlines.length ? data.longHeadlines.map((h, i) => renderCopyRow(h, i, 'longHeadlines', 90)).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">LH</div><div class="empty-text">No long headlines yet</div><div class="empty-hint">Click "Add Long Headline" to get started</div></div></td></tr>';
+
+  // Descriptions
+  const db = document.getElementById('descriptionsTableBody');
+  db.innerHTML = data.descriptions.length ? data.descriptions.map((d, i) => renderCopyRow(d, i, 'descriptions', 90)).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">D</div><div class="empty-text">No descriptions yet</div><div class="empty-hint">Click "Add Description" to get started</div></div></td></tr>';
+
+  // Meta
+  const mb = document.getElementById('metaTableBody');
+  mb.innerHTML = data.meta.length ? data.meta.map((m, i) => renderLinkRow(m, i, 'meta')).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">📱</div><div class="empty-text">No Meta campaigns yet</div><div class="empty-hint">Click "Add Meta Campaign" to get started</div></div></td></tr>';
+
+  // Dishio
+  const dib = document.getElementById('dishioTableBody');
+  dib.innerHTML = data.dishio.length ? data.dishio.map((d, i) => renderLinkRow(d, i, 'dishio')).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">🔗</div><div class="empty-text">No Smart Site links yet</div><div class="empty-hint">Click "Add Smart Site Link" to get started</div></div></td></tr>';
+
+  // Videos
+  const vb = document.getElementById('videosTableBody');
+  vb.innerHTML = data.videos.length ? data.videos.map((v, i) => renderLinkRow(v, i, 'videos')).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-text">No videos yet</div><div class="empty-hint">Click "Add Video" to get started</div></div></td></tr>';
+
+  // Update Google ad previews
+  renderGoogleAdPreviews();
+
+  // Update stats
+  updateStats();
+
+  // Badges
+  document.getElementById('headlineBadge').textContent = data.headlines.length + ' items';
+  document.getElementById('longHeadlineBadge').textContent = data.longHeadlines.length + ' items';
+  document.getElementById('descriptionBadge').textContent = data.descriptions.length + ' items';
+
+  // Tab counts
+  document.getElementById('googleCount').textContent = data.headlines.length + data.longHeadlines.length + data.descriptions.length;
+  document.getElementById('metaCount').textContent = data.meta.length;
+  document.getElementById('dishioCount').textContent = data.dishio.length;
+  document.getElementById('videosCount').textContent = data.videos.length;
+
+  // Save to localStorage
+  saveToStorage();
+}
+
+function renderGoogleAdPreviews() {
+  const container = document.getElementById('googleAdPreviews');
+  if (!data.headlines.length && !data.descriptions.length) {
+    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--dishio-text-muted);font-size:14px;">Add headlines and descriptions to see live ad previews</div>';
+    return;
+  }
+  const clientName = document.getElementById('clientName').textContent || 'Restaurant Name';
+  const headline = data.headlines[0]?.text || 'Your Headline Here';
+  const longHL = data.longHeadlines[0]?.text || 'Your Long Headline Goes Here';
+  const desc = data.descriptions[0]?.text || 'Your description will appear here. Add compelling ad copy to preview.';
+
+  container.innerHTML = `
+    <div class="ad-mockup">
+      <div class="ad-mockup-header">
+        <span class="platform-dot" style="background:#4285F4"></span>
+        Google Search
+      </div>
+      <div class="ad-mockup-body">
+        <div class="google-search-mockup">
+          <div class="gs-url">
+            <span class="favicon" style="padding:2px"><svg viewBox="0 0 64 64" fill="white" width="12" height="12"><g transform="translate(32,32)"><ellipse cx="0" cy="-22" rx="3.2" ry="6"/><circle cx="11" cy="-19" r="5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(60)"/><circle cx="22" cy="0" r="6.5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(120)"/><circle cx="11" cy="19" r="5.5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(180)"/><circle cx="-11" cy="19" r="5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(240)"/><circle cx="-22" cy="0" r="6"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(300)"/><circle cx="-11" cy="-19" r="4.5"/></g></svg></span>
+            <span>dish.io/${clientName.toLowerCase().replace(/\s+/g,'-')}</span>
+          </div>
+          <div class="gs-headline"><span class="gs-ad-badge">Ad</span>${headline}</div>
+          <div class="gs-description">${desc}</div>
+        </div>
+      </div>
+    </div>
+    <div class="ad-mockup">
+      <div class="ad-mockup-header">
+        <span class="platform-dot" style="background:#34A853"></span>
+        Performance Max
+      </div>
+      <div class="ad-mockup-body">
+        <div class="pmax-mockup">
+          <div class="pmax-visual">
+            <div style="font-size:64px;opacity:0.15">🍽️</div>
+            <div class="pmax-overlay">
+              <h4>${longHL}</h4>
+              <p>${desc.slice(0, 60)}...</p>
+            </div>
+          </div>
+          <div class="pmax-bottom">
+            <div style="font-size:12px;color:var(--dishio-text-muted)">${clientName}</div>
+            <button class="pmax-cta">Order Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ========== INTERACTIONS ==========
+function addRow(section, maxChars) {
+  data[section].push({ text: '', approved: false, notes: '' });
+  renderAll();
+  // Focus the new editable cell
+  const tbody = document.getElementById(section + 'TableBody');
+  const lastRow = tbody.lastElementChild;
+  if (lastRow) {
+    const editable = lastRow.querySelector('.editable-cell');
+    if (editable) editable.focus();
+  }
+}
+
+function addMetaRow() {
+  data.meta.push({ name: '', url: '', approved: false, notes: '' });
+  renderAll();
+}
+
+function addDishioRow() {
+  data.dishio.push({ name: '', url: '', approved: false, notes: '' });
+  renderAll();
+}
+
+function addVideoRow() {
+  data.videos.push({ name: '', url: '', approved: false, notes: '' });
+  renderAll();
+}
+
+function toggleApproval(section, index) {
+  data[section][index].approved = !data[section][index].approved;
+  renderAll();
+  showToast(data[section][index].approved ? 'Approved!' : 'Approval removed');
+}
+
+function saveNote(section, index, value) {
+  data[section][index].notes = value;
+  saveToStorage();
+}
+
+function onCopyEdit(el, maxChars) {
+  const text = el.textContent;
+  const section = el.dataset.section;
+  const index = parseInt(el.dataset.index);
+  data[section][index].text = text;
+
+  // Update char count in same row
+  const tr = el.closest('tr');
+  const charSpan = tr.querySelector('.char-count');
+  if (charSpan) {
+    const len = text.length;
+    charSpan.textContent = len + ' / ' + maxChars;
+    charSpan.className = 'char-count ' + charCountClass(len, maxChars);
+  }
+}
+
+function saveCopyEdit(el) {
+  const section = el.dataset.section;
+  const index = parseInt(el.dataset.index);
+  data[section][index].text = el.textContent;
+  renderGoogleAdPreviews();
+  saveToStorage();
+}
+
+function saveLinkEdit(el, section) {
+  const index = parseInt(el.dataset.index);
+  const field = el.dataset.field;
+  data[section][index][field] = el.textContent;
+  saveToStorage();
+}
+
+function autoResize(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = textarea.scrollHeight + 'px';
+}
+
+function updateStats() {
+  const allItems = [...data.headlines, ...data.longHeadlines, ...data.descriptions, ...data.meta, ...data.dishio, ...data.videos];
+  const total = allItems.length;
+  const approved = allItems.filter(i => i.approved).length;
+  const pending = total - approved;
+  const pct = total > 0 ? Math.round((approved / total) * 100) : 0;
+
+  document.getElementById('totalItems').textContent = total;
+  document.getElementById('approvedItems').textContent = approved;
+  document.getElementById('pendingItems').textContent = pending;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ========== API PERSISTENCE ==========
+const campaignId = window.location.pathname.split('/').pop();
+let saveTimeout = null;
+
+async function saveToStorage() {
+  // Debounce saves to avoid hammering the API
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(async () => {
+    if (!campaignId) return;
+    try {
+      await fetch(`/api/campaigns/${campaignId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          restaurantName: document.getElementById('clientName').textContent,
+          data: data
+        })
+      });
+    } catch (err) { console.error('Save failed:', err); }
+  }, 500);
+}
+
+async function loadFromStorage() {
+  if (!campaignId) return;
+  try {
+    const res = await fetch(`/api/campaigns/${campaignId}`);
+    if (!res.ok) {
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#888">Campaign not found</div>';
+      return;
+    }
+    const campaign = await res.json();
+    if (campaign.data) Object.assign(data, campaign.data);
+    document.getElementById('clientName').textContent = campaign.restaurantName || 'Restaurant Name';
+    if (campaign.accountManager) {
+      document.getElementById('accountManagerName').textContent = campaign.accountManager;
+    }
+    document.title = `Campaign Preview — ${campaign.restaurantName}`;
+    renderAll();
+  } catch (err) { console.error('Load failed:', err); }
+}
+
+// ========== EXPORT ==========
+function exportData() {
+  const exportObj = {
+    clientName: document.getElementById('clientName').textContent,
+    exportDate: new Date().toISOString(),
+    ...data
+  };
+  const blob = new Blob([JSON.stringify(exportObj, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (exportObj.clientName || 'campaign') + '-preview-export.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported successfully!');
+}
+
+async function submitAllApprovals() {
+  const allItems = [...data.headlines, ...data.longHeadlines, ...data.descriptions, ...data.meta, ...data.dishio, ...data.videos];
+  const total = allItems.length;
+  const approved = allItems.filter(i => i.approved).length;
+
+  if (total === 0) { showToast('No items to submit'); return; }
+  if (approved < total) { showToast(`${total - approved} items still pending review`); return; }
+
+  // Mark as approved in backend and notify Slack
+  try {
+    await fetch(`/api/campaigns/${campaignId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'approved', data })
+    });
+    await fetch(`/api/campaigns/${campaignId}/send`, { method: 'POST' });
+    showToast('All approvals submitted & team notified!');
+  } catch (err) {
+    showToast('All approvals submitted!');
+  }
+}
+
+// ========== TOAST ==========
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastText').textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ========== INIT ==========
+loadFromStorage();
+</script>
+</body>
+</html>
