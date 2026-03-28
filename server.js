@@ -178,7 +178,8 @@ app.post('/api/campaigns/:id/send', async (req, res) => {
   if (!campaign) return res.status(404).json({ error: 'Campaign not found' });
   campaign.status = 'sent';
   saveCampaign(campaign);
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  const proto = req.get('x-forwarded-proto') || req.protocol;
+  const baseUrl = `${proto}://${req.get('host')}`;
   const slackSent = await sendSlackNotification(campaign, baseUrl);
   res.json({ success: true, slackSent, previewUrl: `${baseUrl}/preview/${campaign.id}` });
 });
@@ -195,7 +196,7 @@ app.get('/preview/:id', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'preview.html'));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`\n  Dishio Campaign Preview Tool`);
   console.log(`  ============================`);
   console.log(`  Admin Dashboard:  http://localhost:${PORT}`);
