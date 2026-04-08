@@ -254,6 +254,50 @@ body {
   border-radius: 50%;
 }
 
+/* === CAMPAIGN SWITCHER === */
+.campaign-switcher {
+  max-width: 1400px;
+  margin: 0 auto 24px;
+  padding: 0 40px;
+}
+.campaign-switcher-inner {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.campaign-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--dishio-dark-border);
+  background: var(--dishio-dark-card);
+  color: var(--dishio-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.campaign-tab-btn:hover {
+  border-color: var(--dishio-green);
+  color: var(--dishio-text);
+}
+.campaign-tab-btn.active {
+  border-color: var(--dishio-yellow);
+  background: var(--dishio-yellow-dim);
+  color: var(--dishio-yellow);
+}
+.campaign-tab-num {
+  font-size: 10px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.5;
+}
+.campaign-tab-btn.active .campaign-tab-num { opacity: 0.7; }
+
 /* === TABS NAV === */
 .tabs-container {
   max-width: 1400px;
@@ -1222,6 +1266,13 @@ body {
   </div>
 </div>
 
+<!-- Campaign switcher (shown when multi-campaign mode) -->
+<div class="campaign-switcher" id="campaignSwitcher" style="display:none">
+  <div class="campaign-switcher-inner" id="campaignSwitcherInner">
+    <!-- dynamically rendered -->
+  </div>
+</div>
+
 <!-- Tabs -->
 <div class="tabs-container">
   <div class="tabs-nav" id="tabsNav">
@@ -1540,6 +1591,10 @@ const data = {
   videos: []
 };
 
+// Multi-campaign support
+let allCampaignTabs = []; // [{name, data}] — when loaded from batch-create
+let activeCampaignIdx = 0;
+
 // ========== TABS ==========
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1549,6 +1604,30 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
   });
 });
+
+// ========== CAMPAIGN SWITCHER ==========
+function renderCampaignSwitcher() {
+  const container = document.getElementById('campaignSwitcherInner');
+  container.innerHTML = allCampaignTabs.map((camp, i) => `
+    <button class="campaign-tab-btn ${i === activeCampaignIdx ? 'active' : ''}" onclick="switchCampaign(${i})">
+      <span class="campaign-tab-num">${String(i+1).padStart(2,'0')}</span>
+      ${camp.name}
+    </button>
+  `).join('');
+}
+
+function switchCampaign(idx) {
+  activeCampaignIdx = idx;
+  // Copy campaign data into the global data object
+  const camp = allCampaignTabs[idx];
+  Object.assign(data, camp.data);
+  // Update UI
+  document.querySelectorAll('.campaign-tab-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+  renderAll();
+  window.scrollTo(0, 0);
+}
 
 // ========== SECTION TOGGLE ==========
 function toggleSection(header) {
@@ -1711,6 +1790,53 @@ function renderAll() {
   setTimeout(initTextareas, 10);
 }
 
+// ========== OG IMAGE LOADER ==========
+const ogImageCache = {};
+async function loadMetaImage(url, imgEl) {
+  if (!url) return;
+  if (ogImageCache[url] !== undefined) {
+    if (ogImageCache[url]) {
+      imgEl.style.backgroundImage = `url(${ogImageCache[url]})`;
+      imgEl.style.backgroundSize = 'cover';
+      imgEl.style.backgroundPosition = 'center';
+      const icon = imgEl.querySelector('.img-placeholder-icon');
+      if (icon) icon.style.display = 'none';
+      const label = imgEl.querySelector('.fb-image-label, .ig-image-label');
+      if (label) label.style.display = 'none';
+    }
+    return;
+  }
+  // Check if it's a direct image URL
+  if (/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url)) {
+    ogImageCache[url] = url;
+    imgEl.style.backgroundImage = `url(${url})`;
+    imgEl.style.backgroundSize = 'cover';
+    imgEl.style.backgroundPosition = 'center';
+    const icon = imgEl.querySelector('.img-placeholder-icon');
+    if (icon) icon.style.display = 'none';
+    const label = imgEl.querySelector('.fb-image-label, .ig-image-label');
+    if (label) label.style.display = 'none';
+    return;
+  }
+  // Fetch og:image from server
+  try {
+    const res = await fetch('/api/og-image?url=' + encodeURIComponent(url));
+    const d = await res.json();
+    ogImageCache[url] = d.imageUrl || null;
+    if (d.imageUrl) {
+      imgEl.style.backgroundImage = `url(${d.imageUrl})`;
+      imgEl.style.backgroundSize = 'cover';
+      imgEl.style.backgroundPosition = 'center';
+      const icon = imgEl.querySelector('.img-placeholder-icon');
+      if (icon) icon.style.display = 'none';
+      const label = imgEl.querySelector('.fb-image-label, .ig-image-label');
+      if (label) label.style.display = 'none';
+    }
+  } catch (e) {
+    ogImageCache[url] = null;
+  }
+}
+
 function renderMetaAdPreviews() {
   const container = document.getElementById('metaAdPreviews');
   const linkSection = document.getElementById('metaPreviewLinksSection');
@@ -1749,6 +1875,19 @@ function renderMetaAdPreviews() {
 
   if (!itemsWithCopy.length) {
     container.innerHTML = '<div class="meta-preview-empty"><div style="font-size:32px;opacity:0.2;margin-bottom:8px">📱</div><div>Add Meta ad copy above to see live previews</div><div style="font-size:12px;margin-top:4px;opacity:0.5">Mockups update as you type</div></div>';
+    return;
+  }
+
+  // Check for Facebook Ad Manager iframe case
+  const firstUrl = (itemsWithCopy[0]?.url || itemsWithUrl[0]?.url || '').trim();
+  if (firstUrl && (firstUrl.includes('facebook.com/ads') || firstUrl.includes('business.facebook.com'))) {
+    container.innerHTML = `<div class="meta-preview-iframe-wrap" style="background:var(--dishio-dark-card);border:1px solid var(--dishio-dark-border);border-radius:var(--radius);overflow:hidden">
+      <div class="meta-preview-url-bar" style="padding:10px 16px;border-bottom:1px solid var(--dishio-dark-border);font-size:12px;color:var(--dishio-text-muted);display:flex;align-items:center;gap:8px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        Live Ad Preview — <a href="${firstUrl}" target="_blank" rel="noopener" style="color:var(--dishio-green-light)">Open in Facebook</a>
+      </div>
+      <iframe src="${firstUrl}" sandbox="allow-scripts allow-same-origin" loading="lazy" style="width:100%;height:600px;border:none"></iframe>
+    </div>`;
     return;
   }
 
@@ -1870,6 +2009,15 @@ function renderMetaAdPreviews() {
   }
 
   container.innerHTML = html;
+
+  // Load real images for meta items with URLs
+  const primaryUrl = (itemsWithCopy[0]?.url || itemsWithUrl[0]?.url || '').trim();
+  if (primaryUrl) {
+    const fbImg = container.querySelector('.fb-image-area');
+    const igImg = container.querySelector('.ig-image-area');
+    if (fbImg) loadMetaImage(primaryUrl, fbImg);
+    if (igImg) loadMetaImage(primaryUrl, igImg);
+  }
 }
 
 function renderGoogleAdPreviews() {
@@ -2054,14 +2202,27 @@ async function saveToStorage() {
   saveTimeout = setTimeout(async () => {
     if (!campaignId) return;
     try {
-      await fetch(`/api/campaigns/${campaignId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          restaurantName: document.getElementById('clientName').textContent,
-          data: data
-        })
-      });
+      if (allCampaignTabs.length > 0) {
+        // Multi-campaign mode: sync current data back to allCampaignTabs then save all
+        allCampaignTabs[activeCampaignIdx].data = { ...data };
+        await fetch(`/api/campaigns/${campaignId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            restaurantName: document.getElementById('clientName').textContent,
+            campaigns: allCampaignTabs
+          })
+        });
+      } else {
+        await fetch(`/api/campaigns/${campaignId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            restaurantName: document.getElementById('clientName').textContent,
+            data: data
+          })
+        });
+      }
     } catch (err) { console.error('Save failed:', err); }
   }, 500);
 }
@@ -2075,7 +2236,17 @@ async function loadFromStorage() {
       return;
     }
     const campaign = await res.json();
-    if (campaign.data) Object.assign(data, campaign.data);
+    if (campaign.campaigns && campaign.campaigns.length > 0) {
+      // Multi-campaign mode
+      allCampaignTabs = campaign.campaigns;
+      activeCampaignIdx = 0;
+      Object.assign(data, campaign.campaigns[0].data);
+      renderCampaignSwitcher();
+      document.getElementById('campaignSwitcher').style.display = '';
+    } else if (campaign.data) {
+      // Legacy single-campaign mode
+      Object.assign(data, campaign.data);
+    }
     document.getElementById('clientName').textContent = campaign.restaurantName || 'Restaurant Name';
     if (campaign.accountManager) {
       document.getElementById('accountManagerName').textContent = campaign.accountManager;

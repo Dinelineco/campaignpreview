@@ -272,7 +272,7 @@ body {
         <button class="tabs-select-all" onclick="toggleSelectAll()">Select all</button>
       </div>
       <div class="tabs-grid" id="tabsGrid"></div>
-      <div class="tabs-hint" id="tabsHint">Each selected tab will create one campaign preview.</div>
+      <div class="tabs-hint" id="tabsHint">All selected tabs will be combined into one campaign preview.</div>
     </div>
 
     <div id="importStatus" style="display:none;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5"></div>
@@ -494,17 +494,17 @@ async function createCampaign() {
         body: JSON.stringify({ restaurantName: name, accountManager: manager, sheetUrl, tabs })
       });
       const result = await res.json();
-      const succeeded = result.results.filter(r => r.success);
-      const failed = result.results.filter(r => !r.success);
+      const succeeded = (result.results || []).filter(r => r.success);
+      const failed = (result.results || []).filter(r => !r.success);
 
       statusEl.style.background = failed.length ? 'rgba(255,217,0,0.08)' : 'rgba(0,255,136,0.08)';
       statusEl.style.color = failed.length ? '#FFD900' : '#00FF88';
-      statusEl.innerHTML = succeeded.map(r => `✓ ${r.tab}`).join('<br>') +
+      statusEl.innerHTML = `<strong>1 Campaign Preview Created</strong><br>${succeeded.map(r => `✓ ${r.tab}`).join('<br>')}` +
         (failed.length ? '<br>' + failed.map(r => `✗ ${r.tab}: ${r.error}`).join('<br>') : '');
 
       setTimeout(() => {
         closeNewModal();
-        showToast(`Created ${succeeded.length} campaign preview${succeeded.length !== 1 ? 's' : ''}`);
+        showToast(`Campaign preview created with ${succeeded.length} tab${succeeded.length !== 1 ? 's' : ''}`);
         loadCampaigns();
       }, 1500);
 

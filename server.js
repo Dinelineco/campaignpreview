@@ -34,17 +34,35 @@ function saveCampaign(c) {
 
 function countApproved(c) {
   let n = 0;
-  ['headlines','longHeadlines','descriptions','meta','dishio','videos'].forEach(s => {
-    if (c.data && c.data[s]) n += c.data[s].filter(i => i.approved).length;
-  });
+  const sections = ['headlines','longHeadlines','descriptions','meta','dishio','videos'];
+  if (c.campaigns && c.campaigns.length) {
+    c.campaigns.forEach(tab => {
+      sections.forEach(s => {
+        if (tab.data && tab.data[s]) n += tab.data[s].filter(i => i.approved).length;
+      });
+    });
+  } else {
+    sections.forEach(s => {
+      if (c.data && c.data[s]) n += c.data[s].filter(i => i.approved).length;
+    });
+  }
   return n;
 }
 
 function countTotal(c) {
   let n = 0;
-  ['headlines','longHeadlines','descriptions','meta','dishio','videos'].forEach(s => {
-    if (c.data && c.data[s]) n += c.data[s].length;
-  });
+  const sections = ['headlines','longHeadlines','descriptions','meta','dishio','videos'];
+  if (c.campaigns && c.campaigns.length) {
+    c.campaigns.forEach(tab => {
+      sections.forEach(s => {
+        if (tab.data && tab.data[s]) n += tab.data[s].length;
+      });
+    });
+  } else {
+    sections.forEach(s => {
+      if (c.data && c.data[s]) n += c.data[s].length;
+    });
+  }
   return n;
 }
 
@@ -271,11 +289,12 @@ app.get('/api/campaigns/:id', (req, res) => {
 app.put('/api/campaigns/:id', (req, res) => {
   let c = getCampaign(req.params.id);
   if (!c) return res.status(404).json({ error: 'Campaign not found' });
-  const { restaurantName, accountManager, status, data } = req.body;
+  const { restaurantName, accountManager, status, data, campaigns } = req.body;
   if (restaurantName !== undefined) c.restaurantName = restaurantName;
   if (accountManager !== undefined) c.accountManager = accountManager;
   if (status !== undefined) c.status = status;
   if (data !== undefined) c.data = data;
+  if (campaigns !== undefined) c.campaigns = campaigns;
   saveCampaign(c);
   res.json(c);
 });
@@ -349,7 +368,7 @@ app.post('/api/import-sheet', async (req, res) => {
   }
 });
 
-// Batch create: create multiple campaigns from multiple sheet tabs at once
+// Batch create: create ONE campaign with all tab data as a campaigns array
 // Body: { restaurantName, accountManager, sheetUrl, tabs: [{name, campaignName}] }
 app.post('/api/batch-create', async (req, res) => {
   const { restaurantName, accountManager, sheetUrl, tabs } = req.body;
@@ -360,32 +379,56 @@ app.post('/api/batch-create', async (req, res) => {
   if (!match) return res.status(400).json({ error: 'Invalid Google Sheets URL' });
   const sheetId = match[1];
 
+  const campaignTabs = [];
   const results = [];
   for (const tab of tabs) {
     try {
       const csvText = await fetchTabCSVByName(sheetId, tab.name);
       const data = parseSheetCSV(csvText);
-      const campaign = {
-        id: uuidv4().split('-')[0],
-        restaurantName: tab.campaignName || `${restaurantName} — ${tab.name}`,
-        accountManager: accountManager || '',
-        status: 'draft',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        data
-      };
-      saveCampaign(campaign);
+      campaignTabs.push({ name: tab.name, data });
       const hCount = data.headlines.filter(h => h.text).length;
       const dCount = data.descriptions.filter(d => d.text).length;
-      console.log('[Batch] Created campaign', campaign.id, 'for tab', tab.name, '— headlines:', hCount, 'descriptions:', dCount);
-      results.push({ id: campaign.id, name: campaign.restaurantName, tab: tab.name, success: true });
+      console.log('[Batch] Loaded tab', tab.name, '— headlines:', hCount, 'descriptions:', dCount);
+      results.push({ tab: tab.name, success: true });
     } catch (err) {
       console.error('[Batch] Tab', tab.name, 'failed:', err.message);
       results.push({ tab: tab.name, success: false, error: err.message });
     }
   }
 
-  res.json({ success: true, results });
+  const campaign = {
+    id: uuidv4().split('-')[0],
+    restaurantName,
+    accountManager: accountManager || '',
+    status: 'draft',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    campaigns: campaignTabs
+  };
+  saveCampaign(campaign);
+  console.log('[Batch] Created single campaign', campaign.id, 'with', campaignTabs.length, 'tabs');
+
+  const proto = req.get('x-forwarded-proto') || req.protocol;
+  const baseUrl = `${proto}://${req.get('host')}`;
+  res.json({ success: true, id: campaign.id, url: `${baseUrl}/preview/${campaign.id}`, results });
+});
+
+app.get('/api/og-image', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: 'url required' });
+  try {
+    const resp = await fetch(url, {
+      redirect: 'follow',
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CampaignPreview/1.0)' }
+    });
+    if (!resp.ok) return res.json({ imageUrl: null });
+    const html = await resp.text();
+    const match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+               || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    res.json({ imageUrl: match ? match[1] : null });
+  } catch (err) {
+    res.json({ imageUrl: null });
+  }
 });
 
 // ── Page Routes ─────────────────────────────────────────────────────────────
