@@ -122,96 +122,124 @@ function parseCSVRow(row) {
 
 function parseSheetCSV(csvText) {
   const rows = csvText.split('\n').map(parseCSVRow);
-  const data = emptyData();
+
+  // Use empty dynamic arrays — only filled rows get pushed in
+  const data = {
+    headlines: [],
+    longHeadlines: [],
+    descriptions: [],
+    meta: [],
+    dishio: [],
+    videos: []
+  };
 
   let section = null;
-  let idx = 0;
+
+  // Helper: is a row a section/column-header row (not actual data)?
+  function isHeaderRow(j) {
+    return (
+      j.includes('cc limit') || j.includes('char limit') ||
+      j.includes('character limit') || j.includes('preview link') ||
+      j.includes('copy for approval') || j.includes('approved') ||
+      j.includes('ad copy') || j.includes('campaign name') ||
+      j.includes('primary text')
+    );
+  }
 
   for (const row of rows) {
     const j = row.join(' ').toLowerCase();
 
-    // Section header detection — longHeadlines MUST come before headlines
-    if (j.includes('long headlines') && (j.includes('approval') || j.includes('cc'))) {
-      section = 'longHeadlines'; idx = 0; continue;
+    // ── Section header detection ─────────────────────────────────────────────
+    // Long headlines MUST come before headlines check
+    if (j.includes('long headline') && !j.includes('description')) {
+      section = 'longHeadlines'; continue;
     }
-    if (j.includes('google headlines') && (j.includes('approval') || j.includes('cc'))) {
-      section = 'headlines'; idx = 0; continue;
+    if (
+      (j.includes('google headline') || (j.includes('headline') && !j.includes('long') && !j.includes('description')))
+      && (j.includes('approval') || j.includes('cc') || j.includes('google'))
+    ) {
+      section = 'headlines'; continue;
     }
-    if ((j.includes('google descriptions') || j.includes('descriptions for approval')) && (j.includes('approval') || j.includes('cc'))) {
-      section = 'descriptions'; idx = 0; continue;
+    if (j.includes('description') && (j.includes('approval') || j.includes('google') || j.includes('cc'))) {
+      section = 'descriptions'; continue;
     }
-    if (j.includes('videos for approval') || (j.includes('videos') && j.includes('approval'))) {
-      section = 'videos'; idx = 0; continue;
+    if (j.includes('video') && (j.includes('approval') || j.includes('asset'))) {
+      section = 'videos'; continue;
     }
-    if (j.includes('meta campaign')) {
-      section = 'meta_header'; idx = 0; continue;
+    // Meta: catch "meta", "facebook", "instagram", "social", "paid social"
+    if (
+      (j.includes('meta') || j.includes('facebook') || j.includes('instagram') || j.includes('paid social'))
+      && !j.includes('google') && !j.includes('dishio')
+    ) {
+      section = 'meta'; continue;
     }
-    if (section === 'meta_header' && (j.includes('preview link') || j.includes('approved'))) {
-      section = 'meta'; idx = 0; continue;
-    }
-    if (j.includes('dishio') && !j.includes('smart site')) {
-      section = 'dishio_header'; idx = 0; continue;
-    }
-    if ((section === 'dishio_header' || j.includes('smart site')) && (j.includes('preview') || j.includes('approved'))) {
-      section = 'dishio'; idx = 0; continue;
+    // Dishio smart site
+    if (j.includes('dishio') || j.includes('smart site')) {
+      section = 'dishio'; continue;
     }
 
-    if (j.includes('campaign preview') && !j.includes('google') && !j.includes('meta')) continue;
-    if (j.includes('google campaign') && !j.includes('headlines') && !j.includes('descriptions')) continue;
+    // Skip generic header/label rows that are not data
+    if (isHeaderRow(j)) continue;
+    // Skip rows with no section yet
     if (!section) continue;
 
+    // Skip completely empty rows
     const colB = row[1] || '';
     const colC = row[2] || '';
     const colD = row[3] || '';
     const colE = row[4] || '';
+    const colF = row[5] || '';
 
-    const isEmpty = !colB && (!colC || colC === '0') && !colD && !colE;
-    if (isEmpty) {
-      if (['headlines','longHeadlines','descriptions','videos'].includes(section)) idx++;
-      continue;
-    }
+    if (!colB && !colC && !colD && !colE) continue;
 
     const approvedD = colD && (colD.toLowerCase() === 'yes' || colD.toLowerCase() === 'true');
     const approvedC = colC && (colC.toLowerCase() === 'yes' || colC.toLowerCase() === 'true');
+    const approvedE = colE && (colE.toLowerCase() === 'yes' || colE.toLowerCase() === 'true');
 
-    if (section === 'headlines' && idx < data.headlines.length) {
-      if (colB) data.headlines[idx].text = colB;
-      if (approvedD) data.headlines[idx].approved = true;
-      if (colE) data.headlines[idx].notes = colE;
-      idx++;
-    } else if (section === 'longHeadlines' && idx < data.longHeadlines.length) {
-      if (colB) data.longHeadlines[idx].text = colB;
-      if (approvedD) data.longHeadlines[idx].approved = true;
-      if (colE) data.longHeadlines[idx].notes = colE;
-      idx++;
-    } else if (section === 'descriptions' && idx < data.descriptions.length) {
-      if (colB) data.descriptions[idx].text = colB;
-      if (approvedD) data.descriptions[idx].approved = true;
-      if (colE) data.descriptions[idx].notes = colE;
-      idx++;
-    } else if (section === 'videos' && idx < data.videos.length) {
-      data.videos[idx].name = colB || '';
-      if (colC && colC !== '0') data.videos[idx].url = colC;
-      idx++;
-    } else if (section === 'meta' && idx < data.meta.length) {
-      if (colB) {
-        if (colB.startsWith('http')) data.meta[idx].url = colB;
-        else data.meta[idx].name = colB;
-      }
-      if (approvedC || approvedD) data.meta[idx].approved = true;
-      if (colE) data.meta[idx].notes = colE;
-      else if (colD && !approvedD) data.meta[idx].notes = colD;
-      idx++;
-    } else if (section === 'dishio' && idx < data.dishio.length) {
-      if (colB) {
-        if (colB.startsWith('http')) data.dishio[idx].url = colB;
-        else data.dishio[idx].name = colB;
-      }
-      if (approvedC || approvedD) data.dishio[idx].approved = true;
-      if (colE) data.dishio[idx].notes = colE;
-      idx++;
+    if (section === 'headlines') {
+      if (!colB) continue;
+      data.headlines.push({ text: colB, approved: approvedD || approvedC || false, notes: colE || colF || '' });
+    } else if (section === 'longHeadlines') {
+      if (!colB) continue;
+      data.longHeadlines.push({ text: colB, approved: approvedD || approvedC || false, notes: colE || colF || '' });
+    } else if (section === 'descriptions') {
+      if (!colB) continue;
+      data.descriptions.push({ text: colB, approved: approvedD || approvedC || false, notes: colE || colF || '' });
+    } else if (section === 'videos') {
+      if (!colB && !colC) continue;
+      data.videos.push({ name: colB || '', url: (colC && colC !== '0') ? colC : '', approved: approvedD || false, notes: colE || '' });
+    } else if (section === 'meta') {
+      if (!colB) continue;
+      // colB may be the primary copy text OR a URL; colC may be a URL
+      const isUrl = (s) => s && (s.startsWith('http') || s.startsWith('www.'));
+      const text = !isUrl(colB) ? colB : '';
+      const url = isUrl(colB) ? colB : (isUrl(colC) ? colC : '');
+      if (!text && !url) continue;
+      data.meta.push({
+        name: text,
+        url: url,
+        approved: approvedC || approvedD || approvedE || false,
+        notes: colF || (colD && !approvedD ? colD : '') || (colE && !approvedE ? colE : '') || ''
+      });
+    } else if (section === 'dishio') {
+      if (!colB) continue;
+      const isUrl = (s) => s && (s.startsWith('http') || s.startsWith('www.'));
+      data.dishio.push({
+        name: !isUrl(colB) ? colB : '',
+        url: isUrl(colB) ? colB : (isUrl(colC) ? colC : ''),
+        approved: approvedC || approvedD || false,
+        notes: colE || ''
+      });
     }
   }
+
+  // Log what was parsed
+  console.log('[Parse] headlines:', data.headlines.length,
+    '| longHeadlines:', data.longHeadlines.length,
+    '| descriptions:', data.descriptions.length,
+    '| meta:', data.meta.length,
+    '| dishio:', data.dishio.length,
+    '| videos:', data.videos.length);
 
   return data;
 }

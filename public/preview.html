@@ -1760,10 +1760,24 @@ function renderAll() {
   document.getElementById('headlineBadge').textContent = data.headlines.length + ' items';
   document.getElementById('longHeadlineBadge').textContent = data.longHeadlines.length + ' items';
   document.getElementById('descriptionBadge').textContent = data.descriptions.length + ' items';
+  const metaBadgeEl = document.getElementById('metaBadge');
+  if (metaBadgeEl) metaBadgeEl.textContent = data.meta.length + ' items';
+
+  // Show/hide Google sub-sections based on whether they have any data
+  const hasHeadlines = data.headlines.filter(h=>h.text).length > 0;
+  const hasLongHeadlines = data.longHeadlines.filter(h=>h.text).length > 0;
+  const hasDescriptions = data.descriptions.filter(d=>d.text).length > 0;
+  // find parent .section divs for each body
+  const headlinesSec = document.getElementById('headlinesBody')?.closest('.section');
+  const longHeadlinesSec = document.getElementById('longHeadlinesBody')?.closest('.section');
+  const descriptionsSec = document.getElementById('descriptionsBody')?.closest('.section');
+  if (headlinesSec) headlinesSec.style.display = hasHeadlines ? '' : 'none';
+  if (longHeadlinesSec) longHeadlinesSec.style.display = hasLongHeadlines ? '' : 'none';
+  if (descriptionsSec) descriptionsSec.style.display = hasDescriptions ? '' : 'none';
 
   // Tab counts — only count non-empty items
   const googleItems = data.headlines.filter(h=>h.text).length + data.longHeadlines.filter(h=>h.text).length + data.descriptions.filter(d=>d.text).length;
-  const metaItems = data.meta.filter(m=>m.url).length;
+  const metaItems = data.meta.filter(m=>m.name||m.url).length;
   const dishioItems = data.dishio.filter(d=>d.url).length;
   const videoItems = data.videos.filter(v=>v.url||v.name).length;
   document.getElementById('googleCount').textContent = googleItems;
