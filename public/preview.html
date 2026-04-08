@@ -35,6 +35,12 @@
   --reject-red-bg: rgba(239,68,68,0.12);
   --purple: #A855F7;
   --purple-bg: rgba(168,85,247,0.12);
+  /* Aliases for component references */
+  --dishio-purple: #A855F7;
+  --dishio-purple-bg: rgba(168,85,247,0.12);
+  --dishio-yellow-bg: rgba(255,217,0,0.12);
+  --dishio-red: #EF4444;
+  --dishio-red-bg: rgba(239,68,68,0.12);
   --radius: 16px;
   --radius-sm: 10px;
   --radius-xs: 6px;
@@ -418,14 +424,15 @@ body {
 .item-text {
   font-size: 15px;
   color: var(--dishio-text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
   border-radius: var(--radius-xs);
-  padding: 2px 6px;
-  margin-left: -6px;
-  transition: var(--transition);
+  padding: 8px 10px;
+  margin-left: -10px;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
   cursor: text;
-  min-height: 24px;
+  min-height: 48px;
   word-break: break-word;
+  white-space: pre-wrap;
 }
 .item-text:hover { background: rgba(255,255,255,0.04); color: var(--dishio-text); }
 .item-text:focus {
@@ -479,8 +486,9 @@ body {
   font-family: inherit;
   font-size: 12px;
   resize: none;
+  overflow: hidden;
   transition: var(--transition);
-  line-height: 1.4;
+  line-height: 1.5;
   min-height: 32px;
 }
 .item-notes:hover { border-color: var(--dishio-dark-border); background: rgba(255,255,255,0.02); }
@@ -740,6 +748,274 @@ body {
 .link-url { font-size: 12px; color: var(--dishio-text-muted); word-break: break-all; }
 .link-arrow { font-size: 18px; color: var(--dishio-text-muted); transition: var(--transition); }
 .link-preview-card:hover .link-arrow { color: var(--dishio-green-light); transform: translateX(4px); }
+
+/* === META AD MOCKUP === */
+.meta-ad-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 28px;
+  margin-bottom: 28px;
+}
+.meta-ad-slot {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.meta-ad-slot-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--dishio-text-muted);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fb-ad-card {
+  background: #242526;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+.fb-ad-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fb-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--dishio-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #000;
+  flex-shrink: 0;
+}
+.fb-page-info { flex: 1; }
+.fb-page-name { font-size: 14px; font-weight: 600; color: #E4E6EB; line-height: 1.2; }
+.fb-sponsored { font-size: 12px; color: #B0B3B8; display: flex; align-items: center; gap: 4px; }
+.fb-more {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #B0B3B8; font-size: 20px; cursor: pointer;
+  transition: background 0.2s;
+}
+.fb-more:hover { background: rgba(255,255,255,0.1); }
+.fb-primary-text {
+  padding: 0 16px 12px;
+  font-size: 14px;
+  color: #E4E6EB;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.fb-image-area {
+  width: 100%;
+  aspect-ratio: 1.91 / 1;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.fb-image-area .img-placeholder-icon { font-size: 56px; opacity: 0.18; }
+.fb-image-label {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.fb-link-bar {
+  background: #3a3b3c;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.fb-link-info { flex: 1; min-width: 0; }
+.fb-link-domain { font-size: 11px; color: #B0B3B8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.fb-link-headline { font-size: 14px; font-weight: 600; color: #E4E6EB; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fb-cta-btn {
+  padding: 7px 16px;
+  background: #E4E6EB;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.fb-cta-btn:hover { background: #fff; }
+.fb-reactions {
+  padding: 6px 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  gap: 4px;
+}
+.fb-reaction-btn {
+  flex: 1;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  color: #B0B3B8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+.fb-reaction-btn:hover { background: rgba(255,255,255,0.08); color: #E4E6EB; }
+
+/* Instagram mockup */
+.ig-ad-card {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.ig-ad-header {
+  padding: 12px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ig-avatar-ring {
+  padding: 2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  flex-shrink: 0;
+}
+.ig-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--dishio-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  color: #000;
+  border: 2px solid #000;
+}
+.ig-page-info { flex: 1; }
+.ig-page-name { font-size: 13px; font-weight: 600; color: #FAFAFA; }
+.ig-sponsored { font-size: 11px; color: #8E8E8E; }
+.ig-image-area {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.ig-image-area .img-placeholder-icon { font-size: 56px; opacity: 0.18; }
+.ig-image-label {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.ig-cta-strip {
+  background: #111;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ig-cta-url { font-size: 12px; color: #8E8E8E; }
+.ig-cta-btn {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0095F6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ig-body { padding: 8px 12px 12px; }
+.ig-actions {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.ig-action-btn {
+  background: none;
+  border: none;
+  color: #FAFAFA;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.ig-caption { font-size: 13px; color: #FAFAFA; line-height: 1.5; }
+.ig-caption strong { font-weight: 600; }
+
+/* Meta preview URL iframe */
+.meta-preview-iframe-wrap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--dishio-dark-border);
+  background: var(--dishio-dark-surface);
+}
+.meta-preview-iframe-wrap iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+  display: block;
+}
+.meta-preview-url-bar {
+  padding: 10px 16px;
+  background: var(--dishio-dark-card);
+  border-bottom: 1px solid var(--dishio-dark-border);
+  font-size: 12px;
+  color: var(--dishio-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.meta-preview-url-bar a { color: var(--dishio-green-light); text-decoration: none; font-weight: 600; }
+.meta-preview-url-bar a:hover { text-decoration: underline; }
+
+/* No meta items state */
+.meta-preview-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--dishio-text-muted);
+  font-size: 14px;
+}
 
 /* === FOOTER === */
 .footer {
@@ -1087,19 +1363,22 @@ body {
 
 <!-- META TAB -->
 <div class="tab-content" id="tab-meta">
+
+  <!-- Meta Ad Copy (primary text for ads) -->
   <div class="section">
     <div class="section-card">
       <div class="section-header open" onclick="toggleSection(this)">
         <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-blue-bg); color: var(--dishio-blue);">
+          <div class="section-icon" style="background: var(--dishio-blue-bg); color: #1877F2;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
           </div>
           <div>
-            <div class="section-title">Meta Campaign Preview Links</div>
-            <div class="section-subtitle">Facebook & Instagram ad previews for approval</div>
+            <div class="section-title">Meta Ad Copy</div>
+            <div class="section-subtitle">Primary text for Facebook & Instagram ads — no character limit</div>
           </div>
         </div>
         <div class="section-header-right">
+          <div class="section-badge" style="background: var(--dishio-blue-bg); color: #1877F2;" id="metaBadge">0 items</div>
           <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
         </div>
       </div>
@@ -1107,11 +1386,58 @@ body {
         <div id="metaTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addMetaRow()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Meta Campaign
+          Add Meta Ad
         </button>
       </div>
     </div>
   </div>
+
+  <!-- Live Meta Ad Previews -->
+  <div class="section">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: linear-gradient(135deg, #1877F2, #E1306C); color: white;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Live Ad Previews</div>
+            <div class="section-subtitle">Facebook Feed & Instagram Feed — updates as you edit copy above</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="metaPreviewBody">
+        <div id="metaAdPreviews"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meta Preview URLs (if any) -->
+  <div class="section" id="metaPreviewLinksSection" style="display:none">
+    <div class="section-card">
+      <div class="section-header open" onclick="toggleSection(this)">
+        <div class="section-header-left">
+          <div class="section-icon" style="background: var(--dishio-green-bg); color: var(--dishio-green-light);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </div>
+          <div>
+            <div class="section-title">Ad Manager Preview Links</div>
+            <div class="section-subtitle">Direct links to view ads in Facebook Ad Manager</div>
+          </div>
+        </div>
+        <div class="section-header-right">
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+      <div class="section-body open" id="metaPreviewLinksBody">
+        <div id="metaPreviewLinksList" class="items-list"></div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- DISHIO TAB -->
@@ -1263,6 +1589,34 @@ function renderCopyRow(item, index, section, maxChars) {
   </div>`;
 }
 
+function renderMetaAdRow(item, index) {
+  const numStr = String(index + 1).padStart(2, '0');
+  const len = (item.name || '').length;
+  const lenDisplay = len === 0 ? '—' : len + ' chars';
+  const lenColor = len > 125 ? 'var(--dishio-yellow)' : 'var(--dishio-text-muted)';
+  return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms;align-items:start">
+    <div class="item-num" style="margin-top:6px">${numStr}</div>
+    <div class="item-body">
+      <div class="item-text" contenteditable="true" data-section="meta" data-index="${index}" data-field="name"
+        data-placeholder="Write Facebook/Instagram primary text here…"
+        style="min-height:80px;font-size:14px;line-height:1.65;"
+        oninput="onMetaCopyEdit(this)" onblur="saveMetaCopyEdit(this)">${item.name || ''}</div>
+      <textarea class="item-notes" rows="1" placeholder="Add note or revision request…" oninput="autoResize(this)" onchange="saveNote('meta', ${index}, this.value)">${item.notes || ''}</textarea>
+    </div>
+    <div class="item-actions">
+      <span style="font-size:11px;color:${lenColor};white-space:nowrap">${lenDisplay}</span>
+      <button class="approve-btn ${item.approved ? 'active' : ''}" onclick="toggleApproval('meta', ${index})" title="${item.approved ? 'Click to remove approval' : 'Click to approve'}">
+        <span class="approve-icon">
+          ${item.approved
+            ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`
+            : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>`}
+        </span>
+        ${item.approved ? 'Approved' : 'Approve'}
+      </button>
+    </div>
+  </div>`;
+}
+
 function renderLinkRow(item, index, section) {
   const numStr = String(index + 1).padStart(2, '0');
   return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms">
@@ -1303,9 +1657,11 @@ function renderAll() {
   const db = document.getElementById('descriptionsTableBody');
   db.innerHTML = data.descriptions.length ? data.descriptions.map((d, i) => renderCopyRow(d, i, 'descriptions', 90)).join('') : emptyCard('D', 'No descriptions yet', 'Click "Add Description" to get started');
 
-  // Meta
+  // Meta — render as copy rows (primary text), not link rows
   const mb = document.getElementById('metaTableBody');
-  mb.innerHTML = data.meta.length ? data.meta.map((m, i) => renderLinkRow(m, i, 'meta')).join('') : emptyCard('📱', 'No Meta campaigns yet', 'Click "Add Meta Campaign" to get started');
+  mb.innerHTML = data.meta.length ? data.meta.map((m, i) => renderMetaAdRow(m, i)).join('') : emptyCard('📱', 'No Meta ads yet', 'Click "Add Meta Ad" to get started');
+  document.getElementById('metaBadge').textContent = data.meta.length + ' items';
+  renderMetaAdPreviews();
 
   // Dishio
   const dib = document.getElementById('dishioTableBody');
@@ -1351,6 +1707,169 @@ function renderAll() {
 
   // Save to localStorage
   saveToStorage();
+  // Init textarea auto-heights after render
+  setTimeout(initTextareas, 10);
+}
+
+function renderMetaAdPreviews() {
+  const container = document.getElementById('metaAdPreviews');
+  const linkSection = document.getElementById('metaPreviewLinksSection');
+  const linkList = document.getElementById('metaPreviewLinksList');
+  const clientName = document.getElementById('clientName').textContent || 'Restaurant Name';
+  const initials = clientName.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'D';
+  const domain = 'dish.io/' + clientName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+  // Items that have URLs → show in preview links section
+  const itemsWithUrl = data.meta.filter(m => m.url && m.url.trim());
+  if (itemsWithUrl.length > 0) {
+    linkSection.style.display = '';
+    linkList.innerHTML = itemsWithUrl.map((m, i) => {
+      const numStr = String(i + 1).padStart(2, '0');
+      return `<div class="item-card animate-in ${m.approved ? 'is-approved' : ''}">
+        <div class="item-num">${numStr}</div>
+        <div class="item-body">
+          <div class="item-text" style="font-size:13px;color:var(--dishio-text-muted)">${m.name || 'Untitled'}</div>
+          <a href="${m.url}" target="_blank" rel="noopener" class="item-url-link" style="margin-top:4px;display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--dishio-green-light)">
+            Open Ad Preview <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+        <div class="item-actions">
+          <button class="approve-btn ${m.approved ? 'active' : ''}" onclick="toggleApproval('meta', ${data.meta.indexOf(m)})">
+            ${m.approved ? '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Approved' : 'Approve'}
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  } else {
+    linkSection.style.display = 'none';
+  }
+
+  // Items with copy → build ad mockups
+  const itemsWithCopy = data.meta.filter(m => m.name && m.name.trim());
+
+  if (!itemsWithCopy.length) {
+    container.innerHTML = '<div class="meta-preview-empty"><div style="font-size:32px;opacity:0.2;margin-bottom:8px">📱</div><div>Add Meta ad copy above to see live previews</div><div style="font-size:12px;margin-top:4px;opacity:0.5">Mockups update as you type</div></div>';
+    return;
+  }
+
+  // Show first item in both FB and IG mockup, then remaining in a grid
+  const firstItem = itemsWithCopy[0];
+  const primaryText = firstItem.name || '';
+  const truncatedText = primaryText.length > 125 ? primaryText.slice(0, 122) + '…' : primaryText;
+
+  let html = `<div class="meta-ad-preview-grid">`;
+
+  // Facebook Feed Ad
+  html += `
+  <div class="meta-ad-slot">
+    <div class="meta-ad-slot-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      Facebook Feed
+    </div>
+    <div class="fb-ad-card">
+      <div class="fb-ad-header">
+        <div class="fb-avatar">${initials}</div>
+        <div class="fb-page-info">
+          <div class="fb-page-name">${clientName}</div>
+          <div class="fb-sponsored">
+            Sponsored &middot;
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B0B3B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          </div>
+        </div>
+        <div class="fb-more">···</div>
+      </div>
+      <div class="fb-primary-text">${primaryText}</div>
+      <div class="fb-image-area">
+        <span class="img-placeholder-icon">🍽️</span>
+        <div class="fb-image-label">AD IMAGE</div>
+      </div>
+      <div class="fb-link-bar">
+        <div class="fb-link-info">
+          <div class="fb-link-domain">${domain.split('/')[0]}</div>
+          <div class="fb-link-headline">${clientName}</div>
+        </div>
+        <button class="fb-cta-btn">Order Food</button>
+      </div>
+      <div class="fb-reactions">
+        <button class="fb-reaction-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
+          Like
+        </button>
+        <button class="fb-reaction-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Comment
+        </button>
+        <button class="fb-reaction-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+      </div>
+    </div>
+  </div>`;
+
+  // Instagram Feed Ad
+  html += `
+  <div class="meta-ad-slot">
+    <div class="meta-ad-slot-label">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C"/></svg>
+      Instagram Feed
+    </div>
+    <div class="ig-ad-card">
+      <div class="ig-ad-header">
+        <div class="ig-avatar-ring">
+          <div class="ig-avatar">${initials}</div>
+        </div>
+        <div class="ig-page-info">
+          <div class="ig-page-name">${clientName}</div>
+          <div class="ig-sponsored">Sponsored</div>
+        </div>
+        <div style="margin-left:auto;color:#8E8E8E;font-size:20px;cursor:pointer">···</div>
+      </div>
+      <div class="ig-image-area">
+        <span class="img-placeholder-icon">🍽️</span>
+        <div class="ig-image-label">AD IMAGE</div>
+      </div>
+      <div class="ig-cta-strip">
+        <div class="ig-cta-url">${domain}</div>
+        <button class="ig-cta-btn">
+          Order Food
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="ig-body">
+        <div class="ig-actions">
+          <button class="ig-action-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+          <button class="ig-action-btn" style="margin-left:2px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </button>
+          <button class="ig-action-btn" style="margin-left:2px">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="ig-caption"><strong>${clientName}</strong> ${truncatedText}</div>
+      </div>
+    </div>
+  </div>`;
+
+  html += `</div>`;
+
+  // If more than 1 item, show remaining items' copy as a stacked list
+  if (itemsWithCopy.length > 1) {
+    html += `<div style="margin-top:16px;padding:16px;background:var(--dishio-dark-surface);border-radius:var(--radius-sm);border:1px solid var(--dishio-dark-border)">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dishio-text-muted);margin-bottom:12px">Additional Ad Variants</div>
+      <div style="display:flex;flex-direction:column;gap:10px">`;
+    itemsWithCopy.slice(1).forEach((m, i) => {
+      html += `<div style="padding:12px 16px;background:var(--dishio-dark-card);border-radius:var(--radius-xs);border:1px solid var(--dishio-dark-border)">
+        <div style="font-size:11px;color:var(--dishio-text-muted);margin-bottom:4px;font-weight:600">VARIANT ${i + 2}</div>
+        <div style="font-size:14px;color:var(--dishio-text-secondary);line-height:1.5;white-space:pre-wrap">${m.name}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  container.innerHTML = html;
 }
 
 function renderGoogleAdPreviews() {
@@ -1418,9 +1937,41 @@ function addRow(section, maxChars) {
   }
 }
 
+function onMetaCopyEdit(el) {
+  const index = parseInt(el.dataset.index);
+  const text = el.textContent || el.innerText || '';
+  data.meta[index].name = text;
+  // Update char count inline
+  const card = el.closest('.item-card');
+  if (card) {
+    const span = card.querySelector('.item-actions span');
+    if (span) {
+      const len = text.length;
+      span.textContent = len === 0 ? '—' : len + ' chars';
+      span.style.color = len > 125 ? 'var(--dishio-yellow)' : 'var(--dishio-text-muted)';
+    }
+  }
+}
+
+function saveMetaCopyEdit(el) {
+  const index = parseInt(el.dataset.index);
+  data.meta[index].name = el.textContent || el.innerText || '';
+  renderMetaAdPreviews();
+  saveToStorage();
+}
+
 function addMetaRow() {
   data.meta.push({ name: '', url: '', approved: false, notes: '' });
   renderAll();
+  // Focus the new text area
+  setTimeout(() => {
+    const tbody = document.getElementById('metaTableBody');
+    const last = tbody.lastElementChild;
+    if (last) {
+      const editable = last.querySelector('.item-text');
+      if (editable) editable.focus();
+    }
+  }, 50);
 }
 
 function addDishioRow() {
@@ -1532,6 +2083,14 @@ async function loadFromStorage() {
     document.title = `Campaign Preview — ${campaign.restaurantName}`;
     renderAll();
   } catch (err) { console.error('Load failed:', err); }
+}
+
+// ========== INIT TEXTAREA HEIGHTS ==========
+function initTextareas() {
+  document.querySelectorAll('.item-notes').forEach(ta => {
+    ta.style.height = 'auto';
+    ta.style.height = ta.scrollHeight + 'px';
+  });
 }
 
 // ========== GOOGLE SHEET IMPORT ==========
