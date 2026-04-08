@@ -375,106 +375,197 @@ body {
   padding: 24px 28px;
 }
 
-/* === TABLE === */
-.preview-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-.preview-table thead th {
-  padding: 12px 16px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--dishio-text-muted);
-  background: var(--dishio-dark-surface);
-  border-bottom: 1px solid var(--dishio-dark-border);
-}
-.preview-table thead th:first-child { border-radius: var(--radius-xs) 0 0 0; }
-.preview-table thead th:last-child { border-radius: 0 var(--radius-xs) 0 0; }
-.preview-table tbody td {
-  padding: 14px 16px;
-  font-size: 14px;
-  border-bottom: 1px solid var(--dishio-dark-border);
-  vertical-align: middle;
-}
-.preview-table tbody tr:last-child td { border-bottom: none; }
-.preview-table tbody tr { transition: var(--transition); }
-.preview-table tbody tr:hover { background: var(--dishio-dark-surface); }
+/* === APPROVAL CARDS === */
+.items-list { display: flex; flex-direction: column; gap: 10px; }
 
-.copy-text {
-  color: var(--dishio-text-secondary);
-  line-height: 1.5;
-  max-width: 500px;
-}
-.char-count {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 100px;
-  white-space: nowrap;
-}
-.char-count.ok { background: var(--dishio-green-bg); color: var(--dishio-green); }
-.char-count.warn { background: var(--dishio-yellow-bg); color: var(--dishio-yellow); }
-.char-count.over { background: var(--dishio-red-bg); color: var(--dishio-red); }
-
-/* Approval toggles */
-.approval-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.toggle-track {
-  width: 44px;
-  height: 24px;
-  border-radius: 12px;
-  background: var(--dishio-dark-surface);
-  border: 2px solid var(--dishio-dark-border);
-  cursor: pointer;
-  position: relative;
-  transition: var(--transition);
-}
-.toggle-track.approved { background: var(--dishio-malachite); border-color: var(--dishio-malachite); }
-.toggle-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: white;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: var(--transition);
-}
-.toggle-track.approved .toggle-thumb { left: 22px; }
-.toggle-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--dishio-text-muted);
-}
-.toggle-track.approved + .toggle-label { color: var(--dishio-malachite); }
-
-/* Notes input */
-.notes-input {
-  width: 100%;
-  min-width: 180px;
-  padding: 8px 12px;
+.item-card {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 16px;
+  align-items: start;
+  padding: 18px 20px;
   background: var(--dishio-dark-surface);
   border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius-xs);
-  color: var(--dishio-text);
-  font-family: inherit;
-  font-size: 13px;
-  resize: none;
+  border-left: 3px solid transparent;
+  border-radius: var(--radius-sm);
   transition: var(--transition);
 }
-.notes-input:focus {
-  outline: none;
-  border-color: var(--dishio-green);
-  box-shadow: 0 0 0 3px rgba(0,155,0,0.2);
+.item-card:hover { background: rgba(255,255,255,0.025); }
+.item-card.is-approved {
+  border-left-color: var(--approve-green);
+  background: rgba(0,255,136,0.025);
 }
-.notes-input::placeholder { color: var(--dishio-text-muted); }
+
+.item-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--dishio-dark-card);
+  border: 1px solid var(--dishio-dark-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--dishio-text-muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.item-body { flex: 1; min-width: 0; }
+
+.item-text {
+  font-size: 15px;
+  color: var(--dishio-text-secondary);
+  line-height: 1.5;
+  border-radius: var(--radius-xs);
+  padding: 2px 6px;
+  margin-left: -6px;
+  transition: var(--transition);
+  cursor: text;
+  min-height: 24px;
+  word-break: break-word;
+}
+.item-text:hover { background: rgba(255,255,255,0.04); color: var(--dishio-text); }
+.item-text:focus {
+  outline: none;
+  background: var(--dishio-dark-card);
+  color: var(--dishio-text);
+  box-shadow: 0 0 0 2px rgba(255,217,0,0.3);
+}
+.item-text[data-placeholder]:empty::before,
+.item-url[data-placeholder]:empty::before {
+  content: attr(data-placeholder);
+  color: var(--dishio-text-muted);
+  opacity: 0.4;
+}
+
+.item-url {
+  font-size: 12px;
+  color: var(--dishio-text-muted);
+  border-radius: var(--radius-xs);
+  padding: 2px 6px;
+  margin-left: -6px;
+  transition: var(--transition);
+  cursor: text;
+  word-break: break-all;
+  margin-top: 4px;
+}
+.item-url:hover { background: rgba(255,255,255,0.04); color: var(--dishio-text-secondary); }
+.item-url:focus { outline: none; background: var(--dishio-dark-card); color: var(--dishio-text); box-shadow: 0 0 0 2px rgba(255,217,0,0.3); }
+
+.item-url-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--dishio-green-light);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: var(--transition);
+}
+.item-url-link:hover { opacity: 1; }
+
+.item-notes {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  color: var(--dishio-text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  resize: none;
+  transition: var(--transition);
+  line-height: 1.4;
+  min-height: 32px;
+}
+.item-notes:hover { border-color: var(--dishio-dark-border); background: rgba(255,255,255,0.02); }
+.item-notes:focus {
+  outline: none;
+  border-color: var(--dishio-dark-border);
+  background: var(--dishio-dark-card);
+  color: var(--dishio-text);
+  box-shadow: 0 0 0 2px rgba(0,155,0,0.15);
+}
+.item-notes::placeholder { color: var(--dishio-text-muted); opacity: 0.5; }
+
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.char-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+.char-pill.ok { background: var(--dishio-green-bg); color: var(--dishio-green-light); }
+.char-pill.warn { background: var(--dishio-yellow-dim); color: var(--dishio-yellow); }
+.char-pill.over { background: rgba(239,68,68,0.12); color: #EF4444; }
+.char-pill.empty { background: var(--dishio-dark-card); color: var(--dishio-text-muted); }
+
+.approve-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 100px;
+  border: 1.5px solid var(--dishio-dark-border);
+  background: transparent;
+  color: var(--dishio-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  width: 100%;
+  justify-content: center;
+}
+.approve-btn:hover {
+  border-color: var(--approve-green);
+  color: var(--approve-green);
+  background: var(--approve-green-bg);
+}
+.approve-btn.active {
+  border-color: var(--approve-green);
+  color: var(--approve-green);
+  background: var(--approve-green-bg);
+}
+.approve-btn.active:hover {
+  border-color: var(--reject-red);
+  color: var(--reject-red);
+  background: var(--reject-red-bg);
+}
+.approve-btn.active:hover .approve-icon { display: none; }
+.approve-btn.active:hover .reject-icon { display: flex; }
+.approve-icon { display: flex; }
+.reject-icon { display: none; }
+
+/* empty state */
+.empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 40px;
+  color: var(--dishio-text-muted);
+}
+.empty-card .empty-icon { font-size: 28px; opacity: 0.25; }
+.empty-card .empty-text { font-size: 14px; }
+.empty-card .empty-hint { font-size: 12px; opacity: 0.5; }
 
 /* === AD PREVIEW MOCKUPS === */
 .ad-preview-grid {
@@ -784,51 +875,8 @@ body {
 <header class="header">
   <div class="header-inner">
     <a class="logo" href="#">
-      <svg class="logo-svg" width="140" height="32" viewBox="0 0 280 64" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <!-- Dishio spinner icon - 12 elements in a circle -->
-        <g transform="translate(32,32)">
-          <!-- 12 o'clock - capsule -->
-          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(0)"/>
-          <!-- 1 o'clock - circle -->
-          <circle cx="11" cy="-19" r="5"/>
-          <!-- 2 o'clock - capsule -->
-          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(60)"/>
-          <!-- 3 o'clock - circle -->
-          <circle cx="22" cy="0" r="6.5"/>
-          <!-- 4 o'clock - capsule -->
-          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(120)"/>
-          <!-- 5 o'clock - circle -->
-          <circle cx="11" cy="19" r="5.5"/>
-          <!-- 6 o'clock - capsule -->
-          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(180)"/>
-          <!-- 7 o'clock - circle -->
-          <circle cx="-11" cy="19" r="5"/>
-          <!-- 8 o'clock - capsule -->
-          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(240)"/>
-          <!-- 9 o'clock - circle -->
-          <circle cx="-22" cy="0" r="6"/>
-          <!-- 10 o'clock - capsule -->
-          <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(300)"/>
-          <!-- 11 o'clock - circle -->
-          <circle cx="-11" cy="-19" r="4.5"/>
-        </g>
-        <!-- DISHIO wordmark -->
-        <!-- D -->
-        <rect x="80" y="16" width="6" height="32" rx="1"/>
-        <path d="M86,20 Q104,20 104,32 Q104,44 86,44 L86,38 Q97,38 97,32 Q97,26 86,26 Z"/>
-        <!-- I -->
-        <rect x="110" y="16" width="6" height="32" rx="1"/>
-        <!-- S -->
-        <path d="M126,22 Q126,16 136,16 Q146,16 146,22 Q146,28 136,30 Q126,32 126,38 Q126,48 136,48 Q146,48 146,42" stroke="white" stroke-width="6" fill="none" stroke-linecap="round"/>
-        <!-- H -->
-        <rect x="156" y="16" width="6" height="32" rx="1"/>
-        <rect x="174" y="16" width="6" height="32" rx="1"/>
-        <rect x="162" y="28" width="12" height="6" rx="1"/>
-        <!-- I -->
-        <rect x="190" y="16" width="6" height="32" rx="1"/>
-        <!-- O -->
-        <circle cx="214" cy="32" r="14" stroke="white" stroke-width="6" fill="none"/>
-        <rect x="220" y="14" width="12" height="8" fill="black"/>
+      <svg class="logo-svg" width="160" height="38" viewBox="0 0 537.52 126.38" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
       </svg>
     </a>
     <div class="header-meta">
@@ -952,18 +1000,7 @@ body {
         </div>
       </div>
       <div class="section-body open" id="headlinesBody">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th style="width:5%">#</th>
-              <th style="width:40%">Headline Copy</th>
-              <th style="width:12%">Characters</th>
-              <th style="width:13%">Approval</th>
-              <th style="width:30%">Notes / Edits</th>
-            </tr>
-          </thead>
-          <tbody id="headlinesTableBody"></tbody>
-        </table>
+        <div id="headlinesTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addRow('headlines', 30)">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add Headline
@@ -989,18 +1026,7 @@ body {
         </div>
       </div>
       <div class="section-body open" id="longHeadlinesBody">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th style="width:5%">#</th>
-              <th style="width:40%">Long Headline Copy</th>
-              <th style="width:12%">Characters</th>
-              <th style="width:13%">Approval</th>
-              <th style="width:30%">Notes / Edits</th>
-            </tr>
-          </thead>
-          <tbody id="longHeadlinesTableBody"></tbody>
-        </table>
+        <div id="longHeadlinesTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addRow('longHeadlines', 90)">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add Long Headline
@@ -1026,18 +1052,7 @@ body {
         </div>
       </div>
       <div class="section-body open" id="descriptionsBody">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th style="width:5%">#</th>
-              <th style="width:40%">Description Copy</th>
-              <th style="width:12%">Characters</th>
-              <th style="width:13%">Approval</th>
-              <th style="width:30%">Notes / Edits</th>
-            </tr>
-          </thead>
-          <tbody id="descriptionsTableBody"></tbody>
-        </table>
+        <div id="descriptionsTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addRow('descriptions', 90)">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add Description
@@ -1089,18 +1104,7 @@ body {
         </div>
       </div>
       <div class="section-body open" id="metaBody">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th style="width:5%">#</th>
-              <th style="width:30%">Campaign / Ad Set</th>
-              <th style="width:25%">Preview Link</th>
-              <th style="width:12%">Approval</th>
-              <th style="width:28%">Notes / Suggested Edits</th>
-            </tr>
-          </thead>
-          <tbody id="metaTableBody"></tbody>
-        </table>
+        <div id="metaTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addMetaRow()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add Meta Campaign
@@ -1129,18 +1133,7 @@ body {
         </div>
       </div>
       <div class="section-body open" id="dishioBody">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th style="width:5%">#</th>
-              <th style="width:30%">Smart Site Page</th>
-              <th style="width:25%">Preview Link</th>
-              <th style="width:12%">Approval</th>
-              <th style="width:28%">Notes / Suggested Edits</th>
-            </tr>
-          </thead>
-          <tbody id="dishioTableBody"></tbody>
-        </table>
+        <div id="dishioTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addDishioRow()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add Smart Site Link
@@ -1169,18 +1162,7 @@ body {
         </div>
       </div>
       <div class="section-body open" id="videosBody">
-        <table class="preview-table">
-          <thead>
-            <tr>
-              <th style="width:5%">#</th>
-              <th style="width:30%">Video Title</th>
-              <th style="width:25%">Video Link</th>
-              <th style="width:12%">Approval</th>
-              <th style="width:28%">Notes / Suggested Edits</th>
-            </tr>
-          </thead>
-          <tbody id="videosTableBody"></tbody>
-        </table>
+        <div id="videosTableBody" class="items-list"></div>
         <button class="add-row-btn" onclick="addVideoRow()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           Add Video
@@ -1193,35 +1175,17 @@ body {
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-left">
-  <svg width="80" height="18" viewBox="0 0 280 64" fill="#888" xmlns="http://www.w3.org/2000/svg">
-    <g transform="translate(32,32)">
-      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(0)"/>
-      <circle cx="11" cy="-19" r="5"/>
-      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(60)"/>
-      <circle cx="22" cy="0" r="6.5"/>
-      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(120)"/>
-      <circle cx="11" cy="19" r="5.5"/>
-      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(180)"/>
-      <circle cx="-11" cy="19" r="5"/>
-      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(240)"/>
-      <circle cx="-22" cy="0" r="6"/>
-      <ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(300)"/>
-      <circle cx="-11" cy="-19" r="4.5"/>
-    </g>
-    <rect x="80" y="16" width="6" height="32" rx="1"/>
-    <path d="M86,20 Q104,20 104,32 Q104,44 86,44 L86,38 Q97,38 97,32 Q97,26 86,26 Z"/>
-    <rect x="110" y="16" width="6" height="32" rx="1"/>
-    <path d="M126,22 Q126,16 136,16 Q146,16 146,22 Q146,28 136,30 Q126,32 126,38 Q126,48 136,48 Q146,48 146,42" stroke="#888" stroke-width="6" fill="none" stroke-linecap="round"/>
-    <rect x="156" y="16" width="6" height="32" rx="1"/>
-    <rect x="174" y="16" width="6" height="32" rx="1"/>
-    <rect x="162" y="28" width="12" height="6" rx="1"/>
-    <rect x="190" y="16" width="6" height="32" rx="1"/>
-    <circle cx="214" cy="32" r="14" stroke="#888" stroke-width="6" fill="none"/>
-    <rect x="220" y="14" width="12" height="8" fill="black"/>
+  <svg width="100" height="24" viewBox="0 0 537.52 126.38" fill="#888" xmlns="http://www.w3.org/2000/svg">
+    <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
   </svg>
   <span style="margin-left:8px">Campaign Preview Tool</span>
 </div>
   <div class="footer-right">
+    <input type="file" id="csvFileInput" accept=".csv,.tsv,.txt" style="display:none" onchange="handleCSVImport(event)">
+    <button class="footer-btn secondary" onclick="promptSheetImport()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+      Import from Sheet
+    </button>
     <button class="footer-btn secondary" onclick="exportData()">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
       Export JSON
@@ -1277,71 +1241,79 @@ function charCountClass(len, max) {
 
 function renderCopyRow(item, index, section, maxChars) {
   const len = item.text.length;
-  const cls = charCountClass(len, maxChars);
-  return `<tr class="animate-in" style="animation-delay:${index*50}ms">
-    <td style="color:var(--dishio-text-muted);font-weight:600">${index + 1}</td>
-    <td>
-      <div class="editable-cell copy-text" contenteditable="true" data-section="${section}" data-index="${index}" data-field="text" data-placeholder="Enter copy here..." oninput="onCopyEdit(this, ${maxChars})" onblur="saveCopyEdit(this)">${item.text}</div>
-    </td>
-    <td><span class="char-count ${cls}">${len} / ${maxChars}</span></td>
-    <td>
-      <div class="approval-toggle">
-        <div class="toggle-track ${item.approved ? 'approved' : ''}" onclick="toggleApproval('${section}', ${index})">
-          <div class="toggle-thumb"></div>
-        </div>
-        <span class="toggle-label">${item.approved ? 'Approved' : 'Pending'}</span>
-      </div>
-    </td>
-    <td><textarea class="notes-input" rows="1" placeholder="Add notes or suggested edits..." oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea></td>
-  </tr>`;
+  const cls = len === 0 ? 'empty' : charCountClass(len, maxChars);
+  const numStr = String(index + 1).padStart(2, '0');
+  return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms">
+    <div class="item-num">${numStr}</div>
+    <div class="item-body">
+      <div class="item-text" contenteditable="true" data-section="${section}" data-index="${index}" data-field="text" data-placeholder="Enter copy here…" oninput="onCopyEdit(this, ${maxChars})" onblur="saveCopyEdit(this)">${item.text}</div>
+      <textarea class="item-notes" rows="1" placeholder="Add note or edit request…" oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea>
+    </div>
+    <div class="item-actions">
+      <span class="char-pill ${cls}" id="char-${section}-${index}">${len === 0 ? '— / ' + maxChars : len + ' / ' + maxChars}</span>
+      <button class="approve-btn ${item.approved ? 'active' : ''}" onclick="toggleApproval('${section}', ${index})" title="${item.approved ? 'Click to remove approval' : 'Click to approve'}">
+        <span class="approve-icon">
+          ${item.approved
+            ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`
+            : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>`}
+        </span>
+        ${item.approved ? 'Approved' : 'Approve'}
+      </button>
+    </div>
+  </div>`;
 }
 
 function renderLinkRow(item, index, section) {
-  return `<tr class="animate-in" style="animation-delay:${index*50}ms">
-    <td style="color:var(--dishio-text-muted);font-weight:600">${index + 1}</td>
-    <td>
-      <div class="editable-cell" contenteditable="true" data-section="${section}" data-index="${index}" data-field="name" data-placeholder="Enter name..." onblur="saveLinkEdit(this, '${section}')">${item.name}</div>
-    </td>
-    <td>
-      <div class="editable-cell" contenteditable="true" data-section="${section}" data-index="${index}" data-field="url" data-placeholder="Paste URL..." onblur="saveLinkEdit(this, '${section}')" style="font-size:12px;color:var(--dishio-text-muted);word-break:break-all">${item.url}</div>
-      ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" style="font-size:11px;color:var(--dishio-green-light);text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:4px">Open Preview <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>` : ''}
-    </td>
-    <td>
-      <div class="approval-toggle">
-        <div class="toggle-track ${item.approved ? 'approved' : ''}" onclick="toggleApproval('${section}', ${index})">
-          <div class="toggle-thumb"></div>
-        </div>
-        <span class="toggle-label">${item.approved ? 'Approved' : 'Pending'}</span>
-      </div>
-    </td>
-    <td><textarea class="notes-input" rows="1" placeholder="Add notes or suggested edits..." oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea></td>
-  </tr>`;
+  const numStr = String(index + 1).padStart(2, '0');
+  return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms">
+    <div class="item-num">${numStr}</div>
+    <div class="item-body">
+      <div class="item-text" contenteditable="true" data-section="${section}" data-index="${index}" data-field="name" data-placeholder="Enter name…" onblur="saveLinkEdit(this, '${section}')">${item.name}</div>
+      <div class="item-url" contenteditable="true" data-section="${section}" data-index="${index}" data-field="url" data-placeholder="Paste preview URL…" onblur="saveLinkEdit(this, '${section}')">${item.url}</div>
+      ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="item-url-link">Open Preview <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>` : ''}
+      <textarea class="item-notes" rows="1" placeholder="Add note or edit request…" oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea>
+    </div>
+    <div class="item-actions">
+      <button class="approve-btn ${item.approved ? 'active' : ''}" onclick="toggleApproval('${section}', ${index})" title="${item.approved ? 'Click to remove approval' : 'Click to approve'}">
+        <span class="approve-icon">
+          ${item.approved
+            ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`
+            : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>`}
+        </span>
+        ${item.approved ? 'Approved' : 'Approve'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function emptyCard(icon, text, hint) {
+  return `<div class="empty-card"><div class="empty-icon">${icon}</div><div class="empty-text">${text}</div><div class="empty-hint">${hint}</div></div>`;
 }
 
 function renderAll() {
   // Headlines
   const hb = document.getElementById('headlinesTableBody');
-  hb.innerHTML = data.headlines.length ? data.headlines.map((h, i) => renderCopyRow(h, i, 'headlines', 30)).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">H</div><div class="empty-text">No headlines yet</div><div class="empty-hint">Click "Add Headline" to get started</div></div></td></tr>';
+  hb.innerHTML = data.headlines.length ? data.headlines.map((h, i) => renderCopyRow(h, i, 'headlines', 30)).join('') : emptyCard('H', 'No headlines yet', 'Click "Add Headline" to get started');
 
   // Long Headlines
   const lb = document.getElementById('longHeadlinesTableBody');
-  lb.innerHTML = data.longHeadlines.length ? data.longHeadlines.map((h, i) => renderCopyRow(h, i, 'longHeadlines', 90)).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">LH</div><div class="empty-text">No long headlines yet</div><div class="empty-hint">Click "Add Long Headline" to get started</div></div></td></tr>';
+  lb.innerHTML = data.longHeadlines.length ? data.longHeadlines.map((h, i) => renderCopyRow(h, i, 'longHeadlines', 90)).join('') : emptyCard('LH', 'No long headlines yet', 'Click "Add Long Headline" to get started');
 
   // Descriptions
   const db = document.getElementById('descriptionsTableBody');
-  db.innerHTML = data.descriptions.length ? data.descriptions.map((d, i) => renderCopyRow(d, i, 'descriptions', 90)).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">D</div><div class="empty-text">No descriptions yet</div><div class="empty-hint">Click "Add Description" to get started</div></div></td></tr>';
+  db.innerHTML = data.descriptions.length ? data.descriptions.map((d, i) => renderCopyRow(d, i, 'descriptions', 90)).join('') : emptyCard('D', 'No descriptions yet', 'Click "Add Description" to get started');
 
   // Meta
   const mb = document.getElementById('metaTableBody');
-  mb.innerHTML = data.meta.length ? data.meta.map((m, i) => renderLinkRow(m, i, 'meta')).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">📱</div><div class="empty-text">No Meta campaigns yet</div><div class="empty-hint">Click "Add Meta Campaign" to get started</div></div></td></tr>';
+  mb.innerHTML = data.meta.length ? data.meta.map((m, i) => renderLinkRow(m, i, 'meta')).join('') : emptyCard('📱', 'No Meta campaigns yet', 'Click "Add Meta Campaign" to get started');
 
   // Dishio
   const dib = document.getElementById('dishioTableBody');
-  dib.innerHTML = data.dishio.length ? data.dishio.map((d, i) => renderLinkRow(d, i, 'dishio')).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">🔗</div><div class="empty-text">No Smart Site links yet</div><div class="empty-hint">Click "Add Smart Site Link" to get started</div></div></td></tr>';
+  dib.innerHTML = data.dishio.length ? data.dishio.map((d, i) => renderLinkRow(d, i, 'dishio')).join('') : emptyCard('🔗', 'No Smart Site links yet', 'Click "Add Smart Site Link" to get started');
 
   // Videos
   const vb = document.getElementById('videosTableBody');
-  vb.innerHTML = data.videos.length ? data.videos.map((v, i) => renderLinkRow(v, i, 'videos')).join('') : '<tr class="empty-row"><td colspan="5"><div class="empty-state"><div class="empty-icon">🎬</div><div class="empty-text">No videos yet</div><div class="empty-hint">Click "Add Video" to get started</div></div></td></tr>';
+  vb.innerHTML = data.videos.length ? data.videos.map((v, i) => renderLinkRow(v, i, 'videos')).join('') : emptyCard('🎬', 'No videos yet', 'Click "Add Video" to get started');
 
   // Update Google ad previews
   renderGoogleAdPreviews();
@@ -1354,11 +1326,28 @@ function renderAll() {
   document.getElementById('longHeadlineBadge').textContent = data.longHeadlines.length + ' items';
   document.getElementById('descriptionBadge').textContent = data.descriptions.length + ' items';
 
-  // Tab counts
-  document.getElementById('googleCount').textContent = data.headlines.length + data.longHeadlines.length + data.descriptions.length;
-  document.getElementById('metaCount').textContent = data.meta.length;
-  document.getElementById('dishioCount').textContent = data.dishio.length;
-  document.getElementById('videosCount').textContent = data.videos.length;
+  // Tab counts — only count non-empty items
+  const googleItems = data.headlines.filter(h=>h.text).length + data.longHeadlines.filter(h=>h.text).length + data.descriptions.filter(d=>d.text).length;
+  const metaItems = data.meta.filter(m=>m.url).length;
+  const dishioItems = data.dishio.filter(d=>d.url).length;
+  const videoItems = data.videos.filter(v=>v.url||v.name).length;
+  document.getElementById('googleCount').textContent = googleItems;
+  document.getElementById('metaCount').textContent = metaItems;
+  document.getElementById('dishioCount').textContent = dishioItems;
+  document.getElementById('videosCount').textContent = videoItems;
+
+  // Hide tabs with no data
+  const tabVis = { google: googleItems > 0, meta: metaItems > 0, dishio: dishioItems > 0, videos: videoItems > 0 };
+  let activeHidden = false;
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const show = tabVis[btn.dataset.tab] !== false;
+    btn.style.display = show ? '' : 'none';
+    if (btn.classList.contains('active') && !show) activeHidden = true;
+  });
+  if (activeHidden) {
+    const first = document.querySelector('.tab-btn:not([style*="display: none"])');
+    if (first) first.click();
+  }
 
   // Save to localStorage
   saveToStorage();
@@ -1384,7 +1373,7 @@ function renderGoogleAdPreviews() {
       <div class="ad-mockup-body">
         <div class="google-search-mockup">
           <div class="gs-url">
-            <span class="favicon" style="padding:2px"><svg viewBox="0 0 64 64" fill="white" width="12" height="12"><g transform="translate(32,32)"><ellipse cx="0" cy="-22" rx="3.2" ry="6"/><circle cx="11" cy="-19" r="5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(60)"/><circle cx="22" cy="0" r="6.5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(120)"/><circle cx="11" cy="19" r="5.5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(180)"/><circle cx="-11" cy="19" r="5"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(240)"/><circle cx="-22" cy="0" r="6"/><ellipse cx="0" cy="-22" rx="3.2" ry="6" transform="rotate(300)"/><circle cx="-11" cy="-19" r="4.5"/></g></svg></span>
+            <span class="favicon" style="padding:2px"><svg viewBox="0 0 126.28 126.38" fill="white" width="14" height="14"><path d="M43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/></svg></span>
             <span>dish.io/${clientName.toLowerCase().replace(/\s+/g,'-')}</span>
           </div>
           <div class="gs-headline"><span class="gs-ad-badge">Ad</span>${headline}</div>
@@ -1461,13 +1450,12 @@ function onCopyEdit(el, maxChars) {
   const index = parseInt(el.dataset.index);
   data[section][index].text = text;
 
-  // Update char count in same row
-  const tr = el.closest('tr');
-  const charSpan = tr.querySelector('.char-count');
-  if (charSpan) {
+  // Update char pill by ID
+  const pill = document.getElementById(`char-${section}-${index}`);
+  if (pill) {
     const len = text.length;
-    charSpan.textContent = len + ' / ' + maxChars;
-    charSpan.className = 'char-count ' + charCountClass(len, maxChars);
+    pill.textContent = len === 0 ? '— / ' + maxChars : len + ' / ' + maxChars;
+    pill.className = 'char-pill ' + (len === 0 ? 'empty' : charCountClass(len, maxChars));
   }
 }
 
@@ -1544,6 +1532,176 @@ async function loadFromStorage() {
     document.title = `Campaign Preview — ${campaign.restaurantName}`;
     renderAll();
   } catch (err) { console.error('Load failed:', err); }
+}
+
+// ========== GOOGLE SHEET IMPORT ==========
+async function promptSheetImport() {
+  const sheetUrl = prompt('Paste Google Sheet URL:');
+  if (!sheetUrl) return;
+  showToast('Importing copy from Google Sheet...');
+  try {
+    const res = await fetch('/api/import-sheet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sheetUrl })
+    });
+    const result = await res.json();
+    if (result.success && result.data) {
+      Object.assign(data, result.data);
+      renderAll();
+      saveToStorage();
+      showToast('Copy imported from Google Sheet!');
+    } else {
+      showToast(result.error || 'Import failed');
+    }
+  } catch (err) {
+    showToast('Import error: ' + err.message);
+  }
+}
+
+// ========== CSV IMPORT ==========
+function handleCSVImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      parseCSVAndPopulate(e.target.result);
+      renderAll();
+      saveToStorage();
+      showToast('CSV imported successfully!');
+    } catch (err) {
+      console.error('CSV parse error:', err);
+      showToast('Error parsing CSV. Check format.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // reset so same file can be re-imported
+}
+
+function parseCSVAndPopulate(csvText) {
+  const rows = csvText.split('\n').map(row => {
+    // Simple CSV parser handling quoted fields
+    const cells = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < row.length; i++) {
+      const ch = row[i];
+      if (ch === '"') { inQuotes = !inQuotes; continue; }
+      if (ch === ',' && !inQuotes) { cells.push(current.trim()); current = ''; continue; }
+      current += ch;
+    }
+    cells.push(current.trim());
+    return cells;
+  });
+
+  // Detect sections by scanning for known header keywords
+  let section = null;
+  let sectionIndex = 0;
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    const joined = row.join(' ').toLowerCase();
+
+    // Detect section headers
+    if (joined.includes('google headlines') && joined.includes('approval')) {
+      section = 'headlines'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('long headlines') && joined.includes('approval')) {
+      section = 'longHeadlines'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('google descriptions') && joined.includes('approval')) {
+      section = 'descriptions'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('videos') && joined.includes('approval')) {
+      section = 'videos'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('meta campaign')) {
+      section = 'meta'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('preview link') && joined.includes('approved')) {
+      section = 'metaLinks'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('dishio')) {
+      section = 'dishio'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('smart site') && joined.includes('preview')) {
+      section = 'dishioLinks'; sectionIndex = 0; continue;
+    }
+    if (joined.includes('campaign preview') && !joined.includes('google') && !joined.includes('meta') && !joined.includes('dishio')) {
+      continue; // skip the title row
+    }
+    if (joined.includes('google campaign')) {
+      continue; // skip section divider
+    }
+
+    if (!section) continue;
+
+    // Get the text value from column B (index 1)
+    const textVal = row[1] || '';
+    const approvedVal = row[3] || '';
+    const notesVal = row[4] || '';
+
+    // Skip empty rows or rows with only "0" in char count column
+    if (!textVal && !row[2] && !approvedVal && !notesVal) continue;
+
+    // Parse based on current section
+    if (section === 'headlines') {
+      if (sectionIndex < data.headlines.length) {
+        if (textVal) data.headlines[sectionIndex].text = textVal;
+        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.headlines[sectionIndex].approved = true;
+        if (notesVal) data.headlines[sectionIndex].notes = notesVal;
+      }
+      sectionIndex++;
+    } else if (section === 'longHeadlines') {
+      if (sectionIndex < data.longHeadlines.length) {
+        if (textVal) data.longHeadlines[sectionIndex].text = textVal;
+        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.longHeadlines[sectionIndex].approved = true;
+        if (notesVal) data.longHeadlines[sectionIndex].notes = notesVal;
+      }
+      sectionIndex++;
+    } else if (section === 'descriptions') {
+      if (sectionIndex < data.descriptions.length) {
+        if (textVal) data.descriptions[sectionIndex].text = textVal;
+        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.descriptions[sectionIndex].approved = true;
+        if (notesVal) data.descriptions[sectionIndex].notes = notesVal;
+      }
+      sectionIndex++;
+    } else if (section === 'videos') {
+      if (sectionIndex < data.videos.length) {
+        if (textVal) data.videos[sectionIndex].name = textVal;
+        if (row[2]) data.videos[sectionIndex].url = row[2];
+      }
+      sectionIndex++;
+    } else if (section === 'metaLinks' || section === 'meta') {
+      if (sectionIndex < data.meta.length) {
+        if (textVal) {
+          // Could be a URL or name
+          if (textVal.startsWith('http')) {
+            data.meta[sectionIndex].url = textVal;
+          } else {
+            data.meta[sectionIndex].name = textVal;
+          }
+        }
+        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.meta[sectionIndex].approved = true;
+        if (notesVal) data.meta[sectionIndex].notes = notesVal;
+      }
+      sectionIndex++;
+    } else if (section === 'dishioLinks' || section === 'dishio') {
+      if (sectionIndex < data.dishio.length) {
+        if (textVal) {
+          if (textVal.startsWith('http')) {
+            data.dishio[sectionIndex].url = textVal;
+          } else {
+            data.dishio[sectionIndex].name = textVal;
+          }
+        }
+        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.dishio[sectionIndex].approved = true;
+        if (notesVal) data.dishio[sectionIndex].notes = notesVal;
+      }
+      sectionIndex++;
+    }
+  }
 }
 
 // ========== EXPORT ==========

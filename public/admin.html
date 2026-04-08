@@ -246,9 +246,15 @@ body {
       <label class="form-label">Account Manager</label>
       <input class="form-input" id="inputManager" placeholder="e.g. Katherine Nin">
     </div>
+    <div class="form-group">
+      <label class="form-label">Google Sheet URL <span style="opacity:.5;font-weight:400">(optional — auto-imports copy)</span></label>
+      <input class="form-input" id="inputSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
+      <div style="font-size:11px;color:#888;margin-top:4px">Sheet must be shared as "Anyone with the link can view". To import a specific tab, navigate to that tab first — the URL will include <code style="background:#1a1a1a;padding:1px 4px;border-radius:3px">#gid=…</code> automatically.</div>
+    </div>
+    <div id="importStatus" style="display:none;padding:8px 12px;border-radius:8px;margin-top:8px;font-size:13px"></div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeNewModal()">Cancel</button>
-      <button class="btn btn-yellow" onclick="createCampaign()">Create Preview</button>
+      <button class="btn btn-yellow" id="createBtn" onclick="createCampaign()">Create Preview</button>
     </div>
   </div>
 </div>
@@ -351,18 +357,74 @@ function closeNewModal() { document.getElementById('newModal').classList.remove(
 async function createCampaign() {
   const name = document.getElementById('inputRestaurant').value.trim();
   const manager = document.getElementById('inputManager').value.trim();
+  const sheetUrl = document.getElementById('inputSheetUrl').value.trim();
   if (!name) { document.getElementById('inputRestaurant').focus(); return; }
-  const res = await fetch('/api/campaigns', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ restaurantName: name, accountManager: manager })
-  });
-  const campaign = await res.json();
-  closeNewModal();
-  document.getElementById('inputRestaurant').value = '';
-  document.getElementById('inputManager').value = '';
-  showToast(`Created preview for ${campaign.restaurantName}`);
-  loadCampaigns();
+
+  const createBtn = document.getElementById('createBtn');
+  const statusEl = document.getElementById('importStatus');
+  createBtn.disabled = true;
+  createBtn.textContent = sheetUrl ? 'Importing...' : 'Creating...';
+
+  try {
+    // Step 1: Create the campaign
+    const res = await fetch('/api/campaigns', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ restaurantName: name, accountManager: manager })
+    });
+    const campaign = await res.json();
+
+    // Step 2: If sheet URL provided, import the copy
+    if (sheetUrl) {
+      statusEl.style.display = 'block';
+      statusEl.style.background = 'rgba(255,217,0,0.1)';
+      statusEl.style.color = '#FFD900';
+      statusEl.textContent = 'Fetching copy from Google Sheet...';
+
+      const importRes = await fetch('/api/import-sheet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sheetUrl })
+      });
+      const importResult = await importRes.json();
+
+      if (importResult.success && importResult.data) {
+        // Update campaign with imported data
+        await fetch(`/api/campaigns/${campaign.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ data: importResult.data })
+        });
+        statusEl.style.background = 'rgba(0,255,136,0.1)';
+        statusEl.style.color = '#00FF88';
+        statusEl.textContent = 'Copy imported successfully!';
+      } else {
+        statusEl.style.background = 'rgba(255,80,80,0.1)';
+        statusEl.style.color = '#ff5050';
+        statusEl.textContent = importResult.error || 'Import failed. Copy was not pulled in.';
+      }
+    }
+
+    // Clear form and close
+    setTimeout(() => {
+      closeNewModal();
+      document.getElementById('inputRestaurant').value = '';
+      document.getElementById('inputManager').value = '';
+      document.getElementById('inputSheetUrl').value = '';
+      statusEl.style.display = 'none';
+      showToast(`Created preview for ${campaign.restaurantName}${sheetUrl ? ' with imported copy' : ''}`);
+      loadCampaigns();
+    }, sheetUrl ? 1200 : 0);
+
+  } catch (err) {
+    statusEl.style.display = 'block';
+    statusEl.style.background = 'rgba(255,80,80,0.1)';
+    statusEl.style.color = '#ff5050';
+    statusEl.textContent = 'Error: ' + err.message;
+  } finally {
+    createBtn.disabled = false;
+    createBtn.textContent = 'Create Preview';
+  }
 }
 
 function copyLink(id) {
