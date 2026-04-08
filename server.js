@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const XLSX = require('xlsx');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +46,17 @@ function countTotal(c) {
     if (c.data && c.data[s]) n += c.data[s].length;
   });
   return n;
+}
+
+function emptyData() {
+  return {
+    headlines: Array.from({ length: 15 }, () => ({ text: '', approved: false, notes: '' })),
+    longHeadlines: Array.from({ length: 6 }, () => ({ text: '', approved: false, notes: '' })),
+    descriptions: Array.from({ length: 5 }, () => ({ text: '', approved: false, notes: '' })),
+    meta: Array.from({ length: 3 }, () => ({ name: '', url: '', approved: false, notes: '' })),
+    dishio: [{ name: '', url: '', approved: false, notes: '' }],
+    videos: Array.from({ length: 2 }, () => ({ name: '', url: '', approved: false, notes: '' }))
+  };
 }
 
 async function sendSlackNotification(campaign, baseUrl) {
@@ -92,15 +104,7 @@ function parseCSVRow(row) {
 
 function parseSheetCSV(csvText) {
   const rows = csvText.split('\n').map(parseCSVRow);
-
-  const data = {
-    headlines: Array.from({ length: 15 }, () => ({ text: '', approved: false, notes: '' })),
-    longHeadlines: Array.from({ length: 6 }, () => ({ text: '', approved: false, notes: '' })),
-    descriptions: Array.from({ length: 5 }, () => ({ text: '', approved: false, notes: '' })),
-    meta: Array.from({ length: 3 }, () => ({ name: '', url: '', approved: false, notes: '' })),
-    dishio: [{ name: '', url: '', approved: false, notes: '' }],
-    videos: Array.from({ length: 2 }, () => ({ name: '', url: '', approved: false, notes: '' }))
-  };
+  const data = emptyData();
 
   let section = null;
   let idx = 0;
@@ -194,6 +198,47 @@ function parseSheetCSV(csvText) {
   return data;
 }
 
+// ── Sheet Tab Discovery ─────────────────────────────────────────────────────
+// Fetches the xlsx export (same auth as CSV) and reads all worksheet names.
+// Returns array of { name } objects, or throws on error.
+async function discoverSheetTabs(sheetId) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=xlsx`;
+  console.log('[Tabs] Fetching xlsx for sheet:', sheetId);
+  const resp = await fetch(url, { redirect: 'follow' });
+  if (!resp.ok) {
+    console.log('[Tabs] xlsx export failed:', resp.status);
+    throw new Error('Cannot access sheet. Make sure it is shared as "Anyone with the link can view".');
+  }
+  const buf = Buffer.from(await resp.arrayBuffer());
+  // Sanity check: xlsx starts with PK (zip magic bytes)
+  if (buf[0] !== 0x50 || buf[1] !== 0x4B) {
+    throw new Error('Sheet returned unexpected format. Make sure sharing is set to "Anyone with the link can view".');
+  }
+  // Read only sheet names (bookSheets:true skips loading cell data — fast)
+  const workbook = XLSX.read(buf, { type: 'buffer', bookSheets: true });
+  console.log('[Tabs] Found sheets:', workbook.SheetNames);
+  return workbook.SheetNames.map(name => ({ name }));
+}
+
+// Fetch CSV for a sheet tab by name via the gviz/tq endpoint.
+// This works for "anyone with link" sharing and accepts sheet names (no gid needed).
+async function fetchTabCSVByName(sheetId, sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+  console.log('[Import] Fetching tab by name:', sheetName);
+  const resp = await fetch(url, { redirect: 'follow' });
+  if (!resp.ok) throw new Error(`Could not fetch tab "${sheetName}": ${resp.status}`);
+  return resp.text();
+}
+
+// Fetch CSV for a sheet tab by gid or fall back to first sheet.
+async function fetchTabCSVByGid(sheetId, gid) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv` + (gid ? `&gid=${gid}` : '');
+  console.log('[Import] Fetching tab by gid:', gid || '(first sheet)');
+  const resp = await fetch(url, { redirect: 'follow' });
+  if (!resp.ok) throw new Error(`Could not fetch sheet: ${resp.status}`);
+  return resp.text();
+}
+
 // ── API Routes ──────────────────────────────────────────────────────────────
 
 app.get('/api/campaigns', (req, res) => {
@@ -211,14 +256,7 @@ app.post('/api/campaigns', (req, res) => {
     id: uuidv4().split('-')[0], restaurantName,
     accountManager: accountManager || '', status: 'draft',
     createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
-    data: {
-      headlines: Array.from({ length: 15 }, () => ({ text: '', approved: false, notes: '' })),
-      longHeadlines: Array.from({ length: 6 }, () => ({ text: '', approved: false, notes: '' })),
-      descriptions: Array.from({ length: 5 }, () => ({ text: '', approved: false, notes: '' })),
-      meta: Array.from({ length: 3 }, () => ({ name: '', url: '', approved: false, notes: '' })),
-      dishio: [{ name: '', url: '', approved: false, notes: '' }],
-      videos: Array.from({ length: 2 }, () => ({ name: '', url: '', approved: false, notes: '' }))
-    }
+    data: emptyData()
   };
   saveCampaign(campaign);
   res.json(campaign);
@@ -260,35 +298,94 @@ app.post('/api/campaigns/:id/send', async (req, res) => {
   res.json({ success: true, slackSent, previewUrl: `${baseUrl}/preview/${c.id}` });
 });
 
-// Import Google Sheet CSV → parse → return structured data
-app.post('/api/import-sheet', async (req, res) => {
+// Discover all sheet tabs in a Google Sheet (uses xlsx export)
+app.post('/api/sheet-tabs', async (req, res) => {
   const { sheetUrl } = req.body;
+  if (!sheetUrl) return res.status(400).json({ error: 'Sheet URL is required' });
+  const match = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) return res.status(400).json({ error: 'Invalid Google Sheets URL' });
+  const sheetId = match[1];
+  try {
+    const tabs = await discoverSheetTabs(sheetId);
+    res.json({ success: true, tabs });
+  } catch (err) {
+    console.error('[Tabs] Error:', err.message);
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Import a single sheet tab → returns parsed campaign data
+// Accepts either sheetName (preferred, from tab discovery) or falls back to gid in URL
+app.post('/api/import-sheet', async (req, res) => {
+  const { sheetUrl, sheetName } = req.body;
   if (!sheetUrl) return res.status(400).json({ error: 'Sheet URL is required' });
   try {
     const match = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
     if (!match) return res.status(400).json({ error: 'Invalid Google Sheets URL' });
     const sheetId = match[1];
-    const gidMatch = sheetUrl.match(/[#&?]gid=(\d+)/);
-    const gid = gidMatch ? gidMatch[1] : '';
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/export?format=csv' + (gid ? '&gid=' + gid : '');
-    console.log('[Import] Fetching sheet:', sheetId);
-    const resp = await fetch(csvUrl, { redirect: 'follow' });
-    if (!resp.ok) {
-      console.log('[Import] Failed:', resp.status);
-      return res.status(400).json({ error: 'Could not fetch sheet. Make sure it is shared as "Anyone with the link can view".' });
+
+    let csvText;
+    if (sheetName) {
+      // Import by tab name — reliable, works for all tabs
+      csvText = await fetchTabCSVByName(sheetId, sheetName);
+    } else {
+      // Fall back to gid-based import (from URL hash)
+      const gidMatch = sheetUrl.match(/[#&?]gid=(\d+)/);
+      const gid = gidMatch ? gidMatch[1] : '';
+      csvText = await fetchTabCSVByGid(sheetId, gid);
     }
-    const csvText = await resp.text();
+
     const parsed = parseSheetCSV(csvText);
     const hCount = parsed.headlines.filter(h => h.text).length;
     const lhCount = parsed.longHeadlines.filter(h => h.text).length;
     const dCount = parsed.descriptions.filter(d => d.text).length;
     const mCount = parsed.meta.filter(m => m.url).length;
     console.log('[Import] Parsed:', hCount, 'headlines,', lhCount, 'long headlines,', dCount, 'descriptions,', mCount, 'meta');
+
     res.json({ success: true, data: parsed });
   } catch (err) {
     console.error('[Import] Error:', err.message);
     res.status(500).json({ error: 'Failed to import: ' + err.message });
   }
+});
+
+// Batch create: create multiple campaigns from multiple sheet tabs at once
+// Body: { restaurantName, accountManager, sheetUrl, tabs: [{name, campaignName}] }
+app.post('/api/batch-create', async (req, res) => {
+  const { restaurantName, accountManager, sheetUrl, tabs } = req.body;
+  if (!restaurantName) return res.status(400).json({ error: 'Restaurant name is required' });
+  if (!sheetUrl || !tabs || !tabs.length) return res.status(400).json({ error: 'Sheet URL and tabs are required' });
+
+  const match = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+  if (!match) return res.status(400).json({ error: 'Invalid Google Sheets URL' });
+  const sheetId = match[1];
+
+  const results = [];
+  for (const tab of tabs) {
+    try {
+      const csvText = await fetchTabCSVByName(sheetId, tab.name);
+      const data = parseSheetCSV(csvText);
+      const campaign = {
+        id: uuidv4().split('-')[0],
+        restaurantName: tab.campaignName || `${restaurantName} — ${tab.name}`,
+        accountManager: accountManager || '',
+        status: 'draft',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        data
+      };
+      saveCampaign(campaign);
+      const hCount = data.headlines.filter(h => h.text).length;
+      const dCount = data.descriptions.filter(d => d.text).length;
+      console.log('[Batch] Created campaign', campaign.id, 'for tab', tab.name, '— headlines:', hCount, 'descriptions:', dCount);
+      results.push({ id: campaign.id, name: campaign.restaurantName, tab: tab.name, success: true });
+    } catch (err) {
+      console.error('[Batch] Tab', tab.name, 'failed:', err.message);
+      results.push({ tab: tab.name, success: false, error: err.message });
+    }
+  }
+
+  res.json({ success: true, results });
 });
 
 // ── Page Routes ─────────────────────────────────────────────────────────────
