@@ -13,7 +13,8 @@
  *     "mcpServers": {
  *       "campaign-preview": {
  *         "command": "node",
- *         "args": ["C:\\Users\\neson\\Documents\\campaignpreview\\mcp-server.js"],
+ *         "args": ["mcp-server.mjs"],
+ *         "cwd": "C:\\Users\\neson\\Documents\\campaignpreview",
  *         "env": {
  *           "CAMPAIGN_API_URL": "https://your-railway-url.up.railway.app"
  *         }
