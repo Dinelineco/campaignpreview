@@ -167,32 +167,45 @@ function parseSheetCSV(csvText) {
   ]);
 
   for (const row of rows) {
-    // Use ONLY colA for section detection — never join all columns
     const colA = (row[0] || '').toLowerCase().trim();
+    const colB = row[1] || '';
+    const colC = row[2] || '';
+    const colD = row[3] || '';
+    const colE = row[4] || '';
+    const colF = row[5] || '';
 
-    // ── Section header detection (colA only) ────────────────────────────────
-    // Long headlines MUST come before general headlines check
-    if (colA.includes('long headline')) {
+    // ── Section header detection ─────────────────────────────────────────────
+    // Section labels may live in colA OR colB depending on the sheet template.
+    // We check colA first; if empty, check colB — but only when colB is short
+    // (< 80 chars) and doesn't look like a URL (so real ad copy isn't matched).
+    const colBLower = colB.toLowerCase().trim();
+    const isSectionCandidate = (s) => s.length > 0 && s.length < 80 && !s.startsWith('http') && !s.startsWith('www.');
+    const sectionStr = colA || (isSectionCandidate(colBLower) ? colBLower : '');
+
+    // Long headlines MUST come before general headline check
+    if (sectionStr.includes('long headline')) {
       section = 'longHeadlines'; continue;
     }
-    if (colA.includes('google headline') || (colA.includes('headline') && !colA.includes('long'))) {
+    if (sectionStr.includes('google headline') || (sectionStr.includes('headline') && !sectionStr.includes('long'))) {
       section = 'headlines'; continue;
     }
-    if (colA.includes('description')) {
+    if (sectionStr.includes('description') && !sectionStr.includes('http')) {
       section = 'descriptions'; continue;
     }
-    if (colA.includes('video')) {
+    if (sectionStr.includes('video') && (sectionStr.includes('approval') || sectionStr.includes('asset') || sectionStr.includes('google') || colA !== '')) {
       section = 'videos'; continue;
     }
-    // Meta: "meta", "facebook", "instagram", "paid social" in colA only
+    // Meta: "meta", "facebook", "instagram", "paid social"
     if (
-      (colA.includes('meta') || colA.includes('facebook') || colA.includes('instagram') || colA.includes('paid social'))
-      && !colA.includes('google') && !colA.includes('dishio')
+      (sectionStr.includes('meta') || sectionStr.includes('paid social') ||
+       (sectionStr.includes('facebook') && !sectionStr.includes('http')) ||
+       (sectionStr.includes('instagram') && !sectionStr.includes('http')))
+      && !sectionStr.includes('google') && !sectionStr.includes('dishio')
     ) {
       section = 'meta'; continue;
     }
     // Dishio smart site
-    if (colA.includes('dishio') || colA.includes('smart site')) {
+    if (sectionStr.includes('dishio') || sectionStr.includes('smart site')) {
       section = 'dishio'; continue;
     }
 
@@ -200,16 +213,10 @@ function parseSheetCSV(csvText) {
     if (!section) continue;
 
     // Skip completely empty rows
-    const colB = row[1] || '';
-    const colC = row[2] || '';
-    const colD = row[3] || '';
-    const colE = row[4] || '';
-    const colF = row[5] || '';
-
     if (!colB && !colC && !colD && !colE) continue;
 
-    // Skip column-label header rows: colB is a known label word and colC looks like another label or is empty
-    if (COLUMN_LABELS.has(colB.toLowerCase().trim())) continue;
+    // Skip column-label header rows (colB is a known label word, not actual copy)
+    if (COLUMN_LABELS.has(colBLower)) continue;
 
     const approvedD = colD && (colD.toLowerCase() === 'yes' || colD.toLowerCase() === 'true');
     const approvedC = colC && (colC.toLowerCase() === 'yes' || colC.toLowerCase() === 'true');
