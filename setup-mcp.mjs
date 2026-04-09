@@ -3,19 +3,18 @@
 /**
  * Dish.io Campaign Preview — MCP Auto-Installer
  *
- * Run:  npx setup-mcp   (from the project dir)
- *   or: node setup-mcp.mjs
+ * For anyone on the team:
+ *   node setup-mcp.mjs
  *
- * Automatically finds and patches the Claude Desktop config
- * to add the campaign-preview MCP server.
+ * Uses the remote MCP endpoint on Railway — no local server files needed.
+ * Automatically patches Claude Desktop config.
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { homedir, platform } from 'os';
 
-const API_URL = process.argv[2] || 'https://campaignpreview-production.up.railway.app';
-const PROJECT_DIR = process.argv[3] || process.cwd();
+const MCP_URL = process.argv[2] || 'https://campaignpreview-production.up.railway.app/mcp';
 
 // ── Find Claude Desktop config path ──────────────────────────────────────────
 function getConfigPath() {
@@ -46,9 +45,8 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`  API URL:     ${API_URL}`);
-  console.log(`  Project Dir: ${PROJECT_DIR}`);
-  console.log(`  Config File: ${configPath}`);
+  console.log(`  MCP Endpoint: ${MCP_URL}`);
+  console.log(`  Config File:  ${configPath}`);
   console.log('');
 
   // Read existing config or start fresh
@@ -65,18 +63,16 @@ function main() {
     }
   } else {
     console.log('  ○ No existing config found. Creating new one...');
-    // Ensure the directory exists
     const dir = configPath.replace(/[/\\][^/\\]+$/, '');
     mkdirSync(dir, { recursive: true });
   }
 
-  // Ensure mcpServers object exists
   if (!config.mcpServers) config.mcpServers = {};
 
   // Check if already installed
   if (config.mcpServers['campaign-preview']) {
     const existing = config.mcpServers['campaign-preview'];
-    if (existing.env?.CAMPAIGN_API_URL === API_URL) {
+    if (existing.url === MCP_URL) {
       console.log('  ✓ Campaign Preview MCP is already configured!');
       console.log('');
       console.log('  Restart Claude Desktop to connect.');
@@ -88,17 +84,11 @@ function main() {
     console.log('  + Adding campaign-preview MCP server...');
   }
 
-  // Add / update the campaign-preview server
+  // Remote URL — no local files needed
   config.mcpServers['campaign-preview'] = {
-    command: 'node',
-    args: ['mcp-server.mjs'],
-    cwd: PROJECT_DIR,
-    env: {
-      CAMPAIGN_API_URL: API_URL,
-    },
+    url: MCP_URL,
   };
 
-  // Write
   writeFileSync(configPath, JSON.stringify(config, null, 2), 'utf-8');
 
   console.log('');
@@ -109,7 +99,7 @@ function main() {
   console.log('    2. Look for the 🔨 tools icon in any chat');
   console.log('    3. Try: "Create a campaign preview for Pizza Palace"');
   console.log('');
-  console.log('  Available commands in Claude:');
+  console.log('  What you can say to Claude:');
   console.log('    • "Create a campaign preview for [restaurant]"');
   console.log('    • "Add these headlines: [list]"');
   console.log('    • "Add Meta ad copy for [restaurant]"');

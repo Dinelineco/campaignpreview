@@ -572,8 +572,235 @@ app.get('/api/screenshot', async (req, res) => {
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 app.get('/preview/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'preview.html')));
 
+// ── Remote MCP Server (Streamable HTTP) ─────────────────────────────────────
+// Lets media buyers connect Claude Desktop with just a URL — no local files.
+// Config: { "mcpServers": { "campaign-preview": { "url": "https://YOUR_URL/mcp" } } }
+
+const mcpSessions = new Map();
+
+async function createMcpServer() {
+  const { McpServer } = await import('@modelcontextprotocol/sdk/server/mcp.js');
+  const { z } = await import('zod');
+  const BASE = `http://localhost:${PORT}`;
+
+  async function api(method, apiPath, body) {
+    const opts = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(`${BASE}${apiPath}`, opts);
+    const text = await res.text();
+    try { return JSON.parse(text); } catch { return { raw: text, status: res.status }; }
+  }
+
+  const server = new McpServer({ name: 'dishio-campaign-preview', version: '1.0.0' });
+
+  server.tool('list_campaigns', 'List all campaign previews', {}, async () => {
+    const campaigns = await api('GET', '/api/campaigns');
+    if (!Array.isArray(campaigns)) return { content: [{ type: 'text', text: `Error: ${JSON.stringify(campaigns)}` }] };
+    const summary = campaigns.map(c => ({ id: c.id, restaurantName: c.restaurantName, status: c.status, approved: c.approved, total: c.total }));
+    return { content: [{ type: 'text', text: summary.length ? JSON.stringify(summary, null, 2) : 'No campaigns found.' }] };
+  });
+
+  server.tool('get_campaign', 'Get full details of a campaign', { campaignId: z.string() }, async ({ campaignId }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    return { content: [{ type: 'text', text: JSON.stringify(c, null, 2) }] };
+  });
+
+  server.tool('create_campaign', 'Create a new campaign preview', {
+    restaurantName: z.string().describe('Restaurant name'),
+    accountManager: z.string().optional().describe('Account manager name'),
+  }, async ({ restaurantName, accountManager }) => {
+    const c = await api('POST', '/api/campaigns', { restaurantName, accountManager });
+    return { content: [{ type: 'text', text: `Campaign created!\nID: ${c.id}\nRestaurant: ${c.restaurantName}\nPreview: ${c.previewUrl || `/preview/${c.id}`}` }] };
+  });
+
+  server.tool('add_headlines', 'Add Google Search ad headlines (30 char limit)', {
+    campaignId: z.string(), headlines: z.array(z.string()),
+    tabIndex: z.number().optional().describe('Tab index for multi-tab campaigns'),
+  }, async ({ campaignId, headlines, tabIndex = 0 }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const items = headlines.map(text => ({ text, approved: false, notes: '' }));
+    if (c.campaigns?.length > 0) {
+      c.campaigns[tabIndex].data.headlines = [...(c.campaigns[tabIndex].data.headlines || []), ...items];
+      await api('PUT', `/api/campaigns/${campaignId}`, { campaigns: c.campaigns });
+    } else {
+      await api('PUT', `/api/campaigns/${campaignId}`, { data: { ...c.data, headlines: [...(c.data?.headlines || []), ...items] } });
+    }
+    const over = headlines.filter(h => h.length > 30);
+    let msg = `Added ${headlines.length} headlines.`;
+    if (over.length) msg += ` Warning: ${over.length} exceed 30-char limit.`;
+    return { content: [{ type: 'text', text: msg }] };
+  });
+
+  server.tool('add_long_headlines', 'Add long headlines (90 char limit)', {
+    campaignId: z.string(), longHeadlines: z.array(z.string()),
+    tabIndex: z.number().optional(),
+  }, async ({ campaignId, longHeadlines, tabIndex = 0 }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const items = longHeadlines.map(text => ({ text, approved: false, notes: '' }));
+    if (c.campaigns?.length > 0) {
+      c.campaigns[tabIndex].data.longHeadlines = [...(c.campaigns[tabIndex].data.longHeadlines || []), ...items];
+      await api('PUT', `/api/campaigns/${campaignId}`, { campaigns: c.campaigns });
+    } else {
+      await api('PUT', `/api/campaigns/${campaignId}`, { data: { ...c.data, longHeadlines: [...(c.data?.longHeadlines || []), ...items] } });
+    }
+    return { content: [{ type: 'text', text: `Added ${longHeadlines.length} long headlines.` }] };
+  });
+
+  server.tool('add_descriptions', 'Add ad descriptions (90 char limit)', {
+    campaignId: z.string(), descriptions: z.array(z.string()),
+    tabIndex: z.number().optional(),
+  }, async ({ campaignId, descriptions, tabIndex = 0 }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const items = descriptions.map(text => ({ text, approved: false, notes: '' }));
+    if (c.campaigns?.length > 0) {
+      c.campaigns[tabIndex].data.descriptions = [...(c.campaigns[tabIndex].data.descriptions || []), ...items];
+      await api('PUT', `/api/campaigns/${campaignId}`, { campaigns: c.campaigns });
+    } else {
+      await api('PUT', `/api/campaigns/${campaignId}`, { data: { ...c.data, descriptions: [...(c.data?.descriptions || []), ...items] } });
+    }
+    return { content: [{ type: 'text', text: `Added ${descriptions.length} descriptions.` }] };
+  });
+
+  server.tool('add_meta_copy', 'Add Meta (Facebook/Instagram) ad copy', {
+    campaignId: z.string(),
+    ads: z.array(z.object({ primaryText: z.string(), previewUrl: z.string().optional() })),
+    tabIndex: z.number().optional(),
+  }, async ({ campaignId, ads, tabIndex = 0 }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const items = ads.map(ad => ({ name: ad.primaryText, url: ad.previewUrl || '', approved: false, notes: '' }));
+    if (c.campaigns?.length > 0) {
+      c.campaigns[tabIndex].data.meta = [...(c.campaigns[tabIndex].data.meta || []), ...items];
+      await api('PUT', `/api/campaigns/${campaignId}`, { campaigns: c.campaigns });
+    } else {
+      await api('PUT', `/api/campaigns/${campaignId}`, { data: { ...c.data, meta: [...(c.data?.meta || []), ...items] } });
+    }
+    return { content: [{ type: 'text', text: `Added ${ads.length} Meta ad(s).` }] };
+  });
+
+  server.tool('add_dishio_links', 'Add Dish.io Smart Site links', {
+    campaignId: z.string(),
+    links: z.array(z.object({ name: z.string(), url: z.string() })),
+    tabIndex: z.number().optional(),
+  }, async ({ campaignId, links, tabIndex = 0 }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const items = links.map(l => ({ name: l.name, url: l.url, approved: false, notes: '' }));
+    if (c.campaigns?.length > 0) {
+      c.campaigns[tabIndex].data.dishio = [...(c.campaigns[tabIndex].data.dishio || []), ...items];
+      await api('PUT', `/api/campaigns/${campaignId}`, { campaigns: c.campaigns });
+    } else {
+      await api('PUT', `/api/campaigns/${campaignId}`, { data: { ...c.data, dishio: [...(c.data?.dishio || []), ...items] } });
+    }
+    return { content: [{ type: 'text', text: `Added ${links.length} Dish.io link(s).` }] };
+  });
+
+  server.tool('add_videos', 'Add video assets', {
+    campaignId: z.string(),
+    videos: z.array(z.object({ name: z.string(), url: z.string() })),
+    tabIndex: z.number().optional(),
+  }, async ({ campaignId, videos, tabIndex = 0 }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const items = videos.map(v => ({ name: v.name, url: v.url, approved: false, notes: '' }));
+    if (c.campaigns?.length > 0) {
+      c.campaigns[tabIndex].data.videos = [...(c.campaigns[tabIndex].data.videos || []), ...items];
+      await api('PUT', `/api/campaigns/${campaignId}`, { campaigns: c.campaigns });
+    } else {
+      await api('PUT', `/api/campaigns/${campaignId}`, { data: { ...c.data, videos: [...(c.data?.videos || []), ...items] } });
+    }
+    return { content: [{ type: 'text', text: `Added ${videos.length} video(s).` }] };
+  });
+
+  server.tool('get_preview_link', 'Get the client-facing preview URL', { campaignId: z.string() }, async ({ campaignId }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    return { content: [{ type: 'text', text: `Preview link for ${c.restaurantName}: /preview/${campaignId}` }] };
+  });
+
+  server.tool('send_for_review', 'Send campaign to client for review', { campaignId: z.string() }, async ({ campaignId }) => {
+    const result = await api('POST', `/api/campaigns/${campaignId}/send`);
+    if (result.error) return { content: [{ type: 'text', text: `Error: ${result.error}` }] };
+    return { content: [{ type: 'text', text: `Campaign sent! Preview: ${result.previewUrl}` }] };
+  });
+
+  server.tool('check_approvals', 'Check approval status', { campaignId: z.string() }, async ({ campaignId }) => {
+    const c = await api('GET', `/api/campaigns/${campaignId}`);
+    if (c.error) return { content: [{ type: 'text', text: `Error: ${c.error}` }] };
+    const check = (items, label) => {
+      if (!items?.length) return '';
+      const approved = items.filter(i => i.approved).length;
+      return `\n${label}: ${approved}/${items.length} approved`;
+    };
+    const d = c.data || {};
+    let report = `Approval Status — ${c.restaurantName}`;
+    report += check(d.headlines, 'Headlines') + check(d.longHeadlines, 'Long Headlines');
+    report += check(d.descriptions, 'Descriptions') + check(d.meta, 'Meta Ads');
+    report += check(d.dishio, 'Dish.io Links') + check(d.videos, 'Videos');
+    return { content: [{ type: 'text', text: report }] };
+  });
+
+  server.tool('delete_campaign', 'Permanently delete a campaign', { campaignId: z.string() }, async ({ campaignId }) => {
+    const result = await api('DELETE', `/api/campaigns/${campaignId}`);
+    if (result.error) return { content: [{ type: 'text', text: `Error: ${result.error}` }] };
+    return { content: [{ type: 'text', text: 'Campaign deleted.' }] };
+  });
+
+  return server;
+}
+
+// Mount MCP Streamable HTTP transport
+(async () => {
+  try {
+    const { StreamableHTTPServerTransport } = await import('@modelcontextprotocol/sdk/server/streamableHttp.js');
+
+    app.post('/mcp', async (req, res) => {
+      const sessionId = req.headers['mcp-session-id'];
+      let transport;
+      if (sessionId && mcpSessions.has(sessionId)) {
+        transport = mcpSessions.get(sessionId);
+      } else {
+        transport = new StreamableHTTPServerTransport({ sessionIdGenerator: () => crypto.randomUUID() });
+        const server = await createMcpServer();
+        await server.connect(transport);
+        mcpSessions.set(transport.sessionId, transport);
+        transport.on('close', () => mcpSessions.delete(transport.sessionId));
+      }
+      await transport.handleRequest(req, res);
+    });
+
+    app.get('/mcp', async (req, res) => {
+      const sessionId = req.headers['mcp-session-id'];
+      if (!sessionId || !mcpSessions.has(sessionId)) {
+        return res.status(400).json({ error: 'No active session. Send a POST first.' });
+      }
+      await mcpSessions.get(sessionId).handleRequest(req, res);
+    });
+
+    app.delete('/mcp', async (req, res) => {
+      const sessionId = req.headers['mcp-session-id'];
+      if (sessionId && mcpSessions.has(sessionId)) {
+        const transport = mcpSessions.get(sessionId);
+        await transport.handleRequest(req, res);
+        mcpSessions.delete(sessionId);
+      } else {
+        res.status(200).end();
+      }
+    });
+
+    console.log('[MCP] Remote MCP server mounted at /mcp');
+  } catch (err) {
+    console.log('[MCP] Streamable HTTP transport not available:', err.message);
+  }
+})();
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log('\n  Dishio Campaign Preview Tool');
   console.log('  Admin: http://localhost:' + PORT);
+  console.log('  MCP:   http://localhost:' + PORT + '/mcp');
   console.log('  Slack: ' + (SLACK_WEBHOOK_URL ? 'Configured' : 'Not set') + '\n');
 });
