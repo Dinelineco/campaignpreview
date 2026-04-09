@@ -1,1670 +1,1230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Campaign Preview</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root {
-  /* Dishio Official Brand Colors */
-  --dishio-yellow: #FFD900;
-  --dishio-yellow-light: #FFE644;
-  --dishio-yellow-dim: rgba(255,217,0,0.12);
-  --dishio-green: #009B00;
-  --dishio-green-light: #00FF88;
-  --dishio-green-dark: #007B00;
-  --dishio-green-bg: rgba(0,155,0,0.12);
-  --dishio-blue: #0033A4;
-  --dishio-blue-bg: rgba(0,51,164,0.12);
-  --dishio-malachite: #00FF88;
-  --dishio-dark: #000000;
-  --dishio-dark-card: #0D0D0D;
-  --dishio-dark-surface: #1A1A1A;
-  --dishio-dark-border: #2A2A2A;
-  --dishio-text: #FFFFFF;
-  --dishio-text-muted: #888888;
-  --dishio-text-secondary: #AAAAAA;
-  /* Utility colors */
-  --approve-green: #00FF88;
-  --approve-green-bg: rgba(0,255,136,0.12);
-  --pending-yellow: #FFD900;
-  --pending-yellow-bg: rgba(255,217,0,0.12);
-  --reject-red: #EF4444;
-  --reject-red-bg: rgba(239,68,68,0.12);
-  --purple: #A855F7;
-  --purple-bg: rgba(168,85,247,0.12);
-  /* Aliases for component references */
-  --dishio-purple: #A855F7;
-  --dishio-purple-bg: rgba(168,85,247,0.12);
-  --dishio-yellow-bg: rgba(255,217,0,0.12);
-  --dishio-red: #EF4444;
-  --dishio-red-bg: rgba(239,68,68,0.12);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-xs: 6px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campaign Preview — Dish.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #000000;
-  color: var(--dishio-text);
-  line-height: 1.6;
-  min-height: 100vh;
-  background-image: linear-gradient(180deg, #000000 0%, #0A0A0A 30%, #111111 60%, #0A0A0A 85%, #000000 100%);
-}
+    :root {
+      --yellow: #FFD900;
+      --yellow-dim: rgba(255,217,0,0.12);
+      --bg: #070707;
+      --card: #111111;
+      --card-border: #1E1E1E;
+      --text: #FFFFFF;
+      --text-muted: #888888;
+      --text-dim: #555555;
+      --green: #00C864;
+      --green-bg: rgba(0,200,100,0.12);
+      --amber: #FFB400;
+      --amber-bg: rgba(255,180,0,0.12);
+      --red: #FF4444;
+      --red-bg: rgba(255,68,68,0.12);
+      --header-h: 72px;
+    }
 
-/* === HEADER === */
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--dishio-dark-border);
-  padding: 0 40px;
-}
-.header-inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 72px;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-.logo-svg {
-  height: 28px;
-  width: auto;
-}
+    html { scroll-behavior: smooth; }
 
-.header-meta {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-.header-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 100px;
-  background: var(--dishio-dark-surface);
-  border: 1px solid var(--dishio-dark-border);
-  font-size: 13px;
-  color: var(--dishio-text-muted);
-}
-.header-badge .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--dishio-malachite);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-.btn-primary {
-  padding: 10px 22px;
-  border-radius: 100px;
-  background: var(--dishio-yellow);
-  color: var(--dishio-dark);
-  font-weight: 700;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-.btn-primary:hover { background: var(--dishio-yellow-light); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,217,0,0.3); }
+    body {
+      font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* === HERO === */
-.hero {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 60px 40px 40px;
-}
-.hero-top {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 48px;
-}
-.hero-left { flex: 1; }
-.hero-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 100px;
-  background: linear-gradient(135deg, var(--dishio-green), var(--dishio-green-light));
-  color: var(--dishio-dark);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin-bottom: 20px;
-}
-.hero h1 {
-  font-size: 48px;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -1.5px;
-  margin-bottom: 12px;
-  background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.hero h1 .accent {
-  background: linear-gradient(135deg, var(--dishio-yellow), var(--dishio-green-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.hero-subtitle {
-  font-size: 17px;
-  color: var(--dishio-text-muted);
-  max-width: 500px;
-}
-.hero-right {
-  display: flex;
-  gap: 16px;
-}
-.stat-card {
-  background: var(--dishio-dark-card);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  padding: 24px;
-  min-width: 160px;
-  text-align: center;
-  transition: var(--transition);
-}
-.stat-card:hover { border-color: var(--dishio-green); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,155,0,0.15); }
-.stat-number {
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--dishio-yellow);
-  line-height: 1;
-  margin-bottom: 6px;
-}
-.stat-label { font-size: 12px; color: var(--dishio-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3A3A3A; }
 
-/* === PROGRESS BAR === */
-.progress-bar-container {
-  max-width: 1400px;
-  margin: 0 auto 48px;
-  padding: 0 40px;
-}
-.progress-wrapper {
-  background: var(--dishio-dark-card);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  padding: 24px 32px;
-}
-.progress-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-.progress-title { font-size: 14px; font-weight: 600; color: var(--dishio-text-secondary); }
-.progress-pct { font-size: 24px; font-weight: 800; color: var(--dishio-yellow); }
-.progress-track {
-  height: 8px;
-  background: var(--dishio-dark-surface);
-  border-radius: 100px;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--dishio-green), var(--dishio-green-light));
-  border-radius: 100px;
-  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.progress-legend {
-  display: flex;
-  gap: 24px;
-}
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--dishio-text-muted);
-}
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
+    /* ── HEADER ── */
+    #siteHeader {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(7,7,7,0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 24px;
+    }
 
-/* === CAMPAIGN SWITCHER === */
-.campaign-switcher {
-  max-width: 1400px;
-  margin: 0 auto 24px;
-  padding: 0 40px;
-}
-.campaign-switcher-inner {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.campaign-tab-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--dishio-dark-border);
-  background: var(--dishio-dark-card);
-  color: var(--dishio-text-muted);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-}
-.campaign-tab-btn:hover {
-  border-color: var(--dishio-green);
-  color: var(--dishio-text);
-}
-.campaign-tab-btn.active {
-  border-color: var(--dishio-yellow);
-  background: var(--dishio-yellow-dim);
-  color: var(--dishio-yellow);
-}
-.campaign-tab-num {
-  font-size: 10px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  opacity: 0.5;
-}
-.campaign-tab-btn.active .campaign-tab-num { opacity: 0.7; }
+    .header-logo {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+    .header-logo svg {
+      height: 26px;
+      width: auto;
+      fill: var(--yellow);
+    }
 
-/* === TABS NAV === */
-.tabs-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 40px;
-}
-.tabs-nav {
-  display: flex;
-  gap: 4px;
-  background: var(--dishio-dark-card);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  padding: 6px;
-  margin-bottom: 32px;
-  overflow-x: auto;
-}
-.tab-btn {
-  flex: 1;
-  padding: 14px 24px;
-  border-radius: var(--radius-sm);
-  border: none;
-  background: transparent;
-  color: var(--dishio-text-muted);
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  position: relative;
-}
-.tab-btn:hover { color: var(--dishio-text); background: var(--dishio-dark-surface); }
-.tab-btn.active {
-  background: var(--dishio-yellow);
-  color: var(--dishio-dark);
-}
-.tab-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.tab-count {
-  font-size: 11px;
-  padding: 2px 8px;
-  border-radius: 100px;
-  background: rgba(255,255,255,0.15);
-  font-weight: 700;
-}
-.tab-btn.active .tab-count { background: rgba(255,255,255,0.25); }
+    .header-center {
+      flex: 1;
+      text-align: center;
+      min-width: 0;
+    }
 
-/* === SECTIONS === */
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+    #clientName {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      outline: none;
+      border-radius: 6px;
+      padding: 2px 8px;
+      cursor: text;
+      transition: background 0.15s;
+      display: inline-block;
+      min-width: 40px;
+    }
+    #clientName:hover { background: rgba(255,255,255,0.05); }
+    #clientName:focus { background: rgba(255,255,255,0.08); box-shadow: 0 0 0 1px var(--yellow); }
 
-.section {
-  max-width: 1400px;
-  margin: 0 auto 32px;
-  padding: 0 40px;
-}
-.section-card {
-  background: var(--dishio-dark-card);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 28px;
-  border-bottom: 1px solid var(--dishio-dark-border);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.section-header:hover { background: var(--dishio-dark-surface); }
-.section-header-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.section-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-.section-title { font-size: 16px; font-weight: 700; }
-.section-subtitle { font-size: 12px; color: var(--dishio-text-muted); margin-top: 2px; }
-.section-header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.section-badge {
-  padding: 4px 12px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.chevron {
-  width: 20px;
-  height: 20px;
-  color: var(--dishio-text-muted);
-  transition: var(--transition);
-}
-.section-header.open .chevron { transform: rotate(180deg); }
+    #accountManagerName {
+      font-size: 12px;
+      color: var(--text-muted);
+      outline: none;
+      border-radius: 4px;
+      padding: 1px 6px;
+      cursor: text;
+      transition: background 0.15s;
+      display: inline-block;
+      min-width: 30px;
+    }
+    #accountManagerName:hover { background: rgba(255,255,255,0.05); }
+    #accountManagerName:focus { background: rgba(255,255,255,0.08); }
 
-.section-body {
-  padding: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s;
-}
-.section-body.open {
-  max-height: 3000px;
-  padding: 24px 28px;
-}
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
 
-/* === APPROVAL CARDS === */
-.items-list { display: flex; flex-direction: column; gap: 10px; }
+    #progressIndicator {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    #progressIndicator .prog-num { color: var(--yellow); }
 
-.item-card {
-  display: grid;
-  grid-template-columns: 36px 1fr auto;
-  gap: 16px;
-  align-items: start;
-  padding: 18px 20px;
-  background: var(--dishio-dark-surface);
-  border: 1px solid var(--dishio-dark-border);
-  border-left: 3px solid transparent;
-  border-radius: var(--radius-sm);
-  transition: var(--transition);
-}
-.item-card:hover { background: rgba(255,255,255,0.025); }
-.item-card.is-approved {
-  border-left-color: var(--approve-green);
-  background: rgba(0,255,136,0.025);
-}
+    .btn-submit {
+      background: var(--yellow);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: 0.01em;
+    }
+    .btn-submit:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
 
-.item-num {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--dishio-dark-card);
-  border: 1px solid var(--dishio-dark-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--dishio-text-muted);
-  flex-shrink: 0;
-  margin-top: 2px;
-  font-variant-numeric: tabular-nums;
-}
+    /* ── MAIN WRAPPER ── */
+    #mainWrapper {
+      padding-top: calc(var(--header-h) + 24px);
+      padding-bottom: 80px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: 28px;
+      padding-right: 28px;
+    }
 
-.item-body { flex: 1; min-width: 0; }
+    /* ── INSTRUCTIONS BANNER ── */
+    #instructionsBanner {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-left: 3px solid var(--yellow);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      position: relative;
+    }
+    #instructionsBanner.dismissed { display: none; }
 
-.item-text {
-  font-size: 15px;
-  color: var(--dishio-text-secondary);
-  line-height: 1.6;
-  border-radius: var(--radius-xs);
-  padding: 8px 10px;
-  margin-left: -10px;
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
-  cursor: text;
-  min-height: 48px;
-  word-break: break-word;
-  white-space: pre-wrap;
-}
-.item-text:hover { background: rgba(255,255,255,0.04); color: var(--dishio-text); }
-.item-text:focus {
-  outline: none;
-  background: var(--dishio-dark-card);
-  color: var(--dishio-text);
-  box-shadow: 0 0 0 2px rgba(255,217,0,0.3);
-}
-.item-text[data-placeholder]:empty::before,
-.item-url[data-placeholder]:empty::before {
-  content: attr(data-placeholder);
-  color: var(--dishio-text-muted);
-  opacity: 0.4;
-}
+    .banner-dismiss {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .banner-dismiss:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 
-.item-url {
-  font-size: 12px;
-  color: var(--dishio-text-muted);
-  border-radius: var(--radius-xs);
-  padding: 2px 6px;
-  margin-left: -6px;
-  transition: var(--transition);
-  cursor: text;
-  word-break: break-all;
-  margin-top: 4px;
-}
-.item-url:hover { background: rgba(255,255,255,0.04); color: var(--dishio-text-secondary); }
-.item-url:focus { outline: none; background: var(--dishio-dark-card); color: var(--dishio-text); box-shadow: 0 0 0 2px rgba(255,217,0,0.3); }
+    .banner-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--yellow);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .banner-heading {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .banner-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .banner-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .banner-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--yellow);
+      letter-spacing: 0.05em;
+      min-width: 26px;
+      padding-top: 1px;
+    }
+    .step-content strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .step-content p {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
 
-.item-url-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--dishio-green-light);
-  text-decoration: none;
-  opacity: 0.8;
-  transition: var(--transition);
-}
-.item-url-link:hover { opacity: 1; }
+    /* ── CAMPAIGN SWITCHER ── */
+    #campaignSwitcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .campaign-pill {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 18px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1.5px solid var(--card-border);
+      background: transparent;
+      color: var(--text-muted);
+    }
+    .campaign-pill:hover { border-color: var(--yellow); color: var(--text); }
+    .campaign-pill.active { background: var(--yellow); border-color: var(--yellow); color: #000; }
 
-.item-notes {
-  width: 100%;
-  margin-top: 10px;
-  padding: 8px 10px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-xs);
-  color: var(--dishio-text-muted);
-  font-family: inherit;
-  font-size: 12px;
-  resize: none;
-  overflow: hidden;
-  transition: var(--transition);
-  line-height: 1.5;
-  min-height: 32px;
-}
-.item-notes:hover { border-color: var(--dishio-dark-border); background: rgba(255,255,255,0.02); }
-.item-notes:focus {
-  outline: none;
-  border-color: var(--dishio-dark-border);
-  background: var(--dishio-dark-card);
-  color: var(--dishio-text);
-  box-shadow: 0 0 0 2px rgba(0,155,0,0.15);
-}
-.item-notes::placeholder { color: var(--dishio-text-muted); opacity: 0.5; }
+    /* ── TAB NAV ── */
+    #tabNav {
+      display: flex;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 32px;
+    }
+    .tab-btn {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 14px 24px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--yellow); border-bottom-color: var(--yellow); }
+    .tab-badge {
+      background: rgba(255,255,255,0.07);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 100px;
+      min-width: 22px;
+      text-align: center;
+    }
+    .tab-btn.active .tab-badge { background: var(--yellow-dim); color: var(--yellow); }
 
-.item-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  flex-shrink: 0;
-  min-width: 120px;
-}
+    /* ── PANELS ── */
+    .panel { display: none; }
+    .panel.active { display: block; }
 
-.char-pill {
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 100px;
-  white-space: nowrap;
-  letter-spacing: 0.3px;
-}
-.char-pill.ok { background: var(--dishio-green-bg); color: var(--dishio-green-light); }
-.char-pill.warn { background: var(--dishio-yellow-dim); color: var(--dishio-yellow); }
-.char-pill.over { background: rgba(239,68,68,0.12); color: #EF4444; }
-.char-pill.empty { background: var(--dishio-dark-card); color: var(--dishio-text-muted); }
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .section-header-title { font-size: 18px; font-weight: 700; white-space: nowrap; }
+    .section-header-line {
+      flex: 1;
+      height: 1px;
+      background: var(--card-border);
+      position: relative;
+    }
+    .section-header-line::after {
+      content: '';
+      position: absolute;
+      right: 0; top: -3px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--card-border);
+    }
+    .section-header-action { flex-shrink: 0; }
 
-.approve-btn {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 10px 16px;
-  border-radius: 100px;
-  border: 1.5px solid var(--dishio-dark-border);
-  background: transparent;
-  color: var(--dishio-text-muted);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-  width: 100%;
-  justify-content: center;
-}
-.approve-btn:hover {
-  border-color: var(--approve-green);
-  color: var(--approve-green);
-  background: var(--approve-green-bg);
-}
-.approve-btn.active {
-  border-color: var(--approve-green);
-  color: var(--approve-green);
-  background: var(--approve-green-bg);
-}
-.approve-btn.active:hover {
-  border-color: var(--reject-red);
-  color: var(--reject-red);
-  background: var(--reject-red-bg);
-}
-.approve-btn.active:hover .approve-icon { display: none; }
-.approve-btn.active:hover .reject-icon { display: flex; }
-.approve-icon { display: flex; }
-.reject-icon { display: none; }
+    /* ── GOOGLE LAYOUT ── */
+    #panel-google .google-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 28px;
+      align-items: start;
+    }
+    #panel-google .google-right {
+      position: sticky;
+      top: calc(var(--header-h) + 20px);
+    }
 
-/* empty state */
-.empty-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 40px;
-  color: var(--dishio-text-muted);
-}
-.empty-card .empty-icon { font-size: 28px; opacity: 0.25; }
-.empty-card .empty-text { font-size: 14px; }
-.empty-card .empty-hint { font-size: 12px; opacity: 0.5; }
+    /* ── COLLAPSIBLE SECTION CARD ── */
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .section-card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+    .section-card-header:hover { background: rgba(255,255,255,0.025); }
+    .section-card-title { flex: 1; font-size: 14px; font-weight: 600; }
+    .section-card-meta { font-size: 12px; color: var(--text-dim); }
+    .section-card-chevron {
+      width: 18px; height: 18px;
+      color: var(--text-dim);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .section-card.collapsed .section-card-chevron { transform: rotate(-90deg); }
+    .section-card-body { padding: 0 16px 16px; }
+    .section-card.collapsed .section-card-body { display: none; }
 
-/* === AD PREVIEW MOCKUPS === */
-.ad-preview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-  margin-top: 16px;
-}
-.ad-mockup {
-  background: var(--dishio-dark-surface);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: var(--transition);
-}
-.ad-mockup:hover { border-color: var(--dishio-green); transform: translateY(-2px); box-shadow: var(--shadow); }
-.ad-mockup-header {
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid var(--dishio-dark-border);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dishio-text-muted);
-}
-.ad-mockup-header .platform-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-.ad-mockup-body { padding: 20px; }
+    /* ── ITEM CARD ── */
+    .item-card {
+      background: #0D0D0D;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .item-card:last-child { margin-bottom: 0; }
+    .item-card.state-approved {
+      border-color: var(--green);
+      background: rgba(0,200,100,0.04);
+      box-shadow: 0 0 0 1px rgba(0,200,100,0.15);
+    }
+    .item-card.state-needs-edit {
+      border-color: var(--amber);
+      background: rgba(255,180,0,0.04);
+      box-shadow: 0 0 0 1px rgba(255,180,0,0.15);
+    }
+    .item-card-row { display: flex; align-items: flex-start; gap: 12px; }
+    .item-num {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .item-text {
+      flex: 1;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      min-height: 24px;
+      border-radius: 4px;
+      padding: 2px 4px;
+      word-break: break-word;
+      transition: background 0.15s;
+    }
+    .item-text:hover { background: rgba(255,255,255,0.04); }
+    .item-text:focus { background: rgba(255,255,255,0.06); }
+    .item-text:empty::before { content: attr(data-placeholder); color: var(--text-dim); }
+    .char-pill {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+    .char-pill.over { background: var(--red-bg); color: var(--red); }
+    .char-pill.near { background: var(--amber-bg); color: var(--amber); }
 
-/* Google Search Ad mockup */
-.google-search-mockup {
-  background: #1a1a2e;
-  border-radius: var(--radius-sm);
-  padding: 20px;
-}
-.gs-url { font-size: 13px; color: var(--dishio-text-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-.gs-url .favicon { width: 18px; height: 18px; background: var(--dishio-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.gs-headline { font-size: 18px; color: #8AB4F8; font-weight: 400; margin-bottom: 6px; cursor: pointer; line-height: 1.3; }
-.gs-headline:hover { text-decoration: underline; }
-.gs-description { font-size: 13px; color: #BDC1C6; line-height: 1.5; }
-.gs-ad-badge { display: inline-block; font-size: 11px; font-weight: 700; color: #000; background: #F1C40F; padding: 1px 6px; border-radius: 3px; margin-right: 6px; }
+    /* ── APPROVAL TOGGLE ── */
+    .approval-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+    .approval-toggle { display: flex; gap: 6px; }
+    .approval-btn {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--card-border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .approval-btn:hover { border-color: #333; color: var(--text); }
+    .approval-btn.btn-approve.active {
+      background: var(--green-bg);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .approval-btn.btn-needs-edit.active {
+      background: var(--amber-bg);
+      border-color: var(--amber);
+      color: var(--amber);
+    }
 
-/* Meta Ad mockup */
-.meta-ad-mockup {
-  background: #1a1a2e;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.meta-header {
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.meta-avatar { width: 36px; height: 36px; background: var(--dishio-yellow); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: var(--dishio-dark); }
-.meta-name { font-size: 14px; font-weight: 600; color: #E4E6EB; }
-.meta-sponsored { font-size: 12px; color: #B0B3B8; }
-.meta-image { width: 100%; height: 200px; background: linear-gradient(135deg, var(--dishio-dark-surface), var(--dishio-dark-card)); display: flex; align-items: center; justify-content: center; }
-.meta-image-placeholder { font-size: 48px; opacity: 0.2; }
-.meta-body { padding: 12px 16px; }
-.meta-text { font-size: 14px; color: #E4E6EB; margin-bottom: 10px; line-height: 1.4; }
-.meta-cta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
-  background: rgba(255,255,255,0.05);
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-.meta-cta-text { font-size: 12px; color: #B0B3B8; }
-.meta-cta-btn { padding: 6px 16px; background: #E4E6EB; color: #000; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
+    /* ── NOTES ── */
+    .notes-wrapper { margin-top: 10px; display: none; }
+    .notes-wrapper.visible { display: block; }
+    .notes-textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 10px 12px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.15s;
+      min-height: 80px;
+    }
+    .notes-textarea::placeholder { color: var(--text-dim); }
+    .notes-textarea:focus { border-color: var(--amber); }
 
-/* PMax mockup */
-.pmax-mockup {
-  background: #1a1a2e;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-}
-.pmax-visual {
-  width: 100%;
-  height: 180px;
-  background: linear-gradient(135deg, #2a1a3e, #1a2a3e);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.pmax-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 16px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
-}
-.pmax-overlay h4 { font-size: 16px; color: white; font-weight: 600; }
-.pmax-overlay p { font-size: 12px; color: rgba(255,255,255,0.7); }
-.pmax-bottom {
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.pmax-cta { padding: 8px 20px; background: var(--dishio-yellow); color: var(--dishio-dark); border: none; border-radius: 100px; font-size: 13px; font-weight: 700; cursor: pointer; }
+    /* ── BTN SECONDARY ── */
+    .btn-secondary {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--card-border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); }
 
-/* Video section */
-.video-card {
-  background: var(--dishio-dark-surface);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: var(--transition);
-}
-.video-card:hover { border-color: var(--dishio-green); }
-.video-placeholder {
-  width: 100%;
-  height: 200px;
-  background: linear-gradient(135deg, #1a1a2e, #2a1a3e);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.play-btn {
-  width: 56px;
-  height: 56px;
-  background: rgba(255,217,0,0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.play-btn:hover { transform: scale(1.1); background: var(--dishio-yellow); }
-.play-btn svg { width: 24px; height: 24px; fill: var(--dishio-dark); margin-left: 3px; }
-.video-info { padding: 16px; }
-.video-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-.video-meta { font-size: 12px; color: var(--dishio-text-muted); }
+    /* ── GOOGLE AD PREVIEW ── */
+    .preview-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .preview-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .google-search-mockup {
+      background: #fff;
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: #000;
+    }
+    .gsm-ad-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      color: #006621;
+      border: 1px solid #006621;
+      border-radius: 3px;
+      padding: 1px 4px;
+      margin-bottom: 4px;
+      font-family: Arial, sans-serif;
+    }
+    .gsm-url { font-size: 12px; color: #006621; margin-bottom: 2px; font-family: Arial, sans-serif; }
+    .gsm-headline {
+      font-size: 18px;
+      font-weight: 400;
+      color: #1a0dab;
+      margin-bottom: 4px;
+      line-height: 1.3;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+    .gsm-headline:hover { text-decoration: underline; }
+    .gsm-description { font-size: 13px; color: #545454; line-height: 1.5; font-family: Arial, sans-serif; }
 
-/* Link preview */
-.link-preview-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--dishio-dark-surface);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
-  transition: var(--transition);
-  cursor: pointer;
-  text-decoration: none;
-  color: inherit;
-}
-.link-preview-card:hover { border-color: var(--dishio-green); transform: translateX(4px); }
-.link-icon-box {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-size: 22px;
-}
-.link-info { flex: 1; }
-.link-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-.link-url { font-size: 12px; color: var(--dishio-text-muted); word-break: break-all; }
-.link-arrow { font-size: 18px; color: var(--dishio-text-muted); transition: var(--transition); }
-.link-preview-card:hover .link-arrow { color: var(--dishio-green-light); transform: translateX(4px); }
+    /* PMax mockup */
+    .pmax-mockup { border-radius: 10px; overflow: hidden; background: linear-gradient(135deg,#1A0A00,#3D1E0A,#5C3317); }
+    .pmax-visual {
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .pmax-visual::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg,rgba(255,217,0,0.05),transparent 60%);
+    }
+    .pmax-visual-text { font-size: 10px; color: rgba(255,255,255,0.18); text-transform: uppercase; letter-spacing: 0.12em; }
+    .pmax-content { padding: 14px; }
+    .pmax-headline { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .pmax-desc { font-size: 12px; color: rgba(255,255,255,0.55); margin-bottom: 12px; }
+    .pmax-cta { display: inline-block; background: var(--yellow); color: #000; font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 6px; }
 
-/* === META AD MOCKUP === */
-.meta-ad-preview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 28px;
-  margin-bottom: 28px;
-}
-.meta-ad-slot {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-.meta-ad-slot-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--dishio-text-muted);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.fb-ad-card {
-  background: #242526;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-.fb-ad-header {
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.fb-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--dishio-yellow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 800;
-  color: #000;
-  flex-shrink: 0;
-}
-.fb-page-info { flex: 1; }
-.fb-page-name { font-size: 14px; font-weight: 600; color: #E4E6EB; line-height: 1.2; }
-.fb-sponsored { font-size: 12px; color: #B0B3B8; display: flex; align-items: center; gap: 4px; }
-.fb-more {
-  width: 32px; height: 32px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: #B0B3B8; font-size: 20px; cursor: pointer;
-  transition: background 0.2s;
-}
-.fb-more:hover { background: rgba(255,255,255,0.1); }
-.fb-primary-text {
-  padding: 0 16px 12px;
-  font-size: 14px;
-  color: #E4E6EB;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.fb-image-area {
-  width: 100%;
-  aspect-ratio: 1.91 / 1;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-.fb-image-area .img-placeholder-icon { font-size: 56px; opacity: 0.18; }
-.fb-image-label {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-}
-.fb-link-bar {
-  background: #3a3b3c;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-.fb-link-info { flex: 1; min-width: 0; }
-.fb-link-domain { font-size: 11px; color: #B0B3B8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
-.fb-link-headline { font-size: 14px; font-weight: 600; color: #E4E6EB; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.fb-cta-btn {
-  padding: 7px 16px;
-  background: #E4E6EB;
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: background 0.2s;
-}
-.fb-cta-btn:hover { background: #fff; }
-.fb-reactions {
-  padding: 6px 16px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  display: flex;
-  gap: 4px;
-}
-.fb-reaction-btn {
-  flex: 1;
-  padding: 6px;
-  background: transparent;
-  border: none;
-  color: #B0B3B8;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: background 0.2s;
-}
-.fb-reaction-btn:hover { background: rgba(255,255,255,0.08); color: #E4E6EB; }
+    /* ── META PANEL ── */
+    .meta-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
 
-/* Instagram mockup */
-.ig-ad-card {
-  background: #000;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-.ig-ad-header {
-  padding: 12px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.ig-avatar-ring {
-  padding: 2px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-  flex-shrink: 0;
-}
-.ig-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--dishio-yellow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 800;
-  color: #000;
-  border: 2px solid #000;
-}
-.ig-page-info { flex: 1; }
-.ig-page-name { font-size: 13px; font-weight: 600; color: #FAFAFA; }
-.ig-sponsored { font-size: 11px; color: #8E8E8E; }
-.ig-image-area {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.ig-image-area .img-placeholder-icon { font-size: 56px; opacity: 0.18; }
-.ig-image-label {
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-.ig-cta-strip {
-  background: #111;
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.ig-cta-url { font-size: 12px; color: #8E8E8E; }
-.ig-cta-btn {
-  font-size: 12px;
-  font-weight: 700;
-  color: #0095F6;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.ig-body { padding: 8px 12px 12px; }
-.ig-actions {
-  display: flex;
-  gap: 14px;
-  margin-bottom: 8px;
-}
-.ig-action-btn {
-  background: none;
-  border: none;
-  color: #FAFAFA;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-}
-.ig-caption { font-size: 13px; color: #FAFAFA; line-height: 1.5; }
-.ig-caption strong { font-weight: 600; }
+    /* ── META AD CARD ── */
+    .meta-ad-card {
+      background: var(--card);
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .meta-ad-card.state-approved {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px rgba(0,200,100,0.2), 0 4px 24px rgba(0,200,100,0.06);
+    }
+    .meta-ad-card.state-needs-edit {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 1px rgba(255,180,0,0.2), 0 4px 24px rgba(255,180,0,0.06);
+    }
+    .meta-card-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .meta-card-name { font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
+    .meta-card-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+    .meta-card-status.approved { color: var(--green); }
+    .meta-card-status.needs-edit { color: var(--amber); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 
-/* Meta preview URL iframe */
-.meta-preview-iframe-wrap {
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--dishio-dark-border);
-  background: var(--dishio-dark-surface);
-}
-.meta-preview-iframe-wrap iframe {
-  width: 100%;
-  height: 600px;
-  border: none;
-  display: block;
-}
-.meta-preview-url-bar {
-  padding: 10px 16px;
-  background: var(--dishio-dark-card);
-  border-bottom: 1px solid var(--dishio-dark-border);
-  font-size: 12px;
-  color: var(--dishio-text-muted);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.meta-preview-url-bar a { color: var(--dishio-green-light); text-decoration: none; font-weight: 600; }
-.meta-preview-url-bar a:hover { text-decoration: underline; }
+    .meta-card-body {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 32px;
+      padding: 28px 24px;
+    }
 
-/* No meta items state */
-.meta-preview-empty {
-  padding: 32px;
-  text-align: center;
-  color: var(--dishio-text-muted);
-  font-size: 14px;
-}
+    /* ── PHONE SHELL ── */
+    .phone-shell {
+      width: 200px;
+      height: 380px;
+      background: #1C1C1E;
+      border-radius: 36px;
+      border: 6px solid #2C2C2E;
+      box-shadow: 0 0 0 1px #3A3A3C, 0 20px 40px rgba(0,0,0,0.7);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+    }
 
-/* Screenshot loading state */
-@keyframes shimmer {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-.img-loading {
-  background: linear-gradient(90deg, #1a1a2e 25%, #2a2a3e 50%, #1a1a2e 75%);
-  background-size: 800px 100%;
-  animation: shimmer 1.6s infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 10px;
-  color: var(--dishio-text-muted);
-  font-size: 12px;
-  font-weight: 600;
-}
-.img-loading svg { opacity: 0.4; }
-.ad-screenshot-wrap {
-  position: relative;
-  width: 100%;
-}
-.ad-screenshot-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.ad-screenshot-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  background: rgba(0,0,0,0.7);
-  color: var(--dishio-green-light);
-  padding: 3px 8px;
-  border-radius: 4px;
-  backdrop-filter: blur(4px);
-}
+    /* Facebook Feed mockup */
+    .fb-feed { background: #F0F2F5; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+    .fb-topbar {
+      background: #fff;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #E4E6EB;
+      flex-shrink: 0;
+    }
+    .fb-logo { font-size: 16px; font-weight: 900; color: #1877F2; font-family: 'Inter', sans-serif; }
+    .fb-topbar-icons { display: flex; gap: 6px; }
+    .fb-icon-circle { width: 22px; height: 22px; background: #E4E6EB; border-radius: 50%; }
+    .fb-post-card { background: #fff; margin-top: 6px; flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+    .fb-post-header { display: flex; align-items: center; gap: 8px; padding: 8px 10px 6px; flex-shrink: 0; }
+    .fb-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: #000;
+      flex-shrink: 0;
+    }
+    .fb-post-meta { flex: 1; min-width: 0; }
+    .fb-page-name { font-size: 9px; font-weight: 700; color: #050505; font-family: 'Inter', sans-serif; }
+    .fb-sponsored { font-size: 8px; color: #65676B; font-family: 'Inter', sans-serif; }
+    .fb-post-text {
+      padding: 0 10px 6px;
+      font-size: 8.5px;
+      color: #050505;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.45;
+      flex-shrink: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .fb-image {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(135deg,#2C1A0E 0%,#5C3317 50%,#8B4513 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .fb-image svg { opacity: 0.2; }
+    .fb-link-strip {
+      background: #F2F3F5;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .fb-link-info { flex: 1; min-width: 0; }
+    .fb-domain { font-size: 7px; text-transform: uppercase; color: #65676B; font-family: 'Inter', sans-serif; letter-spacing: 0.05em; }
+    .fb-link-title { font-size: 8px; font-weight: 700; color: #050505; font-family: 'Inter', sans-serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .fb-learn-more {
+      flex-shrink: 0;
+      background: #E4E6EB;
+      border: none;
+      border-radius: 3px;
+      font-size: 7px;
+      font-weight: 700;
+      color: #050505;
+      font-family: 'Inter', sans-serif;
+      padding: 4px 8px;
+      cursor: pointer;
+    }
+    .fb-reactions {
+      display: flex;
+      padding: 4px 8px;
+      border-top: 1px solid #E4E6EB;
+      flex-shrink: 0;
+    }
+    .fb-react-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      padding: 4px;
+      font-size: 7.5px;
+      color: #65676B;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+    }
 
-/* Full screenshot card (when URL is a Facebook ad preview) */
-.ad-screenshot-card {
-  background: var(--dishio-dark-card);
-  border: 1px solid var(--dishio-dark-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-.ad-screenshot-card-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--dishio-dark-border);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dishio-text-muted);
-}
-.ad-screenshot-card img {
-  width: 100%;
-  display: block;
-}
-.ad-screenshot-card-footer {
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 12px;
-  color: var(--dishio-text-muted);
-  border-top: 1px solid var(--dishio-dark-border);
-}
-.ad-screenshot-card-footer a {
-  color: var(--dishio-green-light);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 12px;
-}
-.ad-screenshot-card-footer a:hover { text-decoration: underline; }
+    /* ── META COPY DETAILS ── */
+    .meta-copy-section { flex: 1; }
+    .copy-field { margin-bottom: 20px; }
+    .copy-field-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .copy-text-editable {
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      border-radius: 8px;
+      padding: 8px 10px;
+      min-height: 40px;
+      border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+    .copy-text-editable:hover { background: rgba(255,255,255,0.04); border-color: var(--card-border); }
+    .copy-text-editable:focus { background: rgba(255,255,255,0.06); border-color: #333; }
+    .copy-text-editable:empty::before { content: attr(data-placeholder); color: var(--text-dim); }
+    .link-field { display: flex; align-items: center; gap: 8px; }
+    .link-url {
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      outline: none;
+      font-family: 'Space Grotesk', monospace;
+      transition: border-color 0.15s;
+    }
+    .link-url:focus { border-color: #444; color: var(--text); }
+    .link-url::placeholder { color: var(--text-dim); }
+    .btn-open-link {
+      flex-shrink: 0;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1.5px solid var(--card-border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-open-link:hover { border-color: var(--yellow); color: var(--yellow); }
 
-/* === FOOTER === */
-.footer {
-  max-width: 1400px;
-  margin: 48px auto 0;
-  padding: 32px 40px;
-  border-top: 1px solid var(--dishio-dark-border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.footer-left { font-size: 13px; color: var(--dishio-text-muted); }
-.footer-right { display: flex; gap: 12px; }
-.footer-btn {
-  padding: 10px 20px;
-  border-radius: 100px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  border: none;
-}
-.footer-btn.secondary {
-  background: var(--dishio-dark-surface);
-  color: var(--dishio-text);
-  border: 1px solid var(--dishio-dark-border);
-}
-.footer-btn.secondary:hover { border-color: var(--dishio-text-muted); }
-.footer-btn.primary { background: var(--dishio-yellow); color: var(--dishio-dark); font-weight: 700; }
-.footer-btn.primary:hover { background: var(--dishio-yellow-light); box-shadow: 0 4px 20px rgba(255,217,0,0.3); }
+    .meta-card-footer { border-top: 1px solid var(--card-border); padding: 16px 24px; }
 
-/* Empty state */
-.empty-row td {
-  text-align: center;
-  padding: 40px !important;
-}
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.empty-icon { font-size: 32px; opacity: 0.3; }
-.empty-text { font-size: 14px; color: var(--dishio-text-muted); }
-.empty-hint { font-size: 12px; color: var(--dishio-text-muted); opacity: 0.6; }
+    /* ── SIMPLE CARDS (Dish.io / Videos) ── */
+    .simple-card {
+      background: var(--card);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .simple-card.state-approved {
+      border-color: var(--green);
+      box-shadow: 0 0 0 1px rgba(0,200,100,0.15);
+    }
+    .simple-card.state-needs-edit {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 1px rgba(255,180,0,0.15);
+    }
+    .simple-card-name {
+      font-size: 15px;
+      font-weight: 700;
+      outline: none;
+      border-radius: 6px;
+      padding: 2px 6px;
+      margin-bottom: 12px;
+      display: block;
+      transition: background 0.15s;
+    }
+    .simple-card-name:hover { background: rgba(255,255,255,0.05); }
+    .simple-card-name:focus { background: rgba(255,255,255,0.08); }
 
-/* Add row button */
-.add-row-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  padding: 12px;
-  background: transparent;
-  border: 2px dashed var(--dishio-dark-border);
-  border-radius: var(--radius-sm);
-  color: var(--dishio-text-muted);
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-top: 12px;
-}
-.add-row-btn:hover { border-color: var(--dishio-green); color: var(--dishio-green-light); background: rgba(0,155,0,0.08); }
+    /* ── EMPTY STATE ── */
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--text-dim); }
+    .empty-state svg { width: 36px; height: 36px; margin: 0 auto 14px; display: block; opacity: 0.25; }
+    .empty-state p { font-size: 13px; }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .header { padding: 0 20px; }
-  .hero { padding: 40px 20px 20px; }
-  .hero-top { flex-direction: column; }
-  .hero h1 { font-size: 32px; }
-  .hero-right { flex-wrap: wrap; }
-  .section, .tabs-container, .progress-bar-container { padding: 0 20px; }
-  .tabs-nav { overflow-x: auto; }
-  .ad-preview-grid { grid-template-columns: 1fr; }
-  .footer { flex-direction: column; gap: 16px; text-align: center; }
-}
+    /* ── PASTE MODAL ── */
+    #pasteModal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+    #pasteModal.open { display: flex; }
+    .paste-panel {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+    }
+    .paste-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .paste-instructions { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.65; }
+    #pasteTextarea {
+      width: 100%;
+      min-height: 200px;
+      background: #0A0A0A;
+      border: 1px solid #222;
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Space Grotesk', monospace;
+      font-size: 13px;
+      padding: 14px 16px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.15s;
+      margin-bottom: 14px;
+    }
+    #pasteTextarea:focus { border-color: var(--yellow); }
+    #pasteTextarea::placeholder { color: var(--text-dim); }
+    .paste-actions { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn-preview {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: 1.5px solid var(--card-border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-preview:hover { border-color: #444; color: var(--text); }
+    .btn-import {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: none;
+      background: var(--yellow);
+      color: #000;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-import:hover { opacity: 0.88; }
+    .btn-import:disabled { opacity: 0.35; cursor: default; }
+    .btn-cancel {
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-left: auto;
+      transition: color 0.15s;
+    }
+    .btn-cancel:hover { color: var(--text); }
+    #pastePreview {
+      display: none;
+      background: #0A0A0A;
+      border: 1px solid #1A1A1A;
+      border-radius: 10px;
+      padding: 14px 16px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    #pastePreview.has-items { display: block; }
+    .paste-preview-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #1A1A1A;
+      font-size: 13px;
+    }
+    .paste-preview-item:last-child { border-bottom: none; }
+    .preview-item-num {
+      width: 22px; height: 22px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .preview-item-text { flex: 1; color: var(--text-muted); line-height: 1.45; }
 
-/* Editable cell highlight */
-.editable-cell {
-  cursor: text;
-  padding: 8px 12px;
-  border-radius: var(--radius-xs);
-  transition: var(--transition);
-  min-height: 24px;
-}
-.editable-cell:hover { background: var(--dishio-dark-surface); }
-.editable-cell:focus {
-  outline: none;
-  background: var(--dishio-dark-surface);
-  box-shadow: 0 0 0 2px var(--dishio-yellow);
-}
-.editable-cell[data-placeholder]:empty::before {
-  content: attr(data-placeholder);
-  color: var(--dishio-text-muted);
-  opacity: 0.5;
-}
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--yellow);
+      color: #000;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 12px 24px;
+      border-radius: 100px;
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(255,217,0,0.3);
+    }
+    #toast.error { background: var(--red); color: #fff; box-shadow: 0 4px 20px rgba(255,68,68,0.3); }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Animations */
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.animate-in { animation: fadeIn 0.5s ease forwards; }
-
-/* Toast notification */
-.toast {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  padding: 14px 24px;
-  background: var(--dishio-malachite);
-  color: var(--dishio-dark);
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  z-index: 1000;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: var(--transition);
-  pointer-events: none;
-}
-.toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
-</style>
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #panel-google .google-layout { grid-template-columns: 1fr; }
+      #panel-google .google-right { position: static; }
+      .meta-card-body { grid-template-columns: 1fr; }
+      .phone-shell { margin: 0 auto; }
+      #instructionsBanner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      #mainWrapper { padding-left: 16px; padding-right: 16px; }
+      #siteHeader { padding: 0 16px; gap: 12px; }
+      .tab-btn { padding: 12px 14px; font-size: 13px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Header -->
-<header class="header">
-  <div class="header-inner">
-    <a class="logo" href="#">
-      <svg class="logo-svg" width="160" height="38" viewBox="0 0 537.52 126.38" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
-      </svg>
-    </a>
-    <div class="header-meta">
-      <div class="header-badge">
-        <span class="dot"></span>
-        Campaign Preview
-      </div>
-      <button class="btn-primary" onclick="submitAllApprovals()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
-        Submit Approvals
-      </button>
+<!-- ═══════════════════════════════════════════════
+     STICKY HEADER
+════════════════════════════════════════════════ -->
+<header id="siteHeader">
+  <div class="header-logo">
+    <svg viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io">
+      <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+    </svg>
+  </div>
+
+  <div class="header-center">
+    <div id="clientName" contenteditable="true" spellcheck="false" aria-label="Client restaurant name">Restaurant Name</div>
+    <div id="accountManagerName" contenteditable="true" spellcheck="false" aria-label="Account manager name">Account Manager</div>
+  </div>
+
+  <div class="header-right">
+    <div id="progressIndicator">
+      <span class="prog-num" id="progApproved">0</span><span> / </span><span id="progTotal">0</span><span> Approved</span>
     </div>
+    <button class="btn-submit" onclick="submitApprovals()">Submit Approvals</button>
   </div>
 </header>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="hero-top">
-    <div class="hero-left">
-      <div class="hero-label">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        Campaign Preview
-      </div>
-      <h1>
-        <span class="accent" id="clientName" contenteditable="true" spellcheck="false">Restaurant Name</span><br>
-        Ad Copy Review
-      </h1>
-      <p class="hero-subtitle">Review and approve ad copy across Google, Meta, and Dishio campaigns. Click any text field to edit, toggle approvals, and add notes.</p>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--dishio-text-muted)">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Account Manager: <strong style="color:var(--dishio-text-secondary)" id="accountManagerName">—</strong>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="stat-card">
-        <div class="stat-number" id="totalItems">0</div>
-        <div class="stat-label">Total Items</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="approvedItems" style="color: var(--dishio-malachite);">0</div>
-        <div class="stat-label">Approved</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number" id="pendingItems" style="color: var(--dishio-yellow);">0</div>
+<!-- ═══════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════ -->
+<main id="mainWrapper">
 
-        <div class="stat-label">Pending</div>
+  <!-- INSTRUCTIONS BANNER -->
+  <div id="instructionsBanner">
+    <button class="banner-dismiss" onclick="document.getElementById('instructionsBanner').classList.add('dismissed')" aria-label="Dismiss">&times;</button>
+    <div>
+      <div class="banner-label">Channel Marketing Framework</div>
+      <h1 class="banner-heading">Your campaign is ready for review</h1>
+      <p class="banner-body">We've built your multi-channel ad campaign using Dish.io's proven Channel Marketing Framework — combining Google Search, Performance Max, and Meta advertising to drive awareness, traffic, and conversions.</p>
+    </div>
+    <div class="banner-steps">
+      <div class="banner-step">
+        <span class="step-num">01</span>
+        <div class="step-content">
+          <strong>Review each piece of copy</strong>
+          <p>Make sure messaging reflects your brand voice and is factually accurate.</p>
+        </div>
+      </div>
+      <div class="banner-step">
+        <span class="step-num">02</span>
+        <div class="step-content">
+          <strong>Check Google &amp; Meta ads</strong>
+          <p>Use the tabs to review all ad creative. Previews show exactly how ads will appear to customers.</p>
+        </div>
+      </div>
+      <div class="banner-step">
+        <span class="step-num">03</span>
+        <div class="step-content">
+          <strong>Approve or request edits</strong>
+          <p>Press "Approved" on items that look good. For changes, select "Needs Edit" and describe what to update.</p>
+        </div>
+      </div>
+      <div class="banner-step">
+        <span class="step-num">04</span>
+        <div class="step-content">
+          <strong>Submit your review</strong>
+          <p>Click "Submit Approvals" when done. Your account manager will be notified instantly.</p>
+        </div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- Progress Bar -->
-<div class="progress-bar-container">
-  <div class="progress-wrapper">
-    <div class="progress-header">
-      <span class="progress-title">Overall Approval Progress</span>
-      <span class="progress-pct" id="progressPct">0%</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-    </div>
-    <div class="progress-legend">
-      <div class="legend-item"><div class="legend-dot" style="background:var(--dishio-malachite)"></div> Approved</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--dishio-yellow)"></div> Pending Review</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--reject-red)"></div> Needs Edits</div>
-    </div>
-  </div>
-</div>
+  <!-- CAMPAIGN SWITCHER -->
+  <div id="campaignSwitcher" style="display:none;"></div>
 
-<!-- Campaign switcher (shown when multi-campaign mode) -->
-<div class="campaign-switcher" id="campaignSwitcher" style="display:none">
-  <div class="campaign-switcher-inner" id="campaignSwitcherInner">
-    <!-- dynamically rendered -->
-  </div>
-</div>
-
-<!-- Tabs -->
-<div class="tabs-container">
-  <div class="tabs-nav" id="tabsNav">
-    <button class="tab-btn active" data-tab="google">
-      <span class="tab-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-      </span>
-      Google
-      <span class="tab-count" id="googleCount">0</span>
+  <!-- TAB NAV -->
+  <nav id="tabNav" role="tablist">
+    <button class="tab-btn active" id="tab-google" role="tab" aria-selected="true" onclick="switchTab('google')">
+      Google <span class="tab-badge" id="badge-google">0</span>
     </button>
-    <button class="tab-btn" data-tab="meta">
-      <span class="tab-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
-      </span>
-      Meta
-      <span class="tab-count" id="metaCount">0</span>
+    <button class="tab-btn" id="tab-meta" role="tab" aria-selected="false" onclick="switchTab('meta')">
+      Meta <span class="tab-badge" id="badge-meta">0</span>
     </button>
-    <button class="tab-btn" data-tab="dishio">
-      <span class="tab-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      </span>
-      Dishio
-      <span class="tab-count" id="dishioCount">0</span>
+    <button class="tab-btn" id="tab-dishio" role="tab" aria-selected="false" onclick="switchTab('dishio')">
+      Dish.io <span class="tab-badge" id="badge-dishio">0</span>
     </button>
-    <button class="tab-btn" data-tab="videos">
-      <span class="tab-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-      </span>
-      Videos
-      <span class="tab-count" id="videosCount">0</span>
+    <button class="tab-btn" id="tab-videos" role="tab" aria-selected="false" onclick="switchTab('videos')">
+      Videos <span class="tab-badge" id="badge-videos">0</span>
     </button>
+  </nav>
+
+  <!-- ── GOOGLE PANEL ── -->
+  <div class="panel active" id="panel-google" role="tabpanel">
+    <div class="google-layout">
+      <div class="google-left">
+        <!-- Headlines -->
+        <div class="section-card" id="sc-headlines">
+          <div class="section-card-header" onclick="toggleSection('headlines')">
+            <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <span class="section-card-title">Headlines</span>
+            <span class="section-card-meta">30 char max</span>
+            <button class="btn-secondary" style="margin-left:auto" onclick="event.stopPropagation();openPasteModal('headlines','Headlines',30)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+              Paste Headlines
+            </button>
+          </div>
+          <div class="section-card-body" id="list-headlines">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <p>No headlines yet. Paste from your Google Sheet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Long Headlines -->
+        <div class="section-card" id="sc-longHeadlines">
+          <div class="section-card-header" onclick="toggleSection('longHeadlines')">
+            <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <span class="section-card-title">Long Headlines</span>
+            <span class="section-card-meta">90 char max</span>
+            <button class="btn-secondary" style="margin-left:auto" onclick="event.stopPropagation();openPasteModal('longHeadlines','Long Headlines',90)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+              Paste Long Headlines
+            </button>
+          </div>
+          <div class="section-card-body" id="list-longHeadlines">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <p>No long headlines yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Descriptions -->
+        <div class="section-card" id="sc-descriptions">
+          <div class="section-card-header" onclick="toggleSection('descriptions')">
+            <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            <span class="section-card-title">Descriptions</span>
+            <span class="section-card-meta">90 char max</span>
+            <button class="btn-secondary" style="margin-left:auto" onclick="event.stopPropagation();openPasteModal('descriptions','Descriptions',90)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+              Paste Descriptions
+            </button>
+          </div>
+          <div class="section-card-body" id="list-descriptions">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <p>No descriptions yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: live previews -->
+      <div class="google-right">
+        <div class="preview-card">
+          <div class="preview-label">Google Search Ad Preview</div>
+          <div class="google-search-mockup">
+            <div class="gsm-ad-badge">Ad</div>
+            <div class="gsm-url" id="gsm-url">yourrestaurant.com</div>
+            <div class="gsm-headline" id="gsm-headline">Your Headline Will Appear Here</div>
+            <div class="gsm-description" id="gsm-description">Your description will appear here once you add ad copy above. It shows exactly as customers will see it in Google Search.</div>
+          </div>
+        </div>
+        <div class="preview-card">
+          <div class="preview-label">Performance Max Preview</div>
+          <div class="pmax-mockup">
+            <div class="pmax-visual">
+              <span class="pmax-visual-text">Ad Visual</span>
+            </div>
+            <div class="pmax-content">
+              <div class="pmax-headline" id="pmax-headline">Your Long Headline Here</div>
+              <div class="pmax-desc" id="pmax-desc">Your description copy will appear in this spot across Google's network of properties.</div>
+              <span class="pmax-cta">Learn More</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── META PANEL ── -->
+  <div class="panel" id="panel-meta" role="tabpanel">
+    <div class="meta-panel-header">
+      <div class="section-header" style="flex:1;margin-bottom:0">
+        <h2 class="section-header-title">Meta Ad Campaigns</h2>
+        <div class="section-header-line"></div>
+      </div>
+      <button class="btn-secondary" style="margin-left:24px;flex-shrink:0" onclick="openPasteModal('meta','Meta Copy',1000)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        Paste Meta Copy
+      </button>
+    </div>
+    <div id="list-meta">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <p>No Meta ads yet. Paste your copy to get started.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DISH.IO PANEL ── -->
+  <div class="panel" id="panel-dishio" role="tabpanel">
+    <div class="section-header">
+      <h2 class="section-header-title">Dish.io Smart Links</h2>
+      <div class="section-header-line"></div>
+      <button class="btn-secondary section-header-action" onclick="openPasteModal('dishio','Dish.io Links',500)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        Add Links
+      </button>
+    </div>
+    <div id="list-dishio">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <p>No Dish.io smart links yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── VIDEOS PANEL ── -->
+  <div class="panel" id="panel-videos" role="tabpanel">
+    <div class="section-header">
+      <h2 class="section-header-title">Video Assets</h2>
+      <div class="section-header-line"></div>
+      <button class="btn-secondary section-header-action" onclick="openPasteModal('videos','Video Assets',500)">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        Add Videos
+      </button>
+    </div>
+    <div id="list-videos">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <p>No video assets yet.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════
+     PASTE MODAL
+════════════════════════════════════════════════ -->
+<div id="pasteModal" role="dialog" aria-modal="true" aria-labelledby="pasteModalTitle">
+  <div class="paste-panel">
+    <h2 class="paste-title" id="pasteModalTitle">Paste Copy</h2>
+    <p class="paste-instructions">Copy cells from your Google Sheet (select the copy column, Cmd+C or Ctrl+C), then paste below. One item per line.</p>
+    <textarea id="pasteTextarea" placeholder="Paste your copy here..." oninput="onPasteInput()"></textarea>
+    <div class="paste-actions">
+      <button class="btn-preview" onclick="previewPaste()">Preview</button>
+      <button class="btn-import" id="btnImport" onclick="confirmImport()" disabled>Import 0 Items</button>
+      <button class="btn-cancel" onclick="closePasteModal()">Cancel</button>
+    </div>
+    <div id="pastePreview"></div>
   </div>
 </div>
 
-<!-- GOOGLE TAB -->
-<div class="tab-content active" id="tab-google">
+<!-- TOAST -->
+<div id="toast" role="alert" aria-live="assertive"></div>
 
-  <!-- Headlines -->
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-blue-bg); color: var(--dishio-blue);">H</div>
-          <div>
-            <div class="section-title">Google Headlines</div>
-            <div class="section-subtitle">Character limit: 30 &nbsp;|&nbsp; Used in Search & PMax campaigns</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <div class="section-badge" style="background: var(--dishio-blue-bg); color: var(--dishio-blue);" id="headlineBadge">0 items</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="headlinesBody">
-        <div id="headlinesTableBody" class="items-list"></div>
-        <button class="add-row-btn" onclick="addRow('headlines', 30)">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Headline
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Long Headlines -->
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-purple-bg); color: var(--dishio-purple);">LH</div>
-          <div>
-            <div class="section-title">Google Long Headlines</div>
-            <div class="section-subtitle">Character limit: 90 &nbsp;|&nbsp; Used in PMax & Demand Gen</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <div class="section-badge" style="background: var(--dishio-purple-bg); color: var(--dishio-purple);" id="longHeadlineBadge">0 items</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="longHeadlinesBody">
-        <div id="longHeadlinesTableBody" class="items-list"></div>
-        <button class="add-row-btn" onclick="addRow('longHeadlines', 90)">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Long Headline
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Descriptions -->
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-green-bg); color: var(--dishio-green);">D</div>
-          <div>
-            <div class="section-title">Google Descriptions</div>
-            <div class="section-subtitle">Character limit: 90 &nbsp;|&nbsp; Used in Search, PMax & Demand Gen</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <div class="section-badge" style="background: var(--dishio-green-bg); color: var(--dishio-green);" id="descriptionBadge">0 items</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="descriptionsBody">
-        <div id="descriptionsTableBody" class="items-list"></div>
-        <button class="add-row-btn" onclick="addRow('descriptions', 90)">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Description
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Google Ad Preview -->
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-yellow-bg); color: var(--dishio-yellow);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <div>
-            <div class="section-title">Live Ad Previews</div>
-            <div class="section-subtitle">See how ads will appear on Google Search and PMax</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body" id="googlePreviewBody">
-        <div class="ad-preview-grid" id="googleAdPreviews"></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- META TAB -->
-<div class="tab-content" id="tab-meta">
-
-  <!-- Meta Ad Copy (primary text for ads) -->
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-blue-bg); color: #1877F2;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
-          </div>
-          <div>
-            <div class="section-title">Meta Ad Copy</div>
-            <div class="section-subtitle">Primary text for Facebook & Instagram ads — no character limit</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <div class="section-badge" style="background: var(--dishio-blue-bg); color: #1877F2;" id="metaBadge">0 items</div>
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="metaBody">
-        <div id="metaTableBody" class="items-list"></div>
-        <button class="add-row-btn" onclick="addMetaRow()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Meta Ad
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Live Meta Ad Previews -->
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: linear-gradient(135deg, #1877F2, #E1306C); color: white;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <div>
-            <div class="section-title">Live Ad Previews</div>
-            <div class="section-subtitle">Facebook Feed & Instagram Feed — updates as you edit copy above</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="metaPreviewBody">
-        <div id="metaAdPreviews"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Meta Preview URLs (if any) -->
-  <div class="section" id="metaPreviewLinksSection" style="display:none">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-green-bg); color: var(--dishio-green-light);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-          </div>
-          <div>
-            <div class="section-title">Ad Manager Preview Links</div>
-            <div class="section-subtitle">Direct links to view ads in Facebook Ad Manager</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="metaPreviewLinksBody">
-        <div id="metaPreviewLinksList" class="items-list"></div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- DISHIO TAB -->
-<div class="tab-content" id="tab-dishio">
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: linear-gradient(135deg, var(--dishio-yellow), var(--dishio-green)); color: white;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          </div>
-          <div>
-            <div class="section-title">Dishio Smart Site</div>
-            <div class="section-subtitle">Review the Dishio-powered digital experience</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="dishioBody">
-        <div id="dishioTableBody" class="items-list"></div>
-        <button class="add-row-btn" onclick="addDishioRow()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Smart Site Link
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- VIDEOS TAB -->
-<div class="tab-content" id="tab-videos">
-  <div class="section">
-    <div class="section-card">
-      <div class="section-header open" onclick="toggleSection(this)">
-        <div class="section-header-left">
-          <div class="section-icon" style="background: var(--dishio-red-bg); color: var(--dishio-red);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-          </div>
-          <div>
-            <div class="section-title">Video Assets</div>
-            <div class="section-subtitle">Video creative for PMax & Meta campaigns</div>
-          </div>
-        </div>
-        <div class="section-header-right">
-          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-        </div>
-      </div>
-      <div class="section-body open" id="videosBody">
-        <div id="videosTableBody" class="items-list"></div>
-        <button class="add-row-btn" onclick="addVideoRow()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-          Add Video
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="footer-left">
-  <svg width="100" height="24" viewBox="0 0 537.52 126.38" fill="#888" xmlns="http://www.w3.org/2000/svg">
-    <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
-  </svg>
-  <span style="margin-left:8px">Campaign Preview Tool</span>
-</div>
-  <div class="footer-right">
-    <input type="file" id="csvFileInput" accept=".csv,.tsv,.txt" style="display:none" onchange="handleCSVImport(event)">
-    <button class="footer-btn secondary" onclick="promptSheetImport()">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-      Import from Sheet
-    </button>
-    <button class="footer-btn secondary" onclick="exportData()">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-      Export JSON
-    </button>
-    <button class="footer-btn primary" onclick="submitAllApprovals()">
-      Submit All Approvals
-    </button>
-  </div>
-</footer>
-
-<!-- Toast -->
-<div class="toast" id="toast">
-  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-  <span id="toastText">Saved!</span>
-</div>
-
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════ -->
 <script>
-// ========== DATA STORE ==========
+/* ════════════════════════════════
+   DATA MODEL
+════════════════════════════════ */
 const data = {
-  clientName: 'Restaurant Name',
   headlines: [],
   longHeadlines: [],
   descriptions: [],
@@ -1672,747 +1232,21 @@ const data = {
   dishio: [],
   videos: []
 };
-
-// Multi-campaign support
-let allCampaignTabs = []; // [{name, data}] — when loaded from batch-create
+let allCampaignTabs = [];
 let activeCampaignIdx = 0;
 
-// ========== TABS ==========
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-  });
-});
-
-// ========== CAMPAIGN SWITCHER ==========
-function renderCampaignSwitcher() {
-  const container = document.getElementById('campaignSwitcherInner');
-  container.innerHTML = allCampaignTabs.map((camp, i) => `
-    <button class="campaign-tab-btn ${i === activeCampaignIdx ? 'active' : ''}" onclick="switchCampaign(${i})">
-      <span class="campaign-tab-num">${String(i+1).padStart(2,'0')}</span>
-      ${camp.name}
-    </button>
-  `).join('');
-}
-
-function switchCampaign(idx) {
-  activeCampaignIdx = idx;
-  // Copy campaign data into the global data object
-  const camp = allCampaignTabs[idx];
-  Object.assign(data, camp.data);
-  // Update UI
-  document.querySelectorAll('.campaign-tab-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', i === idx);
-  });
-  renderAll();
-  window.scrollTo(0, 0);
-}
-
-// ========== SECTION TOGGLE ==========
-function toggleSection(header) {
-  header.classList.toggle('open');
-  const body = header.nextElementSibling;
-  body.classList.toggle('open');
-}
-
-// ========== RENDER FUNCTIONS ==========
-function charCountClass(len, max) {
-  if (len === 0) return '';
-  if (len <= max) return 'ok';
-  if (len <= max + 5) return 'warn';
-  return 'over';
-}
-
-function renderCopyRow(item, index, section, maxChars) {
-  const len = item.text.length;
-  const cls = len === 0 ? 'empty' : charCountClass(len, maxChars);
-  const numStr = String(index + 1).padStart(2, '0');
-  return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms">
-    <div class="item-num">${numStr}</div>
-    <div class="item-body">
-      <div class="item-text" contenteditable="true" data-section="${section}" data-index="${index}" data-field="text" data-placeholder="Enter copy here…" oninput="onCopyEdit(this, ${maxChars})" onblur="saveCopyEdit(this)">${item.text}</div>
-      <textarea class="item-notes" rows="1" placeholder="Add note or edit request…" oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea>
-    </div>
-    <div class="item-actions">
-      <span class="char-pill ${cls}" id="char-${section}-${index}">${len === 0 ? '— / ' + maxChars : len + ' / ' + maxChars}</span>
-      <button class="approve-btn ${item.approved ? 'active' : ''}" onclick="toggleApproval('${section}', ${index})" title="${item.approved ? 'Click to remove approval' : 'Click to approve'}">
-        <span class="approve-icon">
-          ${item.approved
-            ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`
-            : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>`}
-        </span>
-        ${item.approved ? 'Approved' : 'Approve'}
-      </button>
-    </div>
-  </div>`;
-}
-
-function renderMetaAdRow(item, index) {
-  const numStr = String(index + 1).padStart(2, '0');
-  const len = (item.name || '').length;
-  const lenDisplay = len === 0 ? '—' : len + ' chars';
-  const lenColor = len > 125 ? 'var(--dishio-yellow)' : 'var(--dishio-text-muted)';
-  return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms;align-items:start">
-    <div class="item-num" style="margin-top:6px">${numStr}</div>
-    <div class="item-body">
-      <div class="item-text" contenteditable="true" data-section="meta" data-index="${index}" data-field="name"
-        data-placeholder="Write Facebook/Instagram primary text here…"
-        style="min-height:80px;font-size:14px;line-height:1.65;"
-        oninput="onMetaCopyEdit(this)" onblur="saveMetaCopyEdit(this)">${item.name || ''}</div>
-      <textarea class="item-notes" rows="1" placeholder="Add note or revision request…" oninput="autoResize(this)" onchange="saveNote('meta', ${index}, this.value)">${item.notes || ''}</textarea>
-    </div>
-    <div class="item-actions">
-      <span style="font-size:11px;color:${lenColor};white-space:nowrap">${lenDisplay}</span>
-      <button class="approve-btn ${item.approved ? 'active' : ''}" onclick="toggleApproval('meta', ${index})" title="${item.approved ? 'Click to remove approval' : 'Click to approve'}">
-        <span class="approve-icon">
-          ${item.approved
-            ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`
-            : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>`}
-        </span>
-        ${item.approved ? 'Approved' : 'Approve'}
-      </button>
-    </div>
-  </div>`;
-}
-
-function renderLinkRow(item, index, section) {
-  const numStr = String(index + 1).padStart(2, '0');
-  return `<div class="item-card animate-in ${item.approved ? 'is-approved' : ''}" style="animation-delay:${index*40}ms">
-    <div class="item-num">${numStr}</div>
-    <div class="item-body">
-      <div class="item-text" contenteditable="true" data-section="${section}" data-index="${index}" data-field="name" data-placeholder="Enter name…" onblur="saveLinkEdit(this, '${section}')">${item.name}</div>
-      <div class="item-url" contenteditable="true" data-section="${section}" data-index="${index}" data-field="url" data-placeholder="Paste preview URL…" onblur="saveLinkEdit(this, '${section}')">${item.url}</div>
-      ${item.url ? `<a href="${item.url}" target="_blank" rel="noopener" class="item-url-link">Open Preview <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg></a>` : ''}
-      <textarea class="item-notes" rows="1" placeholder="Add note or edit request…" oninput="autoResize(this)" onchange="saveNote('${section}', ${index}, this.value)">${item.notes || ''}</textarea>
-    </div>
-    <div class="item-actions">
-      <button class="approve-btn ${item.approved ? 'active' : ''}" onclick="toggleApproval('${section}', ${index})" title="${item.approved ? 'Click to remove approval' : 'Click to approve'}">
-        <span class="approve-icon">
-          ${item.approved
-            ? `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>`
-            : `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>`}
-        </span>
-        ${item.approved ? 'Approved' : 'Approve'}
-      </button>
-    </div>
-  </div>`;
-}
-
-function emptyCard(icon, text, hint) {
-  return `<div class="empty-card"><div class="empty-icon">${icon}</div><div class="empty-text">${text}</div><div class="empty-hint">${hint}</div></div>`;
-}
-
-function renderAll() {
-  // Headlines
-  const hb = document.getElementById('headlinesTableBody');
-  hb.innerHTML = data.headlines.length ? data.headlines.map((h, i) => renderCopyRow(h, i, 'headlines', 30)).join('') : emptyCard('H', 'No headlines yet', 'Click "Add Headline" to get started');
-
-  // Long Headlines
-  const lb = document.getElementById('longHeadlinesTableBody');
-  lb.innerHTML = data.longHeadlines.length ? data.longHeadlines.map((h, i) => renderCopyRow(h, i, 'longHeadlines', 90)).join('') : emptyCard('LH', 'No long headlines yet', 'Click "Add Long Headline" to get started');
-
-  // Descriptions
-  const db = document.getElementById('descriptionsTableBody');
-  db.innerHTML = data.descriptions.length ? data.descriptions.map((d, i) => renderCopyRow(d, i, 'descriptions', 90)).join('') : emptyCard('D', 'No descriptions yet', 'Click "Add Description" to get started');
-
-  // Meta — render as copy rows (primary text), not link rows
-  const mb = document.getElementById('metaTableBody');
-  mb.innerHTML = data.meta.length ? data.meta.map((m, i) => renderMetaAdRow(m, i)).join('') : emptyCard('📱', 'No Meta ads yet', 'Click "Add Meta Ad" to get started');
-  document.getElementById('metaBadge').textContent = data.meta.length + ' items';
-  renderMetaAdPreviews();
-
-  // Dishio
-  const dib = document.getElementById('dishioTableBody');
-  dib.innerHTML = data.dishio.length ? data.dishio.map((d, i) => renderLinkRow(d, i, 'dishio')).join('') : emptyCard('🔗', 'No Smart Site links yet', 'Click "Add Smart Site Link" to get started');
-
-  // Videos
-  const vb = document.getElementById('videosTableBody');
-  vb.innerHTML = data.videos.length ? data.videos.map((v, i) => renderLinkRow(v, i, 'videos')).join('') : emptyCard('🎬', 'No videos yet', 'Click "Add Video" to get started');
-
-  // Update Google ad previews
-  renderGoogleAdPreviews();
-
-  // Update stats
-  updateStats();
-
-  // Badges
-  document.getElementById('headlineBadge').textContent = data.headlines.length + ' items';
-  document.getElementById('longHeadlineBadge').textContent = data.longHeadlines.length + ' items';
-  document.getElementById('descriptionBadge').textContent = data.descriptions.length + ' items';
-  const metaBadgeEl = document.getElementById('metaBadge');
-  if (metaBadgeEl) metaBadgeEl.textContent = data.meta.length + ' items';
-
-  // Show/hide Google sub-sections based on whether they have any data
-  const hasHeadlines = data.headlines.filter(h=>h.text).length > 0;
-  const hasLongHeadlines = data.longHeadlines.filter(h=>h.text).length > 0;
-  const hasDescriptions = data.descriptions.filter(d=>d.text).length > 0;
-  // find parent .section divs for each body
-  const headlinesSec = document.getElementById('headlinesBody')?.closest('.section');
-  const longHeadlinesSec = document.getElementById('longHeadlinesBody')?.closest('.section');
-  const descriptionsSec = document.getElementById('descriptionsBody')?.closest('.section');
-  if (headlinesSec) headlinesSec.style.display = hasHeadlines ? '' : 'none';
-  if (longHeadlinesSec) longHeadlinesSec.style.display = hasLongHeadlines ? '' : 'none';
-  if (descriptionsSec) descriptionsSec.style.display = hasDescriptions ? '' : 'none';
-
-  // Tab counts — only count non-empty items
-  const googleItems = data.headlines.filter(h=>h.text).length + data.longHeadlines.filter(h=>h.text).length + data.descriptions.filter(d=>d.text).length;
-  const metaItems = data.meta.filter(m=>m.name||m.url).length;
-  const dishioItems = data.dishio.filter(d=>d.url).length;
-  const videoItems = data.videos.filter(v=>v.url||v.name).length;
-  document.getElementById('googleCount').textContent = googleItems;
-  document.getElementById('metaCount').textContent = metaItems;
-  document.getElementById('dishioCount').textContent = dishioItems;
-  document.getElementById('videosCount').textContent = videoItems;
-
-  // Hide tabs with no data
-  const tabVis = { google: googleItems > 0, meta: metaItems > 0, dishio: dishioItems > 0, videos: videoItems > 0 };
-  let activeHidden = false;
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    const show = tabVis[btn.dataset.tab] !== false;
-    btn.style.display = show ? '' : 'none';
-    if (btn.classList.contains('active') && !show) activeHidden = true;
-  });
-  if (activeHidden) {
-    const first = document.querySelector('.tab-btn:not([style*="display: none"])');
-    if (first) first.click();
-  }
-
-  // Save to localStorage
-  saveToStorage();
-  // Init textarea auto-heights after render
-  setTimeout(initTextareas, 10);
-}
-
-// ========== SCREENSHOT / IMAGE LOADER ==========
-const screenshotCache = {}; // url → 'loading' | 'error' | imageUrl string
-
-function isFacebookUrl(url) {
-  return url && (url.includes('facebook.com') || url.includes('fb.com'));
-}
-function isDirectImage(url) {
-  return url && /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url);
-}
-
-// Show a shimmer loading state inside the image area
-function setImageLoading(imgEl) {
-  imgEl.classList.add('img-loading');
-  imgEl.innerHTML = `
-    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-      <rect x="3" y="3" width="18" height="18" rx="2"/>
-      <circle cx="8.5" cy="8.5" r="1.5"/>
-      <path d="M21 15l-5-5L5 21"/>
-    </svg>
-    <span>Loading screenshot…</span>`;
-}
-
-function setImageSrc(imgEl, src, label) {
-  imgEl.classList.remove('img-loading');
-  imgEl.innerHTML = `
-    <div class="ad-screenshot-wrap" style="width:100%;height:100%">
-      <img src="${src}" alt="Ad creative" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block"/>
-      <div class="ad-screenshot-badge">${label || 'AD IMAGE'}</div>
-    </div>`;
-}
-
-function setImageError(imgEl) {
-  imgEl.classList.remove('img-loading');
-  // Restore placeholder
-  imgEl.innerHTML = `<span class="img-placeholder-icon">🍽️</span><div class="fb-image-label" style="position:absolute;bottom:12px;right:12px;font-size:11px;font-weight:700;background:rgba(0,0,0,0.6);color:#fff;padding:3px 8px;border-radius:4px">AD IMAGE</div>`;
-}
-
-async function loadMetaImage(url, imgEl, label) {
-  if (!url) return;
-
-  // Cache hit
-  if (screenshotCache[url] && screenshotCache[url] !== 'loading') {
-    if (screenshotCache[url] === 'error') return;
-    setImageSrc(imgEl, screenshotCache[url], label);
-    return;
-  }
-  if (screenshotCache[url] === 'loading') return;
-
-  screenshotCache[url] = 'loading';
-  setImageLoading(imgEl);
-
-  try {
-    // Direct image URL → use as-is
-    if (isDirectImage(url)) {
-      screenshotCache[url] = url;
-      setImageSrc(imgEl, url, label);
-      return;
-    }
-    // All other URLs (Facebook ad previews, restaurant sites, etc.) → Puppeteer screenshot
-    const screenshotUrl = `/api/screenshot?url=${encodeURIComponent(url)}&t=${Date.now()}`;
-    // Verify the endpoint responds with an image (not an error JSON)
-    const probe = await fetch(screenshotUrl, { method: 'HEAD' }).catch(() => null);
-    if (probe && probe.ok && probe.headers.get('content-type')?.startsWith('image/')) {
-      screenshotCache[url] = screenshotUrl;
-      setImageSrc(imgEl, screenshotUrl, label || (isFacebookUrl(url) ? 'LIVE SCREENSHOT' : 'AD IMAGE'));
-    } else {
-      // Fallback: try og:image
-      const ogRes = await fetch('/api/og-image?url=' + encodeURIComponent(url));
-      const ogData = await ogRes.json();
-      if (ogData.imageUrl) {
-        screenshotCache[url] = ogData.imageUrl;
-        setImageSrc(imgEl, ogData.imageUrl, label || 'AD IMAGE');
-      } else {
-        screenshotCache[url] = 'error';
-        setImageError(imgEl);
-      }
-    }
-  } catch (e) {
-    screenshotCache[url] = 'error';
-    setImageError(imgEl);
-  }
-}
-
-// LEGACY stub — no longer used
-async function loadMetaImageLegacy(url, imgEl) {
-  if (!url) return;
-  if (ogImageCache[url] !== undefined) {
-    if (ogImageCache[url]) {
-    return;
-  }
-  // Check if it's a direct image URL
-  if (/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url)) {
-    ogImageCache[url] = url;
-    imgEl.style.backgroundImage = `url(${url})`;
-    imgEl.style.backgroundSize = 'cover';
-    imgEl.style.backgroundPosition = 'center';
-    const icon = imgEl.querySelector('.img-placeholder-icon');
-    if (icon) icon.style.display = 'none';
-    const label = imgEl.querySelector('.fb-image-label, .ig-image-label');
-    if (label) label.style.display = 'none';
-    return;
-  }
-  // Fetch og:image from server
-  try {
-    const res = await fetch('/api/og-image?url=' + encodeURIComponent(url));
-    const d = await res.json();
-    ogImageCache[url] = d.imageUrl || null;
-    if (d.imageUrl) {
-      imgEl.style.backgroundImage = `url(${d.imageUrl})`;
-      imgEl.style.backgroundSize = 'cover';
-      imgEl.style.backgroundPosition = 'center';
-      const icon = imgEl.querySelector('.img-placeholder-icon');
-      if (icon) icon.style.display = 'none';
-      const label = imgEl.querySelector('.fb-image-label, .ig-image-label');
-      if (label) label.style.display = 'none';
-    }
-  } catch (e) {
-    ogImageCache[url] = null;
-  }
-}
-
-function renderMetaAdPreviews() {
-  const container = document.getElementById('metaAdPreviews');
-  const linkSection = document.getElementById('metaPreviewLinksSection');
-  const linkList = document.getElementById('metaPreviewLinksList');
-  const clientName = document.getElementById('clientName').textContent || 'Restaurant Name';
-  const initials = clientName.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'D';
-  const domain = 'dish.io/' + clientName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-  // Items that have URLs → show in preview links section
-  const itemsWithUrl = data.meta.filter(m => m.url && m.url.trim());
-  if (itemsWithUrl.length > 0) {
-    linkSection.style.display = '';
-    linkList.innerHTML = itemsWithUrl.map((m, i) => {
-      const numStr = String(i + 1).padStart(2, '0');
-      return `<div class="item-card animate-in ${m.approved ? 'is-approved' : ''}">
-        <div class="item-num">${numStr}</div>
-        <div class="item-body">
-          <div class="item-text" style="font-size:13px;color:var(--dishio-text-muted)">${m.name || 'Untitled'}</div>
-          <a href="${m.url}" target="_blank" rel="noopener" class="item-url-link" style="margin-top:4px;display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--dishio-green-light)">
-            Open Ad Preview <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-          </a>
-        </div>
-        <div class="item-actions">
-          <button class="approve-btn ${m.approved ? 'active' : ''}" onclick="toggleApproval('meta', ${data.meta.indexOf(m)})">
-            ${m.approved ? '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Approved' : 'Approve'}
-          </button>
-        </div>
-      </div>`;
-    }).join('');
-  } else {
-    linkSection.style.display = 'none';
-  }
-
-  // Items with copy → build ad mockups
-  const itemsWithCopy = data.meta.filter(m => m.name && m.name.trim());
-
-  if (!itemsWithCopy.length) {
-    container.innerHTML = '<div class="meta-preview-empty"><div style="font-size:32px;opacity:0.2;margin-bottom:8px">📱</div><div>Add Meta ad copy above to see live previews</div><div style="font-size:12px;margin-top:4px;opacity:0.5">Mockups update as you type</div></div>';
-    return;
-  }
-
-  // Collect all URLs across all meta items (from copy rows and URL-only rows)
-  const allUrls = [
-    ...itemsWithCopy.map(m => m.url).filter(Boolean),
-    ...itemsWithUrl.map(m => m.url).filter(Boolean)
-  ];
-  const primaryUrl = [...new Set(allUrls)][0]?.trim() || '';
-
-  // Show first item in both FB and IG mockup, then remaining in a grid
-  const firstItem = itemsWithCopy[0];
-  const primaryText = firstItem.name || '';
-  const truncatedText = primaryText.length > 125 ? primaryText.slice(0, 122) + '…' : primaryText;
-
-  let html = `<div class="meta-ad-preview-grid">`;
-
-  // Facebook Feed Ad
-  html += `
-  <div class="meta-ad-slot">
-    <div class="meta-ad-slot-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
-      Facebook Feed
-    </div>
-    <div class="fb-ad-card">
-      <div class="fb-ad-header">
-        <div class="fb-avatar">${initials}</div>
-        <div class="fb-page-info">
-          <div class="fb-page-name">${clientName}</div>
-          <div class="fb-sponsored">
-            Sponsored &middot;
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#B0B3B8" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-          </div>
-        </div>
-        <div class="fb-more">···</div>
-      </div>
-      <div class="fb-primary-text">${primaryText}</div>
-      <div class="fb-image-area">
-        <span class="img-placeholder-icon">🍽️</span>
-        <div class="fb-image-label">AD IMAGE</div>
-      </div>
-      <div class="fb-link-bar">
-        <div class="fb-link-info">
-          <div class="fb-link-domain">${domain.split('/')[0]}</div>
-          <div class="fb-link-headline">${clientName}</div>
-        </div>
-        <button class="fb-cta-btn">Order Food</button>
-      </div>
-      <div class="fb-reactions">
-        <button class="fb-reaction-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>
-          Like
-        </button>
-        <button class="fb-reaction-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Comment
-        </button>
-        <button class="fb-reaction-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-          Share
-        </button>
-      </div>
-    </div>
-  </div>`;
-
-  // Instagram Feed Ad
-  html += `
-  <div class="meta-ad-slot">
-    <div class="meta-ad-slot-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="#E1306C"/></svg>
-      Instagram Feed
-    </div>
-    <div class="ig-ad-card">
-      <div class="ig-ad-header">
-        <div class="ig-avatar-ring">
-          <div class="ig-avatar">${initials}</div>
-        </div>
-        <div class="ig-page-info">
-          <div class="ig-page-name">${clientName}</div>
-          <div class="ig-sponsored">Sponsored</div>
-        </div>
-        <div style="margin-left:auto;color:#8E8E8E;font-size:20px;cursor:pointer">···</div>
-      </div>
-      <div class="ig-image-area">
-        <span class="img-placeholder-icon">🍽️</span>
-        <div class="ig-image-label">AD IMAGE</div>
-      </div>
-      <div class="ig-cta-strip">
-        <div class="ig-cta-url">${domain}</div>
-        <button class="ig-cta-btn">
-          Order Food
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-      </div>
-      <div class="ig-body">
-        <div class="ig-actions">
-          <button class="ig-action-btn">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-          </button>
-          <button class="ig-action-btn" style="margin-left:2px">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </button>
-          <button class="ig-action-btn" style="margin-left:2px">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          </button>
-        </div>
-        <div class="ig-caption"><strong>${clientName}</strong> ${truncatedText}</div>
-      </div>
-    </div>
-  </div>`;
-
-  html += `</div>`;
-
-  // If more than 1 item, show remaining items' copy as a stacked list
-  if (itemsWithCopy.length > 1) {
-    html += `<div style="margin-top:16px;padding:16px;background:var(--dishio-dark-surface);border-radius:var(--radius-sm);border:1px solid var(--dishio-dark-border)">
-      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--dishio-text-muted);margin-bottom:12px">Additional Ad Variants</div>
-      <div style="display:flex;flex-direction:column;gap:10px">`;
-    itemsWithCopy.slice(1).forEach((m, i) => {
-      html += `<div style="padding:12px 16px;background:var(--dishio-dark-card);border-radius:var(--radius-xs);border:1px solid var(--dishio-dark-border)">
-        <div style="font-size:11px;color:var(--dishio-text-muted);margin-bottom:4px;font-weight:600">VARIANT ${i + 2}</div>
-        <div style="font-size:14px;color:var(--dishio-text-secondary);line-height:1.5;white-space:pre-wrap">${m.name}</div>
-      </div>`;
-    });
-    html += `</div></div>`;
-  }
-
-  // If there's a Facebook ad preview URL, append a live screenshot card below the mockups
-  if (primaryUrl && isFacebookUrl(primaryUrl)) {
-    html += `
-    <div class="ad-screenshot-card" style="margin-top:24px" id="fbScreenshotCard">
-      <div class="ad-screenshot-card-header">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
-        Live Ad Screenshot
-        <span style="margin-left:auto;font-size:11px;opacity:0.5;font-weight:400">Captured via Puppeteer · updates every 24h</span>
-      </div>
-      <div id="fbScreenshotImg" style="min-height:300px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center"></div>
-      <div class="ad-screenshot-card-footer">
-        <span>Pixel-perfect rendering of the actual ad</span>
-        <a href="${primaryUrl}" target="_blank" rel="noopener">Open in Facebook →</a>
-      </div>
-    </div>`;
-  }
-
-  container.innerHTML = html;
-
-  // Load real images into FB/IG mockup image areas
-  if (primaryUrl) {
-    const fbImg = container.querySelector('.fb-image-area');
-    const igImg = container.querySelector('.ig-image-area');
-    if (fbImg) loadMetaImage(primaryUrl, fbImg, isFacebookUrl(primaryUrl) ? 'LIVE SCREENSHOT' : 'AD IMAGE');
-    if (igImg) loadMetaImage(primaryUrl, igImg, isFacebookUrl(primaryUrl) ? 'LIVE SCREENSHOT' : 'AD IMAGE');
-
-    // Also load into the dedicated screenshot card (if Facebook URL)
-    if (isFacebookUrl(primaryUrl)) {
-      const screenshotSlot = container.querySelector('#fbScreenshotImg');
-      if (screenshotSlot) {
-        screenshotSlot.classList.add('img-loading');
-        screenshotSlot.innerHTML = `
-          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="opacity:0.4">
-            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-            <path d="M21 15l-5-5L5 21"/>
-          </svg>
-          <span style="font-size:12px;color:var(--dishio-text-muted);margin-top:8px">Taking screenshot — this may take 5–10 seconds…</span>`;
-        // Fetch screenshot directly as image
-        const screenshotUrl = `/api/screenshot?url=${encodeURIComponent(primaryUrl)}`;
-        const img = new Image();
-        img.onload = () => {
-          screenshotSlot.classList.remove('img-loading');
-          screenshotSlot.innerHTML = '';
-          screenshotSlot.style.minHeight = '';
-          screenshotSlot.appendChild(img);
-        };
-        img.onerror = () => {
-          screenshotSlot.classList.remove('img-loading');
-          screenshotSlot.innerHTML = `<span style="color:var(--dishio-text-muted);font-size:13px;padding:20px">Screenshot unavailable — <a href="${primaryUrl}" target="_blank" style="color:var(--dishio-green-light)">open in Facebook</a></span>`;
-        };
-        img.src = screenshotUrl;
-        img.style.cssText = 'width:100%;display:block;border-radius:0';
-      }
-    }
-  }
-}
-
-function renderGoogleAdPreviews() {
-  const container = document.getElementById('googleAdPreviews');
-  if (!data.headlines.length && !data.descriptions.length) {
-    container.innerHTML = '<div style="text-align:center;padding:40px;color:var(--dishio-text-muted);font-size:14px;">Add headlines and descriptions to see live ad previews</div>';
-    return;
-  }
-  const clientName = document.getElementById('clientName').textContent || 'Restaurant Name';
-  const headline = data.headlines[0]?.text || 'Your Headline Here';
-  const longHL = data.longHeadlines[0]?.text || 'Your Long Headline Goes Here';
-  const desc = data.descriptions[0]?.text || 'Your description will appear here. Add compelling ad copy to preview.';
-
-  container.innerHTML = `
-    <div class="ad-mockup">
-      <div class="ad-mockup-header">
-        <span class="platform-dot" style="background:#4285F4"></span>
-        Google Search
-      </div>
-      <div class="ad-mockup-body">
-        <div class="google-search-mockup">
-          <div class="gs-url">
-            <span class="favicon" style="padding:2px"><svg viewBox="0 0 126.28 126.38" fill="white" width="14" height="14"><path d="M43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/></svg></span>
-            <span>dish.io/${clientName.toLowerCase().replace(/\s+/g,'-')}</span>
-          </div>
-          <div class="gs-headline"><span class="gs-ad-badge">Ad</span>${headline}</div>
-          <div class="gs-description">${desc}</div>
-        </div>
-      </div>
-    </div>
-    <div class="ad-mockup">
-      <div class="ad-mockup-header">
-        <span class="platform-dot" style="background:#34A853"></span>
-        Performance Max
-      </div>
-      <div class="ad-mockup-body">
-        <div class="pmax-mockup">
-          <div class="pmax-visual">
-            <div style="font-size:64px;opacity:0.15">🍽️</div>
-            <div class="pmax-overlay">
-              <h4>${longHL}</h4>
-              <p>${desc.slice(0, 60)}...</p>
-            </div>
-          </div>
-          <div class="pmax-bottom">
-            <div style="font-size:12px;color:var(--dishio-text-muted)">${clientName}</div>
-            <button class="pmax-cta">Order Now</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// ========== INTERACTIONS ==========
-function addRow(section, maxChars) {
-  data[section].push({ text: '', approved: false, notes: '' });
-  renderAll();
-  // Focus the new editable cell
-  const tbody = document.getElementById(section + 'TableBody');
-  const lastRow = tbody.lastElementChild;
-  if (lastRow) {
-    const editable = lastRow.querySelector('.editable-cell');
-    if (editable) editable.focus();
-  }
-}
-
-function onMetaCopyEdit(el) {
-  const index = parseInt(el.dataset.index);
-  const text = el.textContent || el.innerText || '';
-  data.meta[index].name = text;
-  // Update char count inline
-  const card = el.closest('.item-card');
-  if (card) {
-    const span = card.querySelector('.item-actions span');
-    if (span) {
-      const len = text.length;
-      span.textContent = len === 0 ? '—' : len + ' chars';
-      span.style.color = len > 125 ? 'var(--dishio-yellow)' : 'var(--dishio-text-muted)';
-    }
-  }
-}
-
-function saveMetaCopyEdit(el) {
-  const index = parseInt(el.dataset.index);
-  data.meta[index].name = el.textContent || el.innerText || '';
-  renderMetaAdPreviews();
-  saveToStorage();
-}
-
-function addMetaRow() {
-  data.meta.push({ name: '', url: '', approved: false, notes: '' });
-  renderAll();
-  // Focus the new text area
-  setTimeout(() => {
-    const tbody = document.getElementById('metaTableBody');
-    const last = tbody.lastElementChild;
-    if (last) {
-      const editable = last.querySelector('.item-text');
-      if (editable) editable.focus();
-    }
-  }, 50);
-}
-
-function addDishioRow() {
-  data.dishio.push({ name: '', url: '', approved: false, notes: '' });
-  renderAll();
-}
-
-function addVideoRow() {
-  data.videos.push({ name: '', url: '', approved: false, notes: '' });
-  renderAll();
-}
-
-function toggleApproval(section, index) {
-  data[section][index].approved = !data[section][index].approved;
-  renderAll();
-  showToast(data[section][index].approved ? 'Approved!' : 'Approval removed');
-}
-
-function saveNote(section, index, value) {
-  data[section][index].notes = value;
-  saveToStorage();
-}
-
-function onCopyEdit(el, maxChars) {
-  const text = el.textContent;
-  const section = el.dataset.section;
-  const index = parseInt(el.dataset.index);
-  data[section][index].text = text;
-
-  // Update char pill by ID
-  const pill = document.getElementById(`char-${section}-${index}`);
-  if (pill) {
-    const len = text.length;
-    pill.textContent = len === 0 ? '— / ' + maxChars : len + ' / ' + maxChars;
-    pill.className = 'char-pill ' + (len === 0 ? 'empty' : charCountClass(len, maxChars));
-  }
-}
-
-function saveCopyEdit(el) {
-  const section = el.dataset.section;
-  const index = parseInt(el.dataset.index);
-  data[section][index].text = el.textContent;
-  renderGoogleAdPreviews();
-  saveToStorage();
-}
-
-function saveLinkEdit(el, section) {
-  const index = parseInt(el.dataset.index);
-  const field = el.dataset.field;
-  data[section][index][field] = el.textContent;
-  saveToStorage();
-}
-
-function autoResize(textarea) {
-  textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
-}
-
-function updateStats() {
-  const allItems = [...data.headlines, ...data.longHeadlines, ...data.descriptions, ...data.meta, ...data.dishio, ...data.videos];
-  const total = allItems.length;
-  const approved = allItems.filter(i => i.approved).length;
-  const pending = total - approved;
-  const pct = total > 0 ? Math.round((approved / total) * 100) : 0;
-
-  document.getElementById('totalItems').textContent = total;
-  document.getElementById('approvedItems').textContent = approved;
-  document.getElementById('pendingItems').textContent = pending;
-  document.getElementById('progressPct').textContent = pct + '%';
-  document.getElementById('progressFill').style.width = pct + '%';
-}
-
-// ========== API PERSISTENCE ==========
+/* ════════════════════════════════
+   API
+════════════════════════════════ */
 const campaignId = window.location.pathname.split('/').pop();
 let saveTimeout = null;
 
 async function saveToStorage() {
-  // Debounce saves to avoid hammering the API
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(async () => {
     if (!campaignId) return;
     try {
       if (allCampaignTabs.length > 0) {
-        // Multi-campaign mode: sync current data back to allCampaignTabs then save all
         allCampaignTabs[activeCampaignIdx].data = { ...data };
         await fetch(`/api/campaigns/${campaignId}`, {
           method: 'PUT',
@@ -2441,256 +1275,644 @@ async function loadFromStorage() {
   try {
     const res = await fetch(`/api/campaigns/${campaignId}`);
     if (!res.ok) {
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#888">Campaign not found</div>';
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:#888;font-family:Space Grotesk,sans-serif">Campaign not found</div>';
       return;
     }
     const campaign = await res.json();
     if (campaign.campaigns && campaign.campaigns.length > 0) {
-      // Multi-campaign mode
       allCampaignTabs = campaign.campaigns;
       activeCampaignIdx = 0;
       Object.assign(data, campaign.campaigns[0].data);
       renderCampaignSwitcher();
       document.getElementById('campaignSwitcher').style.display = '';
     } else if (campaign.data) {
-      // Legacy single-campaign mode
       Object.assign(data, campaign.data);
     }
     document.getElementById('clientName').textContent = campaign.restaurantName || 'Restaurant Name';
-    if (campaign.accountManager) {
-      document.getElementById('accountManagerName').textContent = campaign.accountManager;
-    }
+    const amEl = document.getElementById('accountManagerName');
+    if (amEl && campaign.accountManager) amEl.textContent = campaign.accountManager;
     document.title = `Campaign Preview — ${campaign.restaurantName}`;
     renderAll();
   } catch (err) { console.error('Load failed:', err); }
 }
 
-// ========== INIT TEXTAREA HEIGHTS ==========
-function initTextareas() {
-  document.querySelectorAll('.item-notes').forEach(ta => {
-    ta.style.height = 'auto';
-    ta.style.height = ta.scrollHeight + 'px';
+/* ════════════════════════════════
+   TABS
+════════════════════════════════ */
+let activeTab = 'google';
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.id === `tab-${tab}`);
+    b.setAttribute('aria-selected', String(b.id === `tab-${tab}`));
+  });
+  document.querySelectorAll('.panel').forEach(p => {
+    p.classList.toggle('active', p.id === `panel-${tab}`);
   });
 }
 
-// ========== GOOGLE SHEET IMPORT ==========
-async function promptSheetImport() {
-  const sheetUrl = prompt('Paste Google Sheet URL:');
-  if (!sheetUrl) return;
-  showToast('Importing copy from Google Sheet...');
+/* ════════════════════════════════
+   SECTION COLLAPSE
+════════════════════════════════ */
+function toggleSection(section) {
+  const card = document.getElementById(`sc-${section}`);
+  if (card) card.classList.toggle('collapsed');
+}
+
+/* ════════════════════════════════
+   RENDER ALL
+════════════════════════════════ */
+function renderAll() {
+  renderGoogleSection('headlines', 30);
+  renderGoogleSection('longHeadlines', 90);
+  renderGoogleSection('descriptions', 90);
+  renderMetaSection();
+  renderSimpleSection('dishio');
+  renderSimpleSection('videos');
+  updateStats();
+  updateTabBadges();
+  renderGoogleAdPreviews();
+}
+
+/* ════════════════════════════════
+   CAMPAIGN SWITCHER
+════════════════════════════════ */
+function renderCampaignSwitcher() {
+  const el = document.getElementById('campaignSwitcher');
+  el.innerHTML = allCampaignTabs.map((tab, i) => `
+    <button class="campaign-pill${i === activeCampaignIdx ? ' active' : ''}" onclick="switchCampaign(${i})">
+      ${escHtml(tab.name || `Campaign ${i + 1}`)}
+    </button>
+  `).join('');
+}
+
+function switchCampaign(idx) {
+  allCampaignTabs[activeCampaignIdx].data = { ...data };
+  activeCampaignIdx = idx;
+  const empty = { headlines: [], longHeadlines: [], descriptions: [], meta: [], dishio: [], videos: [] };
+  Object.assign(data, empty);
+  Object.assign(data, allCampaignTabs[idx].data || {});
+  renderCampaignSwitcher();
+  renderAll();
+}
+
+/* ════════════════════════════════
+   RENDER GOOGLE SECTIONS
+════════════════════════════════ */
+function renderGoogleSection(section, maxChars) {
+  const container = document.getElementById(`list-${section}`);
+  if (!container) return;
+  const items = data[section] || [];
+  if (items.length === 0) {
+    const labels = { headlines: 'headlines', longHeadlines: 'long headlines', descriptions: 'descriptions' };
+    container.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>No ${labels[section] || section} yet. Paste from your Google Sheet.</p>
+    </div>`;
+    return;
+  }
+  container.innerHTML = items.map((item, i) => {
+    const len = (item.text || '').length;
+    const over = len > maxChars;
+    const near = !over && len > Math.floor(maxChars * 0.85);
+    const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
+    return `<div class="item-card ${state}" id="item-${section}-${i}">
+      <div class="item-card-row">
+        <span class="item-num">${i + 1}</span>
+        <div class="item-text" contenteditable="true" spellcheck="false"
+          data-placeholder="Enter copy..."
+          data-section="${section}" data-index="${i}"
+          onblur="handleTextEdit(this)"
+          oninput="updateCharCount(this,${maxChars},'${section}',${i})"
+        >${escHtml(item.text || '')}</div>
+        <span class="char-pill${over?' over':near?' near':''}" id="char-${section}-${i}">${len}/${maxChars}</span>
+      </div>
+      <div class="approval-row">
+        <div class="approval-toggle">
+          <button class="approval-btn btn-approve${item.approved?' active':''}"
+            onclick="setApproval('${section}',${i},'${item.approved?'none':'approved'}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Approved
+          </button>
+          <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
+            onclick="setApproval('${section}',${i},'${item.needsEdit?'none':'needs-edit'}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Needs Edit
+          </button>
+        </div>
+      </div>
+      <div class="notes-wrapper${item.needsEdit?' visible':''}" id="notes-${section}-${i}">
+        <textarea class="notes-textarea" placeholder="Describe what needs to change..."
+          data-section="${section}" data-index="${i}"
+          onblur="handleNotesEdit(this)" oninput="autoResize(this)"
+        >${escHtml(item.notes || '')}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════
+   RENDER META SECTION
+════════════════════════════════ */
+function renderMetaSection() {
+  const container = document.getElementById('list-meta');
+  if (!container) return;
+  const items = data.meta || [];
+  if (items.length === 0) {
+    container.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <p>No Meta ads yet. Paste your copy to get started.</p>
+    </div>`;
+    return;
+  }
+  const pageName = document.getElementById('clientName').textContent.trim() || 'Restaurant Name';
+  container.innerHTML = items.map((item, i) => {
+    const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
+    const statusLabel = item.approved ? 'Approved' : item.needsEdit ? 'Needs Edit' : 'Pending';
+    const statusCls = item.approved ? 'approved' : item.needsEdit ? 'needs-edit' : '';
+    const initials = (item.name || pageName).split(' ').slice(0,2).map(w => w[0]||'').join('').toUpperCase() || 'RN';
+    const domain = (item.url||'').replace(/^https?:\/\//,'').split('/')[0] || 'yourrestaurant.com';
+    const preview = (item.text||'').slice(0,90) || 'Your ad copy will appear here...';
+    const safeUrl = escAttr(item.url || '#');
+    return `<div class="meta-ad-card ${state}" id="meta-card-${i}">
+      <div class="meta-card-topbar">
+        <span class="meta-card-name">Meta Ad ${String(i+1).padStart(2,'0')}</span>
+        <span class="meta-card-status ${statusCls}"><span class="status-dot"></span>${statusLabel}</span>
+      </div>
+      <div class="meta-card-body">
+        <div>
+          <div class="phone-shell" aria-label="Facebook ad preview">
+            <div class="phone-screen">
+              <div class="fb-feed">
+                <div class="fb-topbar">
+                  <span class="fb-logo">f</span>
+                  <div class="fb-topbar-icons"><div class="fb-icon-circle"></div><div class="fb-icon-circle"></div></div>
+                </div>
+                <div class="fb-post-card">
+                  <div class="fb-post-header">
+                    <div class="fb-avatar">${escHtml(initials)}</div>
+                    <div class="fb-post-meta">
+                      <div class="fb-page-name">${escHtml(pageName)}</div>
+                      <div class="fb-sponsored">Sponsored</div>
+                    </div>
+                  </div>
+                  <div class="fb-post-text">${escHtml(preview)}</div>
+                  <div class="fb-image">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  </div>
+                  <div class="fb-link-strip">
+                    <div class="fb-link-info">
+                      <div class="fb-domain">${escHtml(domain.toUpperCase())}</div>
+                      <div class="fb-link-title">${escHtml(item.name || pageName)}</div>
+                    </div>
+                    <button class="fb-learn-more">Learn More</button>
+                  </div>
+                  <div class="fb-reactions">
+                    <div class="fb-react-btn">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Like
+                    </div>
+                    <div class="fb-react-btn">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Comment
+                    </div>
+                    <div class="fb-react-btn">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="meta-copy-section">
+          <div class="copy-field">
+            <div class="copy-field-label">Primary Text</div>
+            <div class="copy-text-editable" contenteditable="true" spellcheck="false"
+              data-placeholder="Enter primary text..."
+              data-section="meta" data-index="${i}" data-field="text"
+              onblur="handleMetaTextEdit(this)"
+            >${escHtml(item.text || '')}</div>
+          </div>
+          <div class="copy-field">
+            <div class="copy-field-label">Preview Link</div>
+            <div class="link-field">
+              <input type="url" class="link-url" placeholder="https://yourrestaurant.com"
+                value="${escAttr(item.url||'')}"
+                data-section="meta" data-index="${i}"
+                onblur="handleMetaUrlEdit(this)"
+              />
+              <a href="${safeUrl}" target="_blank" rel="noopener" class="btn-open-link" id="meta-link-${i}">
+                Open
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="meta-card-footer">
+        <div class="approval-toggle">
+          <button class="approval-btn btn-approve${item.approved?' active':''}"
+            onclick="setApproval('meta',${i},'${item.approved?'none':'approved'}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Approved
+          </button>
+          <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
+            onclick="setApproval('meta',${i},'${item.needsEdit?'none':'needs-edit'}')">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Needs Edit
+          </button>
+        </div>
+        <div class="notes-wrapper${item.needsEdit?' visible':''}" id="meta-notes-${i}" style="margin-top:12px">
+          <textarea class="notes-textarea" placeholder="Describe what needs to change..."
+            data-section="meta" data-index="${i}"
+            onblur="handleNotesEdit(this)" oninput="autoResize(this)"
+          >${escHtml(item.notes || '')}</textarea>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════
+   RENDER SIMPLE SECTIONS
+════════════════════════════════ */
+function renderSimpleSection(section) {
+  const container = document.getElementById(`list-${section}`);
+  if (!container) return;
+  const items = data[section] || [];
+  if (items.length === 0) {
+    const iconPaths = {
+      dishio: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+      videos: '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>'
+    };
+    container.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${iconPaths[section]||''}</svg>
+      <p>No ${section === 'dishio' ? 'Dish.io smart links' : 'video assets'} yet.</p>
+    </div>`;
+    return;
+  }
+  container.innerHTML = items.map((item, i) => {
+    const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
+    const safeUrl = escAttr(item.url || '#');
+    return `<div class="simple-card ${state}" id="simple-${section}-${i}">
+      <div class="simple-card-name" contenteditable="true" spellcheck="false"
+        data-section="${section}" data-index="${i}" data-field="name"
+        onblur="handleSimpleEdit(this)"
+      >${escHtml(item.name || '')}</div>
+      <div class="link-field" style="margin-bottom:14px">
+        <input type="url" class="link-url" placeholder="https://..."
+          value="${escAttr(item.url||'')}"
+          data-section="${section}" data-index="${i}"
+          onblur="handleSimpleUrlEdit(this)"
+        />
+        <a href="${safeUrl}" target="_blank" rel="noopener" class="btn-open-link" id="${section}-link-${i}">
+          Open
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+      <div class="approval-toggle">
+        <button class="approval-btn btn-approve${item.approved?' active':''}"
+          onclick="setApproval('${section}',${i},'${item.approved?'none':'approved'}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Approved
+        </button>
+        <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
+          onclick="setApproval('${section}',${i},'${item.needsEdit?'none':'needs-edit'}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Needs Edit
+        </button>
+      </div>
+      <div class="notes-wrapper${item.needsEdit?' visible':''}" id="${section}-notes-${i}" style="margin-top:12px">
+        <textarea class="notes-textarea" placeholder="Describe what needs to change..."
+          data-section="${section}" data-index="${i}"
+          onblur="handleNotesEdit(this)" oninput="autoResize(this)"
+        >${escHtml(item.notes || '')}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════
+   APPROVAL
+════════════════════════════════ */
+function setApproval(section, index, state) {
+  if (!data[section] || data[section][index] == null) return;
+  const item = data[section][index];
+  item.approved = state === 'approved';
+  item.needsEdit = state === 'needs-edit';
+
+  let card, notesEl;
+  if (section === 'meta') {
+    card = document.getElementById(`meta-card-${index}`);
+    notesEl = document.getElementById(`meta-notes-${index}`);
+    // Update status badge inside card
+    const statusEl = card && card.querySelector('.meta-card-status');
+    if (statusEl) {
+      const label = item.approved ? 'Approved' : item.needsEdit ? 'Needs Edit' : 'Pending';
+      const cls = item.approved ? 'approved' : item.needsEdit ? 'needs-edit' : '';
+      statusEl.className = `meta-card-status ${cls}`;
+      statusEl.innerHTML = `<span class="status-dot"></span>${label}`;
+    }
+  } else if (section === 'dishio' || section === 'videos') {
+    card = document.getElementById(`simple-${section}-${index}`);
+    notesEl = document.getElementById(`${section}-notes-${index}`);
+  } else {
+    card = document.getElementById(`item-${section}-${index}`);
+    notesEl = document.getElementById(`notes-${section}-${index}`);
+  }
+
+  if (card) {
+    card.classList.toggle('state-approved', item.approved);
+    card.classList.toggle('state-needs-edit', item.needsEdit);
+    // Update button states
+    const approveBtn = card.querySelector('.btn-approve');
+    const needsBtn = card.querySelector('.btn-needs-edit');
+    if (approveBtn) {
+      approveBtn.classList.toggle('active', item.approved);
+      approveBtn.setAttribute('onclick', `setApproval('${section}',${index},'${item.approved?'none':'approved'}')`);
+    }
+    if (needsBtn) {
+      needsBtn.classList.toggle('active', item.needsEdit);
+      needsBtn.setAttribute('onclick', `setApproval('${section}',${index},'${item.needsEdit?'none':'needs-edit'}')`);
+    }
+  }
+  if (notesEl) notesEl.classList.toggle('visible', item.needsEdit);
+
+  updateStats();
+  saveToStorage();
+}
+
+function toggleApproval(section, index) {
+  const item = data[section] && data[section][index];
+  if (!item) return;
+  setApproval(section, index, item.approved ? 'none' : 'approved');
+}
+
+/* ════════════════════════════════
+   STATS & BADGES
+════════════════════════════════ */
+function updateStats() {
+  const all = [
+    ...data.headlines, ...data.longHeadlines, ...data.descriptions,
+    ...data.meta, ...data.dishio, ...data.videos
+  ];
+  document.getElementById('progApproved').textContent = all.filter(i => i && i.approved).length;
+  document.getElementById('progTotal').textContent = all.length;
+}
+
+function updateTabBadges() {
+  const counts = {
+    google: data.headlines.length + data.longHeadlines.length + data.descriptions.length,
+    meta: data.meta.length,
+    dishio: data.dishio.length,
+    videos: data.videos.length
+  };
+  Object.entries(counts).forEach(([tab, n]) => {
+    const el = document.getElementById(`badge-${tab}`);
+    if (el) el.textContent = n;
+  });
+}
+
+/* ════════════════════════════════
+   GOOGLE AD PREVIEWS
+════════════════════════════════ */
+function renderGoogleAdPreviews() {
+  const h1 = (data.headlines[0] && data.headlines[0].text) || 'Your Headline Will Appear Here';
+  const h2 = (data.headlines[1] && data.headlines[1].text) ? ` | ${data.headlines[1].text}` : '';
+  const h3 = (data.headlines[2] && data.headlines[2].text) ? ` | ${data.headlines[2].text}` : '';
+  const lh = (data.longHeadlines[0] && data.longHeadlines[0].text) || 'Your Long Headline Here';
+  const d1 = (data.descriptions[0] && data.descriptions[0].text) || 'Your description will appear here once you add ad copy above. It shows exactly as customers will see it in Google Search.';
+  const d2 = (data.descriptions[1] && data.descriptions[1].text) ? ' ' + data.descriptions[1].text : '';
+
+  const gH = document.getElementById('gsm-headline');
+  const gD = document.getElementById('gsm-description');
+  const pH = document.getElementById('pmax-headline');
+  const pD = document.getElementById('pmax-desc');
+  if (gH) gH.textContent = h1 + h2 + h3;
+  if (gD) gD.textContent = d1 + d2;
+  if (pH) pH.textContent = lh;
+  if (pD) pD.textContent = d1;
+}
+
+/* ════════════════════════════════
+   CONTENT EDITABLE HANDLERS
+════════════════════════════════ */
+function handleTextEdit(el) {
+  const section = el.dataset.section;
+  const idx = parseInt(el.dataset.index);
+  if (data[section] && data[section][idx] != null) {
+    data[section][idx].text = el.textContent.trim();
+    renderGoogleAdPreviews();
+    saveToStorage();
+  }
+}
+
+function handleNotesEdit(el) {
+  const section = el.dataset.section;
+  const idx = parseInt(el.dataset.index);
+  if (data[section] && data[section][idx] != null) {
+    data[section][idx].notes = el.value.trim();
+    saveToStorage();
+  }
+}
+
+function handleMetaTextEdit(el) {
+  const idx = parseInt(el.dataset.index);
+  if (data.meta[idx] != null) { data.meta[idx].text = el.textContent.trim(); saveToStorage(); }
+}
+
+function handleMetaUrlEdit(el) {
+  const idx = parseInt(el.dataset.index);
+  if (data.meta[idx] != null) {
+    data.meta[idx].url = el.value.trim();
+    const link = document.getElementById(`meta-link-${idx}`);
+    if (link) link.href = el.value.trim() || '#';
+    saveToStorage();
+  }
+}
+
+function handleSimpleEdit(el) {
+  const section = el.dataset.section;
+  const idx = parseInt(el.dataset.index);
+  if (data[section] && data[section][idx] != null) { data[section][idx].name = el.textContent.trim(); saveToStorage(); }
+}
+
+function handleSimpleUrlEdit(el) {
+  const section = el.dataset.section;
+  const idx = parseInt(el.dataset.index);
+  if (data[section] && data[section][idx] != null) {
+    data[section][idx].url = el.value.trim();
+    const link = document.getElementById(`${section}-link-${idx}`);
+    if (link) link.href = el.value.trim() || '#';
+    saveToStorage();
+  }
+}
+
+function updateCharCount(el, maxChars, section, index) {
+  const len = el.textContent.length;
+  const pill = document.getElementById(`char-${section}-${index}`);
+  if (!pill) return;
+  pill.textContent = `${len}/${maxChars}`;
+  pill.classList.toggle('over', len > maxChars);
+  pill.classList.toggle('near', len <= maxChars && len > Math.floor(maxChars * 0.85));
+}
+
+/* ════════════════════════════════
+   PASTE MODAL
+════════════════════════════════ */
+let currentPasteSection = null;
+let currentPasteLabel = '';
+let currentPasteMaxChars = 500;
+let parsedPasteItems = [];
+
+function openPasteModal(section, label, maxChars) {
+  currentPasteSection = section;
+  currentPasteLabel = label;
+  currentPasteMaxChars = maxChars;
+  parsedPasteItems = [];
+  document.getElementById('pasteModalTitle').textContent = `Paste ${label} Copy`;
+  document.getElementById('pasteTextarea').value = '';
+  document.getElementById('pastePreview').innerHTML = '';
+  document.getElementById('pastePreview').classList.remove('has-items');
+  document.getElementById('btnImport').textContent = 'Import 0 Items';
+  document.getElementById('btnImport').disabled = true;
+  document.getElementById('pasteModal').classList.add('open');
+  setTimeout(() => document.getElementById('pasteTextarea').focus(), 60);
+}
+
+function closePasteModal() {
+  document.getElementById('pasteModal').classList.remove('open');
+}
+
+function onPasteInput() {
+  document.getElementById('pastePreview').classList.remove('has-items');
+  document.getElementById('pastePreview').innerHTML = '';
+  parsedPasteItems = [];
+  document.getElementById('btnImport').textContent = 'Import 0 Items';
+  document.getElementById('btnImport').disabled = true;
+}
+
+function parsePastedCopy(text) {
+  return text.split('\n')
+    .map(line => {
+      const cols = line.split('\t');
+      const copyText = cols[0].trim();
+      const approved = cols.some(c => c.trim().toLowerCase() === 'yes' || c.trim().toLowerCase() === 'approved');
+      const notes = cols.slice(1).find(c => {
+        const v = c.trim().toLowerCase();
+        return c.trim().length > 1 && v !== 'yes' && v !== 'no' && v !== 'approved';
+      }) || '';
+      return { text: copyText, approved, notes };
+    })
+    .filter(item => item.text.length > 0 && item.text.length < 500);
+}
+
+function previewPaste() {
+  const raw = document.getElementById('pasteTextarea').value;
+  if (!raw.trim()) { showToast('Please paste some copy first.', true); return; }
+  parsedPasteItems = parsePastedCopy(raw);
+  const preview = document.getElementById('pastePreview');
+  const btn = document.getElementById('btnImport');
+  if (parsedPasteItems.length === 0) {
+    preview.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:8px 0">No valid items detected. Check your formatting.</p>';
+    preview.classList.add('has-items');
+    btn.disabled = true;
+    return;
+  }
+  preview.innerHTML = parsedPasteItems.map((item, i) => `
+    <div class="paste-preview-item">
+      <span class="preview-item-num">${i+1}</span>
+      <span class="preview-item-text">${escHtml(item.text)}</span>
+      ${item.approved ? '<span style="font-size:10px;color:var(--green);font-weight:700;margin-left:auto;white-space:nowrap">PRE-APPROVED</span>' : ''}
+    </div>`).join('');
+  preview.classList.add('has-items');
+  btn.textContent = `Import ${parsedPasteItems.length} Item${parsedPasteItems.length!==1?'s':''}`;
+  btn.disabled = false;
+}
+
+function importPastedItems(section, items) {
+  if (!data[section]) data[section] = [];
+  items.forEach(item => {
+    if (section === 'meta' || section === 'dishio' || section === 'videos') {
+      data[section].push({ name: item.text, url: '', approved: item.approved, needsEdit: false, notes: item.notes });
+    } else {
+      data[section].push({ text: item.text, approved: item.approved, needsEdit: false, notes: item.notes });
+    }
+  });
+  renderAll();
+  saveToStorage();
+}
+
+function confirmImport() {
+  if (!currentPasteSection || parsedPasteItems.length === 0) return;
+  importPastedItems(currentPasteSection, parsedPasteItems);
+  showToast(`Imported ${parsedPasteItems.length} item${parsedPasteItems.length!==1?'s':''} successfully.`);
+  closePasteModal();
+}
+
+document.getElementById('pasteModal').addEventListener('click', function(e) {
+  if (e.target === this) closePasteModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePasteModal(); });
+
+/* ════════════════════════════════
+   TOAST
+════════════════════════════════ */
+let toastTimer = null;
+function showToast(message, isError = false) {
+  const el = document.getElementById('toast');
+  clearTimeout(toastTimer);
+  el.textContent = message;
+  el.classList.toggle('error', isError);
+  el.classList.add('show');
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+/* ════════════════════════════════
+   SUBMIT
+════════════════════════════════ */
+async function submitApprovals() {
+  if (!campaignId) { showToast('No campaign ID found.', true); return; }
   try {
-    const res = await fetch('/api/import-sheet', {
+    const res = await fetch(`/api/campaigns/${campaignId}/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sheetUrl })
+      body: JSON.stringify({ restaurantName: document.getElementById('clientName').textContent, data })
     });
-    const result = await res.json();
-    if (result.success && result.data) {
-      Object.assign(data, result.data);
-      renderAll();
-      saveToStorage();
-      showToast('Copy imported from Google Sheet!');
-    } else {
-      showToast(result.error || 'Import failed');
-    }
-  } catch (err) {
-    showToast('Import error: ' + err.message);
+    if (!res.ok) throw new Error('Server error');
+    showToast('Approvals submitted! Your account manager has been notified.');
+  } catch {
+    showToast('Failed to submit. Please try again.', true);
   }
 }
 
-// ========== CSV IMPORT ==========
-function handleCSVImport(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      parseCSVAndPopulate(e.target.result);
-      renderAll();
-      saveToStorage();
-      showToast('CSV imported successfully!');
-    } catch (err) {
-      console.error('CSV parse error:', err);
-      showToast('Error parsing CSV. Check format.');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = ''; // reset so same file can be re-imported
+/* ════════════════════════════════
+   UTILITIES
+════════════════════════════════ */
+function autoResize(ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function escAttr(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
 }
 
-function parseCSVAndPopulate(csvText) {
-  const rows = csvText.split('\n').map(row => {
-    // Simple CSV parser handling quoted fields
-    const cells = [];
-    let current = '';
-    let inQuotes = false;
-    for (let i = 0; i < row.length; i++) {
-      const ch = row[i];
-      if (ch === '"') { inQuotes = !inQuotes; continue; }
-      if (ch === ',' && !inQuotes) { cells.push(current.trim()); current = ''; continue; }
-      current += ch;
-    }
-    cells.push(current.trim());
-    return cells;
-  });
+/* Save on header edit */
+document.getElementById('clientName').addEventListener('blur', saveToStorage);
+document.getElementById('accountManagerName').addEventListener('blur', saveToStorage);
 
-  // Detect sections by scanning for known header keywords
-  let section = null;
-  let sectionIndex = 0;
-
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    const joined = row.join(' ').toLowerCase();
-
-    // Detect section headers
-    if (joined.includes('google headlines') && joined.includes('approval')) {
-      section = 'headlines'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('long headlines') && joined.includes('approval')) {
-      section = 'longHeadlines'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('google descriptions') && joined.includes('approval')) {
-      section = 'descriptions'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('videos') && joined.includes('approval')) {
-      section = 'videos'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('meta campaign')) {
-      section = 'meta'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('preview link') && joined.includes('approved')) {
-      section = 'metaLinks'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('dishio')) {
-      section = 'dishio'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('smart site') && joined.includes('preview')) {
-      section = 'dishioLinks'; sectionIndex = 0; continue;
-    }
-    if (joined.includes('campaign preview') && !joined.includes('google') && !joined.includes('meta') && !joined.includes('dishio')) {
-      continue; // skip the title row
-    }
-    if (joined.includes('google campaign')) {
-      continue; // skip section divider
-    }
-
-    if (!section) continue;
-
-    // Get the text value from column B (index 1)
-    const textVal = row[1] || '';
-    const approvedVal = row[3] || '';
-    const notesVal = row[4] || '';
-
-    // Skip empty rows or rows with only "0" in char count column
-    if (!textVal && !row[2] && !approvedVal && !notesVal) continue;
-
-    // Parse based on current section
-    if (section === 'headlines') {
-      if (sectionIndex < data.headlines.length) {
-        if (textVal) data.headlines[sectionIndex].text = textVal;
-        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.headlines[sectionIndex].approved = true;
-        if (notesVal) data.headlines[sectionIndex].notes = notesVal;
-      }
-      sectionIndex++;
-    } else if (section === 'longHeadlines') {
-      if (sectionIndex < data.longHeadlines.length) {
-        if (textVal) data.longHeadlines[sectionIndex].text = textVal;
-        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.longHeadlines[sectionIndex].approved = true;
-        if (notesVal) data.longHeadlines[sectionIndex].notes = notesVal;
-      }
-      sectionIndex++;
-    } else if (section === 'descriptions') {
-      if (sectionIndex < data.descriptions.length) {
-        if (textVal) data.descriptions[sectionIndex].text = textVal;
-        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.descriptions[sectionIndex].approved = true;
-        if (notesVal) data.descriptions[sectionIndex].notes = notesVal;
-      }
-      sectionIndex++;
-    } else if (section === 'videos') {
-      if (sectionIndex < data.videos.length) {
-        if (textVal) data.videos[sectionIndex].name = textVal;
-        if (row[2]) data.videos[sectionIndex].url = row[2];
-      }
-      sectionIndex++;
-    } else if (section === 'metaLinks' || section === 'meta') {
-      if (sectionIndex < data.meta.length) {
-        if (textVal) {
-          // Could be a URL or name
-          if (textVal.startsWith('http')) {
-            data.meta[sectionIndex].url = textVal;
-          } else {
-            data.meta[sectionIndex].name = textVal;
-          }
-        }
-        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.meta[sectionIndex].approved = true;
-        if (notesVal) data.meta[sectionIndex].notes = notesVal;
-      }
-      sectionIndex++;
-    } else if (section === 'dishioLinks' || section === 'dishio') {
-      if (sectionIndex < data.dishio.length) {
-        if (textVal) {
-          if (textVal.startsWith('http')) {
-            data.dishio[sectionIndex].url = textVal;
-          } else {
-            data.dishio[sectionIndex].name = textVal;
-          }
-        }
-        if (approvedVal && approvedVal.toLowerCase() === 'yes') data.dishio[sectionIndex].approved = true;
-        if (notesVal) data.dishio[sectionIndex].notes = notesVal;
-      }
-      sectionIndex++;
-    }
-  }
-}
-
-// ========== EXPORT ==========
-function exportData() {
-  const exportObj = {
-    clientName: document.getElementById('clientName').textContent,
-    exportDate: new Date().toISOString(),
-    ...data
-  };
-  const blob = new Blob([JSON.stringify(exportObj, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = (exportObj.clientName || 'campaign') + '-preview-export.json';
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Exported successfully!');
-}
-
-async function submitAllApprovals() {
-  const allItems = [...data.headlines, ...data.longHeadlines, ...data.descriptions, ...data.meta, ...data.dishio, ...data.videos];
-  const total = allItems.length;
-  const approved = allItems.filter(i => i.approved).length;
-
-  if (total === 0) { showToast('No items to submit'); return; }
-  if (approved < total) { showToast(`${total - approved} items still pending review`); return; }
-
-  // Mark as approved in backend and notify Slack
-  try {
-    await fetch(`/api/campaigns/${campaignId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'approved', data })
-    });
-    await fetch(`/api/campaigns/${campaignId}/send`, { method: 'POST' });
-    showToast('All approvals submitted & team notified!');
-  } catch (err) {
-    showToast('All approvals submitted!');
-  }
-}
-
-// ========== TOAST ==========
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  document.getElementById('toastText').textContent = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// ========== INIT ==========
+/* ════════════════════════════════
+   INIT
+════════════════════════════════ */
 loadFromStorage();
 </script>
 </body>
