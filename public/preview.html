@@ -229,11 +229,25 @@
     }
 
     /* ── CAMPAIGN SWITCHER ── */
+    #campaignSwitcherWrap {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .campaign-switcher-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
     #campaignSwitcher {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
     }
     .campaign-pill {
       font-family: inherit;
@@ -1030,10 +1044,13 @@
     </div>
   </div>
 
-  <!-- CAMPAIGN SWITCHER -->
-  <div id="campaignSwitcher" style="display:none;"></div>
+  <!-- CAMPAIGN TABS (multi-tab campaigns like General, Crab & Lobster, etc.) -->
+  <div id="campaignSwitcherWrap" style="display:none;">
+    <div class="campaign-switcher-label">Campaign Previews</div>
+    <div id="campaignSwitcher"></div>
+  </div>
 
-  <!-- TAB NAV -->
+  <!-- TAB NAV (Google / Meta / Dish.io / Videos) -->
   <nav id="tabNav" role="tablist">
     <button class="tab-btn active" id="tab-google" role="tab" aria-selected="true" onclick="switchTab('google')">
       Google <span class="tab-badge" id="badge-google">0</span>
@@ -1067,7 +1084,7 @@
           <div class="section-card-body" id="list-headlines">
             <div class="empty-state">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <p>No headlines yet. Paste from your Google Sheet.</p>
+              <p>No headlines yet. Use the Paste button above to add copy.</p>
             </div>
           </div>
         </div>
@@ -1203,7 +1220,7 @@
 <div id="pasteModal" role="dialog" aria-modal="true" aria-labelledby="pasteModalTitle">
   <div class="paste-panel">
     <h2 class="paste-title" id="pasteModalTitle">Paste Copy</h2>
-    <p class="paste-instructions">Copy cells from your Google Sheet (select the copy column, Cmd+C or Ctrl+C), then paste below. One item per line.</p>
+    <p class="paste-instructions">Paste your copy below — one item per line. If pasting from a spreadsheet, columns will be auto-detected.</p>
     <textarea id="pasteTextarea" placeholder="Paste your copy here..." oninput="onPasteInput()"></textarea>
     <div class="paste-actions">
       <button class="btn-preview" onclick="previewPaste()">Preview</button>
@@ -1284,7 +1301,7 @@ async function loadFromStorage() {
       activeCampaignIdx = 0;
       Object.assign(data, campaign.campaigns[0].data);
       renderCampaignSwitcher();
-      document.getElementById('campaignSwitcher').style.display = '';
+      document.getElementById('campaignSwitcherWrap').style.display = '';
     } else if (campaign.data) {
       Object.assign(data, campaign.data);
     }
@@ -1368,7 +1385,7 @@ function renderGoogleSection(section, maxChars) {
     const labels = { headlines: 'headlines', longHeadlines: 'long headlines', descriptions: 'descriptions' };
     container.innerHTML = `<div class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <p>No ${labels[section] || section} yet. Paste from your Google Sheet.</p>
+      <p>No ${labels[section] || section} yet. Use the Paste button above to add copy.</p>
     </div>`;
     return;
   }
