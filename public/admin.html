@@ -77,50 +77,40 @@ body {
 .stat-val { font-size: 28px; font-weight: 800; color: var(--yellow); margin-bottom: 4px; }
 .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* Campaign grid */
-.campaign-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-.campaign-card {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 24px; transition: all 0.3s ease; position: relative; overflow: hidden;
+/* Campaign list */
+.campaign-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; }
+.campaign-row {
+  background: var(--card); padding: 16px 24px; display: grid;
+  grid-template-columns: 4px 1fr 120px 140px 180px auto;
+  align-items: center; gap: 16px; transition: background 0.15s;
+  cursor: pointer;
 }
-.campaign-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-.campaign-card .status-strip {
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-}
+.campaign-row:hover { background: #1A1A1A; }
+.row-status-bar { width: 4px; height: 36px; border-radius: 2px; }
 .status-draft { background: var(--muted); }
 .status-sent { background: var(--green-light); }
 .status-approved { background: var(--yellow); }
-.card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
-.card-restaurant { font-size: 18px; font-weight: 700; }
-.card-status {
-  padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+.row-info { min-width: 0; }
+.row-name { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-manager { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.row-status {
+  padding: 3px 10px; border-radius: 100px; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; text-align: center; width: fit-content;
 }
 .badge-draft { background: rgba(136,136,136,0.15); color: var(--muted); }
 .badge-sent { background: rgba(0,255,136,0.12); color: var(--green-light); }
 .badge-approved { background: rgba(255,217,0,0.12); color: var(--yellow); }
-.card-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.card-meta-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
-.card-meta-item svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
-.card-progress-bar { height: 4px; background: var(--surface); border-radius: 100px; margin-bottom: 12px; overflow: hidden; }
-.card-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-light)); border-radius: 100px; }
-.card-progress-text { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
-.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.card-actions .btn { flex: 1; justify-content: center; }
-
-/* New campaign card */
-.new-campaign-card {
-  background: transparent; border: 2px dashed var(--border); border-radius: var(--radius);
-  padding: 40px 24px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 12px; cursor: pointer; transition: all 0.3s ease; min-height: 260px;
+.row-progress { display: flex; align-items: center; gap: 10px; }
+.row-progress-bar { flex: 1; height: 4px; background: var(--surface); border-radius: 100px; overflow: hidden; min-width: 60px; }
+.row-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-light)); border-radius: 100px; }
+.row-progress-text { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.row-date { font-size: 12px; color: var(--text-dim, #555); white-space: nowrap; }
+.row-actions { display: flex; gap: 6px; }
+.list-header {
+  display: grid; grid-template-columns: 4px 1fr 120px 140px 180px auto;
+  gap: 16px; padding: 0 24px 10px; font-size: 11px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
 }
-.new-campaign-card:hover { border-color: var(--green); background: rgba(0,155,0,0.04); }
-.new-campaign-card .plus-icon {
-  width: 48px; height: 48px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--muted);
-  transition: all 0.3s ease;
-}
-.new-campaign-card:hover .plus-icon { background: var(--green); color: #000; border-color: var(--green); }
-.new-campaign-card span { font-size: 14px; color: var(--muted); font-weight: 600; }
 
 /* Modal */
 .modal-overlay {
@@ -145,38 +135,15 @@ body {
 .form-input::placeholder { color: var(--muted); }
 .modal-actions { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; }
 
-/* Sheet URL row */
-.sheet-url-row { display: flex; gap: 8px; }
-.sheet-url-row .form-input { flex: 1; min-width: 0; }
-.btn-find-tabs {
-  padding: 12px 16px; border-radius: var(--radius-sm); font-family: inherit;
-  font-size: 13px; font-weight: 700; cursor: pointer; border: 1px solid var(--border);
-  background: var(--surface); color: var(--text); white-space: nowrap; flex-shrink: 0;
-  transition: all 0.2s ease;
-}
-.btn-find-tabs:hover { border-color: var(--green); color: var(--green-light); }
-.btn-find-tabs:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Tab cards */
-.tabs-section { margin-top: 4px; }
-.tabs-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.tabs-found-label { font-size: 12px; font-weight: 700; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-.tabs-select-all { font-size: 12px; font-weight: 600; color: var(--green-light); cursor: pointer; background: none; border: none; padding: 0; font-family: inherit; text-decoration: underline; text-underline-offset: 2px; }
-.tabs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.tab-card {
-  background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius-sm);
-  padding: 12px 14px; cursor: pointer; transition: all 0.2s ease;
-  display: flex; align-items: center; gap: 10px; user-select: none;
+/* Paste section toggle buttons */
+.paste-section-btn {
+  font-family: inherit; font-size: 12px; font-weight: 600; padding: 6px 14px;
+  border-radius: 100px; cursor: pointer; transition: all 0.15s;
+  border: 1.5px solid var(--border); background: transparent; color: var(--muted);
 }
-.tab-card:hover { border-color: rgba(0,155,0,0.5); }
-.tab-card.selected { border-color: var(--green-light); background: rgba(0,255,136,0.07); }
-.tab-check {
-  width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border);
-  flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.2s;
-}
-.tab-card.selected .tab-check { background: var(--green-light); border-color: var(--green-light); }
-.tab-name { font-size: 13px; font-weight: 600; line-height: 1.3; }
-.tabs-hint { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+.paste-section-btn:hover { border-color: var(--yellow); color: var(--text); }
+.paste-section-btn.active { background: var(--yellow); border-color: var(--yellow); color: #000; }
 
 /* Empty state */
 .empty-state { text-align: center; padding: 60px 20px; }
@@ -207,7 +174,9 @@ body {
 @media (max-width: 768px) {
   .main { padding: 24px 20px; }
   .stats-row { grid-template-columns: repeat(2, 1fr); }
-  .campaign-grid { grid-template-columns: 1fr; }
+  .list-header { display: none; }
+  .campaign-row { grid-template-columns: 4px 1fr auto; gap: 12px; padding: 14px 16px; }
+  .row-progress, .row-date { display: none; }
 }
 </style>
 </head>
@@ -239,15 +208,23 @@ body {
     <div class="stat-box"><div class="stat-val" id="statApproved" style="color:var(--yellow)">0</div><div class="stat-label">Fully Approved</div></div>
   </div>
 
-  <!-- Campaign Grid -->
-  <div class="campaign-grid" id="campaignGrid"></div>
+  <!-- Campaign List -->
+  <div class="list-header">
+    <span></span>
+    <span>Campaign</span>
+    <span>Status</span>
+    <span>Progress</span>
+    <span>Created</span>
+    <span>Actions</span>
+  </div>
+  <div class="campaign-list" id="campaignList"></div>
 </main>
 
 <!-- New Campaign Modal -->
 <div class="modal-overlay" id="newModal">
-  <div class="modal">
+  <div class="modal" style="width:680px">
     <h2>New Campaign Preview</h2>
-    <p>Set up a campaign preview. Paste the Google Sheet URL to auto-import copy from any tab.</p>
+    <p>Create a preview and paste in copy. Or use Claude via MCP to fill it automatically.</p>
     <div class="form-group">
       <label class="form-label">Restaurant Name *</label>
       <input class="form-input" id="inputRestaurant" placeholder="e.g. Orchard Grocer" autofocus>
@@ -256,23 +233,22 @@ body {
       <label class="form-label">Account Manager</label>
       <input class="form-input" id="inputManager" placeholder="e.g. Katherine Nin">
     </div>
-    <div class="form-group">
-      <label class="form-label">Google Sheet URL</label>
-      <div class="sheet-url-row">
-        <input class="form-input" id="inputSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/...">
-        <button class="btn-find-tabs" id="findTabsBtn" onclick="findTabs()">Find Tabs</button>
-      </div>
-      <div style="font-size:11px;color:#888;margin-top:6px">Sheet must be shared as "Anyone with the link can view"</div>
-    </div>
 
-    <!-- Tab selection (shown after Find Tabs) -->
-    <div id="tabsSection" style="display:none;" class="form-group tabs-section">
-      <div class="tabs-header">
-        <span class="tabs-found-label" id="tabsFoundLabel">Tabs found</span>
-        <button class="tabs-select-all" onclick="toggleSelectAll()">Select all</button>
+    <!-- Paste Copy Section -->
+    <div class="form-group">
+      <label class="form-label">Paste Copy <span style="font-weight:400;color:var(--muted)">(optional — you can also add copy later)</span></label>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <button class="paste-section-btn active" onclick="switchPasteSection('headlines', this)">Headlines</button>
+        <button class="paste-section-btn" onclick="switchPasteSection('longHeadlines', this)">Long Headlines</button>
+        <button class="paste-section-btn" onclick="switchPasteSection('descriptions', this)">Descriptions</button>
+        <button class="paste-section-btn" onclick="switchPasteSection('meta', this)">Meta Copy</button>
       </div>
-      <div class="tabs-grid" id="tabsGrid"></div>
-      <div class="tabs-hint" id="tabsHint">All selected tabs will be combined into one campaign preview.</div>
+      <textarea class="form-input" id="pasteArea" rows="6" style="font-size:13px;line-height:1.6;font-family:'Space Grotesk',monospace;resize:vertical" placeholder="Paste one item per line. Tab-separated columns are auto-detected."></textarea>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+        <div style="font-size:11px;color:var(--muted)" id="pasteHint">Paste headlines — one per line</div>
+        <button class="btn btn-outline btn-sm" onclick="addPastedCopy()">+ Add to Campaign</button>
+      </div>
+      <div id="pastedSummary" style="margin-top:10px;font-size:12px;color:var(--green-light);display:none"></div>
     </div>
 
     <div id="importStatus" style="display:none;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;line-height:1.5"></div>
@@ -300,9 +276,6 @@ body {
 <script>
 let campaigns = [];
 let deleteTargetId = null;
-let discoveredTabs = [];   // [{name}]
-let selectedTabs = new Set();
-let currentSheetUrl = '';
 
 async function loadCampaigns() {
   const res = await fetch('/api/campaigns');
@@ -312,53 +285,45 @@ async function loadCampaigns() {
 }
 
 function renderCampaigns() {
-  const grid = document.getElementById('campaignGrid');
-  const newCard = `<div class="new-campaign-card" onclick="openNewModal()">
-    <div class="plus-icon">+</div>
-    <span>New Campaign Preview</span>
-  </div>`;
-  if (!campaigns.length) { grid.innerHTML = newCard; return; }
-  grid.innerHTML = campaigns.map(c => {
+  const list = document.getElementById('campaignList');
+  if (!campaigns.length) {
+    list.innerHTML = `<div style="padding:40px;text-align:center;background:var(--card)">
+      <div style="font-size:32px;opacity:0.15;margin-bottom:12px">📋</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px">No campaigns yet</div>
+      <div style="font-size:13px;color:var(--muted)">Click "New Preview" to create your first campaign.</div>
+    </div>`;
+    return;
+  }
+  list.innerHTML = campaigns.map(c => {
     const pct = c.total > 0 ? Math.round((c.approved / c.total) * 100) : 0;
     const statusClass = c.status === 'sent' ? 'sent' : c.status === 'approved' ? 'approved' : 'draft';
     const badgeClass = c.status === 'sent' ? 'badge-sent' : c.status === 'approved' ? 'badge-approved' : 'badge-draft';
-    return `<div class="campaign-card">
-      <div class="status-strip status-${statusClass}"></div>
-      <div class="card-header">
-        <div class="card-restaurant">${c.restaurantName}</div>
-        <span class="card-status ${badgeClass}">${c.status}</span>
+    const date = new Date(c.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return `<div class="campaign-row" onclick="window.open('/preview/${c.id}','_blank')">
+      <div class="row-status-bar status-${statusClass}"></div>
+      <div class="row-info">
+        <div class="row-name">${c.restaurantName}</div>
+        <div class="row-manager">${c.accountManager || '—'}</div>
       </div>
-      <div class="card-meta">
-        <div class="card-meta-item">
-          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          ${c.accountManager || 'No account manager'}
-        </div>
-        <div class="card-meta-item">
-          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-          Created ${new Date(c.createdAt).toLocaleDateString()}
-        </div>
+      <span class="row-status ${badgeClass}">${c.status}</span>
+      <div class="row-progress">
+        <div class="row-progress-bar"><div class="row-progress-fill" style="width:${pct}%"></div></div>
+        <span class="row-progress-text">${c.approved}/${c.total}</span>
       </div>
-      <div class="card-progress-bar"><div class="card-progress-fill" style="width:${pct}%"></div></div>
-      <div class="card-progress-text">${c.approved} / ${c.total} items approved (${pct}%)</div>
-      <div class="card-actions">
-        <button class="btn btn-outline btn-sm" onclick="window.open('/preview/${c.id}','_blank')">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
-          Edit
-        </button>
-        <button class="btn btn-outline btn-sm" onclick="copyLink('${c.id}')">
+      <div class="row-date">${date}</div>
+      <div class="row-actions" onclick="event.stopPropagation()">
+        <button class="btn btn-outline btn-sm" onclick="copyLink('${c.id}')" title="Copy link">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-          Link
         </button>
-        <button class="btn btn-yellow btn-sm" onclick="sendToSlack('${c.id}')">
+        <button class="btn btn-yellow btn-sm" onclick="sendToSlack('${c.id}')" title="Send to client">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
-          Send
         </button>
-        <button class="btn btn-danger btn-sm" onclick="openDeleteModal('${c.id}')" style="flex:0;padding:6px 10px">
+        <button class="btn btn-danger btn-sm" onclick="openDeleteModal('${c.id}')" title="Delete" style="padding:6px 10px">
           <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
         </button>
       </div>
     </div>`;
-  }).join('') + newCard;
+  }).join('');
 }
 
 function updateStats() {
@@ -380,146 +345,94 @@ function closeNewModal() {
 }
 
 function resetModal() {
-  discoveredTabs = [];
-  selectedTabs = new Set();
-  currentSheetUrl = '';
   document.getElementById('inputRestaurant').value = '';
   document.getElementById('inputManager').value = '';
-  document.getElementById('inputSheetUrl').value = '';
-  document.getElementById('tabsSection').style.display = 'none';
-  document.getElementById('tabsGrid').innerHTML = '';
+  document.getElementById('pasteArea').value = '';
   document.getElementById('importStatus').style.display = 'none';
-  document.getElementById('findTabsBtn').disabled = false;
-  document.getElementById('findTabsBtn').textContent = 'Find Tabs';
+  document.getElementById('pastedSummary').style.display = 'none';
   document.getElementById('createBtn').textContent = 'Create Preview';
   document.getElementById('createBtn').disabled = false;
+  pastedData = { headlines: [], longHeadlines: [], descriptions: [], meta: [] };
+  activePasteSection = 'headlines';
+  document.querySelectorAll('.paste-section-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+  updatePasteHint();
+  updatePastedSummary();
 }
 
-// ── Tab Discovery ────────────────────────────────────────────────────────────
-async function findTabs() {
-  const sheetUrl = document.getElementById('inputSheetUrl').value.trim();
-  if (!sheetUrl) { document.getElementById('inputSheetUrl').focus(); return; }
+// ── Paste System ─────────────────────────────────────────────────────────────
+let activePasteSection = 'headlines';
+let pastedData = { headlines: [], longHeadlines: [], descriptions: [], meta: [] };
 
-  const btn = document.getElementById('findTabsBtn');
-  const statusEl = document.getElementById('importStatus');
-  btn.disabled = true;
-  btn.textContent = 'Loading…';
-  statusEl.style.display = 'none';
+const pasteLabels = { headlines: 'headlines', longHeadlines: 'long headlines', descriptions: 'descriptions', meta: 'Meta ad copy' };
 
-  try {
-    const res = await fetch('/api/sheet-tabs', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sheetUrl })
-    });
-    const result = await res.json();
-    if (!result.success) throw new Error(result.error);
+function switchPasteSection(section, btn) {
+  activePasteSection = section;
+  document.querySelectorAll('.paste-section-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pasteArea').value = '';
+  updatePasteHint();
+}
 
-    currentSheetUrl = sheetUrl;
-    discoveredTabs = result.tabs;
-    selectedTabs = new Set(discoveredTabs.map(t => t.name)); // select all by default
-    renderTabCards();
-    document.getElementById('tabsSection').style.display = 'block';
-  } catch (err) {
-    statusEl.style.display = 'block';
-    statusEl.style.background = 'rgba(255,80,80,0.1)';
-    statusEl.style.color = '#ff5050';
-    statusEl.textContent = err.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Find Tabs';
+function updatePasteHint() {
+  document.getElementById('pasteHint').textContent = `Paste ${pasteLabels[activePasteSection]} — one per line`;
+}
+
+function parsePastedText(text) {
+  return text.split('\n')
+    .map(line => {
+      const cols = line.split('\t');
+      const copyText = cols[0].trim();
+      const approved = cols.some(c => {
+        const v = c.trim().toLowerCase();
+        return v === 'yes' || v === 'approved';
+      });
+      return { text: copyText, approved, notes: '' };
+    })
+    .filter(item => item.text.length > 0 && item.text.length < 500);
+}
+
+function addPastedCopy() {
+  const text = document.getElementById('pasteArea').value.trim();
+  if (!text) return;
+  const items = parsePastedText(text);
+  if (!items.length) { showToast('No valid items found'); return; }
+
+  if (activePasteSection === 'meta') {
+    pastedData.meta.push(...items.map(i => ({ name: i.text, url: '', approved: i.approved, notes: '' })));
+  } else {
+    pastedData[activePasteSection].push(...items);
   }
+
+  document.getElementById('pasteArea').value = '';
+  showToast(`Added ${items.length} ${pasteLabels[activePasteSection]}`);
+  updatePastedSummary();
 }
 
-function renderTabCards() {
-  const grid = document.getElementById('tabsGrid');
-  const label = document.getElementById('tabsFoundLabel');
-  label.textContent = `${discoveredTabs.length} tab${discoveredTabs.length !== 1 ? 's' : ''} found`;
-
-  grid.innerHTML = discoveredTabs.map(tab => {
-    const sel = selectedTabs.has(tab.name);
-    return `<div class="tab-card ${sel ? 'selected' : ''}" onclick="toggleTab('${tab.name.replace(/'/g,"\\'")}')">
-      <div class="tab-check">
-        ${sel ? `<svg width="11" height="11" fill="none" stroke="#000" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>` : ''}
-      </div>
-      <span class="tab-name">${tab.name}</span>
-    </div>`;
-  }).join('');
-
-  const selCount = selectedTabs.size;
-  document.getElementById('tabsHint').textContent = selCount === 0
-    ? 'Select at least one tab to import.'
-    : selCount === 1
-      ? 'Will create 1 campaign preview.'
-      : `Will create ${selCount} campaign previews — one per tab.`;
-}
-
-function toggleTab(name) {
-  if (selectedTabs.has(name)) selectedTabs.delete(name);
-  else selectedTabs.add(name);
-  renderTabCards();
-}
-
-function toggleSelectAll() {
-  if (selectedTabs.size === discoveredTabs.length) selectedTabs.clear();
-  else selectedTabs = new Set(discoveredTabs.map(t => t.name));
-  renderTabCards();
+function updatePastedSummary() {
+  const parts = [];
+  if (pastedData.headlines.length) parts.push(`${pastedData.headlines.length} headlines`);
+  if (pastedData.longHeadlines.length) parts.push(`${pastedData.longHeadlines.length} long headlines`);
+  if (pastedData.descriptions.length) parts.push(`${pastedData.descriptions.length} descriptions`);
+  if (pastedData.meta.length) parts.push(`${pastedData.meta.length} Meta ads`);
+  const el = document.getElementById('pastedSummary');
+  if (parts.length) {
+    el.style.display = 'block';
+    el.textContent = 'Ready to import: ' + parts.join(', ');
+  } else {
+    el.style.display = 'none';
+  }
 }
 
 // ── Create ────────────────────────────────────────────────────────────────────
 async function createCampaign() {
   const name = document.getElementById('inputRestaurant').value.trim();
   const manager = document.getElementById('inputManager').value.trim();
-  const sheetUrl = document.getElementById('inputSheetUrl').value.trim();
   if (!name) { document.getElementById('inputRestaurant').focus(); return; }
 
   const createBtn = document.getElementById('createBtn');
-  const statusEl = document.getElementById('importStatus');
   createBtn.disabled = true;
-  statusEl.style.display = 'none';
+  createBtn.textContent = 'Creating…';
 
-  // ── Path A: tabs selected — batch create one campaign per tab ──
-  if (sheetUrl && discoveredTabs.length > 0 && selectedTabs.size > 0) {
-    const tabs = [...selectedTabs].map(tabName => ({ name: tabName, campaignName: `${name} — ${tabName}` }));
-    createBtn.textContent = `Creating ${tabs.length} preview${tabs.length > 1 ? 's' : ''}…`;
-    statusEl.style.display = 'block';
-    statusEl.style.background = 'rgba(255,217,0,0.08)';
-    statusEl.style.color = '#FFD900';
-    statusEl.textContent = `Importing ${tabs.length} tab${tabs.length > 1 ? 's' : ''}…`;
-
-    try {
-      const res = await fetch('/api/batch-create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ restaurantName: name, accountManager: manager, sheetUrl, tabs })
-      });
-      const result = await res.json();
-      const succeeded = (result.results || []).filter(r => r.success);
-      const failed = (result.results || []).filter(r => !r.success);
-
-      statusEl.style.background = failed.length ? 'rgba(255,217,0,0.08)' : 'rgba(0,255,136,0.08)';
-      statusEl.style.color = failed.length ? '#FFD900' : '#00FF88';
-      statusEl.innerHTML = `<strong>1 Campaign Preview Created</strong><br>${succeeded.map(r => `✓ ${r.tab}`).join('<br>')}` +
-        (failed.length ? '<br>' + failed.map(r => `✗ ${r.tab}: ${r.error}`).join('<br>') : '');
-
-      setTimeout(() => {
-        closeNewModal();
-        showToast(`Campaign preview created with ${succeeded.length} tab${succeeded.length !== 1 ? 's' : ''}`);
-        loadCampaigns();
-      }, 1500);
-
-    } catch (err) {
-      statusEl.style.background = 'rgba(255,80,80,0.1)';
-      statusEl.style.color = '#ff5050';
-      statusEl.textContent = 'Error: ' + err.message;
-      createBtn.disabled = false;
-      createBtn.textContent = 'Create Preview';
-    }
-    return;
-  }
-
-  // ── Path B: no tabs selected, create single campaign (with optional single-tab import) ──
-  createBtn.textContent = sheetUrl ? 'Importing…' : 'Creating…';
   try {
     const res = await fetch('/api/campaigns', {
       method: 'POST',
@@ -528,42 +441,26 @@ async function createCampaign() {
     });
     const campaign = await res.json();
 
-    if (sheetUrl) {
-      statusEl.style.display = 'block';
-      statusEl.style.background = 'rgba(255,217,0,0.08)';
-      statusEl.style.color = '#FFD900';
-      statusEl.textContent = 'Fetching copy from Google Sheet…';
-
-      const importRes = await fetch('/api/import-sheet', {
-        method: 'POST',
+    // If copy was pasted, save it to the campaign
+    const hasPasted = pastedData.headlines.length || pastedData.longHeadlines.length ||
+                      pastedData.descriptions.length || pastedData.meta.length;
+    if (hasPasted) {
+      await fetch(`/api/campaigns/${campaign.id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sheetUrl })
+        body: JSON.stringify({ data: pastedData })
       });
-      const importResult = await importRes.json();
-
-      if (importResult.success && importResult.data) {
-        await fetch(`/api/campaigns/${campaign.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: importResult.data })
-        });
-        statusEl.style.background = 'rgba(0,255,136,0.08)';
-        statusEl.style.color = '#00FF88';
-        statusEl.textContent = 'Copy imported!';
-      } else {
-        statusEl.style.background = 'rgba(255,80,80,0.1)';
-        statusEl.style.color = '#ff5050';
-        statusEl.textContent = importResult.error || 'Import failed';
-      }
     }
 
-    setTimeout(() => {
-      closeNewModal();
-      showToast(`Created preview for ${campaign.restaurantName}`);
-      loadCampaigns();
-    }, sheetUrl ? 1200 : 0);
+    closeNewModal();
+    showToast(`Created preview for ${campaign.restaurantName}`);
+    loadCampaigns();
+
+    // Open the preview immediately
+    if (hasPasted) window.open(`/preview/${campaign.id}`, '_blank');
 
   } catch (err) {
+    const statusEl = document.getElementById('importStatus');
     statusEl.style.display = 'block';
     statusEl.style.background = 'rgba(255,80,80,0.1)';
     statusEl.style.color = '#ff5050';
