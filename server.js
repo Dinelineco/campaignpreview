@@ -1,18 +1,41 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const XLSX = require('xlsx');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
+const SCREENSHOT_DIR = path.join(DATA_DIR, 'screenshots');
 const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL || '';
+
+// ── Puppeteer (lazy-loaded so startup is fast) ──────────────────────────────
+let _browser = null;
+async function getBrowser() {
+  if (_browser && _browser.isConnected()) return _browser;
+  const puppeteer = require('puppeteer');
+  _browser = await puppeteer.launch({
+    headless: 'new',
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--window-size=1280,900'
+    ]
+  });
+  _browser.on('disconnected', () => { _browser = null; });
+  console.log('[Browser] Puppeteer launched');
+  return _browser;
+}
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(SCREENSHOT_DIR)) fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
 
 function getAllCampaigns() {
   const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith('.json'));
@@ -135,51 +158,44 @@ function parseSheetCSV(csvText) {
 
   let section = null;
 
-  // Helper: is a row a section/column-header row (not actual data)?
-  function isHeaderRow(j) {
-    return (
-      j.includes('cc limit') || j.includes('char limit') ||
-      j.includes('character limit') || j.includes('preview link') ||
-      j.includes('copy for approval') || j.includes('approved') ||
-      j.includes('ad copy') || j.includes('campaign name') ||
-      j.includes('primary text')
-    );
-  }
+  // Known column-label words that appear in colB of header rows (not data rows)
+  const COLUMN_LABELS = new Set([
+    'copy', 'ad copy', 'headline', 'description', 'primary text',
+    'text', 'url', 'preview link', 'approved', 'approval',
+    'cc limit', 'char limit', 'character limit', 'copy for approval',
+    'campaign name', 'asset', 'name'
+  ]);
 
   for (const row of rows) {
-    const j = row.join(' ').toLowerCase();
+    // Use ONLY colA for section detection — never join all columns
+    const colA = (row[0] || '').toLowerCase().trim();
 
-    // ── Section header detection ─────────────────────────────────────────────
-    // Long headlines MUST come before headlines check
-    if (j.includes('long headline') && !j.includes('description')) {
+    // ── Section header detection (colA only) ────────────────────────────────
+    // Long headlines MUST come before general headlines check
+    if (colA.includes('long headline')) {
       section = 'longHeadlines'; continue;
     }
-    if (
-      (j.includes('google headline') || (j.includes('headline') && !j.includes('long') && !j.includes('description')))
-      && (j.includes('approval') || j.includes('cc') || j.includes('google'))
-    ) {
+    if (colA.includes('google headline') || (colA.includes('headline') && !colA.includes('long'))) {
       section = 'headlines'; continue;
     }
-    if (j.includes('description') && (j.includes('approval') || j.includes('google') || j.includes('cc'))) {
+    if (colA.includes('description')) {
       section = 'descriptions'; continue;
     }
-    if (j.includes('video') && (j.includes('approval') || j.includes('asset'))) {
+    if (colA.includes('video')) {
       section = 'videos'; continue;
     }
-    // Meta: catch "meta", "facebook", "instagram", "social", "paid social"
+    // Meta: "meta", "facebook", "instagram", "paid social" in colA only
     if (
-      (j.includes('meta') || j.includes('facebook') || j.includes('instagram') || j.includes('paid social'))
-      && !j.includes('google') && !j.includes('dishio')
+      (colA.includes('meta') || colA.includes('facebook') || colA.includes('instagram') || colA.includes('paid social'))
+      && !colA.includes('google') && !colA.includes('dishio')
     ) {
       section = 'meta'; continue;
     }
     // Dishio smart site
-    if (j.includes('dishio') || j.includes('smart site')) {
+    if (colA.includes('dishio') || colA.includes('smart site')) {
       section = 'dishio'; continue;
     }
 
-    // Skip generic header/label rows that are not data
-    if (isHeaderRow(j)) continue;
     // Skip rows with no section yet
     if (!section) continue;
 
@@ -191,6 +207,9 @@ function parseSheetCSV(csvText) {
     const colF = row[5] || '';
 
     if (!colB && !colC && !colD && !colE) continue;
+
+    // Skip column-label header rows: colB is a known label word and colC looks like another label or is empty
+    if (COLUMN_LABELS.has(colB.toLowerCase().trim())) continue;
 
     const approvedD = colD && (colD.toLowerCase() === 'yes' || colD.toLowerCase() === 'true');
     const approvedC = colC && (colC.toLowerCase() === 'yes' || colC.toLowerCase() === 'true');
@@ -456,6 +475,88 @@ app.get('/api/og-image', async (req, res) => {
     res.json({ imageUrl: match ? match[1] : null });
   } catch (err) {
     res.json({ imageUrl: null });
+  }
+});
+
+// ── Screenshot endpoint (Puppeteer) ─────────────────────────────────────────
+// Takes a real screenshot of any URL (especially Facebook ad previews).
+// Caches PNGs in data/screenshots/ for 24 hours by URL hash.
+app.get('/api/screenshot', async (req, res) => {
+  const url = req.query.url;
+  if (!url) return res.status(400).json({ error: 'url required' });
+
+  const hash = crypto.createHash('md5').update(url).digest('hex');
+  const cachePath = path.join(SCREENSHOT_DIR, `${hash}.png`);
+  const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+  // Serve cached version if fresh
+  if (fs.existsSync(cachePath)) {
+    const age = Date.now() - fs.statSync(cachePath).mtimeMs;
+    if (age < CACHE_TTL) {
+      console.log('[Screenshot] Cache hit:', hash);
+      res.set('Content-Type', 'image/png');
+      res.set('Cache-Control', 'public, max-age=86400');
+      return fs.createReadStream(cachePath).pipe(res);
+    }
+  }
+
+  let page = null;
+  try {
+    console.log('[Screenshot] Taking screenshot of:', url.slice(0, 80));
+    const browser = await getBrowser();
+    page = await browser.newPage();
+
+    const isFacebook = url.includes('facebook.com') || url.includes('fb.com');
+
+    await page.setUserAgent(
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+    );
+
+    // Facebook ad preview iframes render narrow; other sites get a standard viewport
+    await page.setViewport({
+      width: isFacebook ? 540 : 1200,
+      height: isFacebook ? 900 : 630,
+      deviceScaleFactor: 2
+    });
+
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 25000 });
+
+    // Extra wait for Facebook's dynamic ad iframe rendering
+    if (isFacebook) {
+      await new Promise(r => setTimeout(r, 2500));
+      // Try to clip to just the ad frame content if it's an iframe-based preview
+      try {
+        const adFrame = await page.$('iframe[src*="ad"], #preview_iframe, .adPreviewWrapper, ._li, ._5pcr');
+        if (adFrame) {
+          const box = await adFrame.boundingBox();
+          if (box && box.width > 50 && box.height > 50) {
+            const buf = await page.screenshot({
+              type: 'png',
+              clip: { x: box.x, y: box.y, width: Math.min(box.width, 600), height: Math.min(box.height, 800) }
+            });
+            fs.writeFileSync(cachePath, buf);
+            res.set('Content-Type', 'image/png');
+            res.set('Cache-Control', 'public, max-age=86400');
+            return res.send(buf);
+          }
+        }
+      } catch (_) { /* fall through to full-page screenshot */ }
+    }
+
+    // Full-page screenshot (cropped to viewport)
+    const buf = await page.screenshot({ type: 'png', fullPage: false });
+    fs.writeFileSync(cachePath, buf);
+
+    console.log('[Screenshot] Done:', hash, `(${buf.length} bytes)`);
+    res.set('Content-Type', 'image/png');
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.send(buf);
+
+  } catch (err) {
+    console.error('[Screenshot] Failed:', err.message);
+    res.status(500).json({ error: 'Screenshot failed: ' + err.message });
+  } finally {
+    if (page) await page.close().catch(() => {});
   }
 });
 

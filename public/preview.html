@@ -1061,6 +1061,88 @@ body {
   font-size: 14px;
 }
 
+/* Screenshot loading state */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.img-loading {
+  background: linear-gradient(90deg, #1a1a2e 25%, #2a2a3e 50%, #1a1a2e 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.6s infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--dishio-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.img-loading svg { opacity: 0.4; }
+.ad-screenshot-wrap {
+  position: relative;
+  width: 100%;
+}
+.ad-screenshot-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ad-screenshot-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.7);
+  color: var(--dishio-green-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+/* Full screenshot card (when URL is a Facebook ad preview) */
+.ad-screenshot-card {
+  background: var(--dishio-dark-card);
+  border: 1px solid var(--dishio-dark-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.ad-screenshot-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--dishio-dark-border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--dishio-text-muted);
+}
+.ad-screenshot-card img {
+  width: 100%;
+  display: block;
+}
+.ad-screenshot-card-footer {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--dishio-text-muted);
+  border-top: 1px solid var(--dishio-dark-border);
+}
+.ad-screenshot-card-footer a {
+  color: var(--dishio-green-light);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 12px;
+}
+.ad-screenshot-card-footer a:hover { text-decoration: underline; }
+
 /* === FOOTER === */
 .footer {
   max-width: 1400px;
@@ -1804,20 +1886,94 @@ function renderAll() {
   setTimeout(initTextareas, 10);
 }
 
-// ========== OG IMAGE LOADER ==========
-const ogImageCache = {};
-async function loadMetaImage(url, imgEl) {
+// ========== SCREENSHOT / IMAGE LOADER ==========
+const screenshotCache = {}; // url → 'loading' | 'error' | imageUrl string
+
+function isFacebookUrl(url) {
+  return url && (url.includes('facebook.com') || url.includes('fb.com'));
+}
+function isDirectImage(url) {
+  return url && /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url);
+}
+
+// Show a shimmer loading state inside the image area
+function setImageLoading(imgEl) {
+  imgEl.classList.add('img-loading');
+  imgEl.innerHTML = `
+    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <path d="M21 15l-5-5L5 21"/>
+    </svg>
+    <span>Loading screenshot…</span>`;
+}
+
+function setImageSrc(imgEl, src, label) {
+  imgEl.classList.remove('img-loading');
+  imgEl.innerHTML = `
+    <div class="ad-screenshot-wrap" style="width:100%;height:100%">
+      <img src="${src}" alt="Ad creative" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block"/>
+      <div class="ad-screenshot-badge">${label || 'AD IMAGE'}</div>
+    </div>`;
+}
+
+function setImageError(imgEl) {
+  imgEl.classList.remove('img-loading');
+  // Restore placeholder
+  imgEl.innerHTML = `<span class="img-placeholder-icon">🍽️</span><div class="fb-image-label" style="position:absolute;bottom:12px;right:12px;font-size:11px;font-weight:700;background:rgba(0,0,0,0.6);color:#fff;padding:3px 8px;border-radius:4px">AD IMAGE</div>`;
+}
+
+async function loadMetaImage(url, imgEl, label) {
+  if (!url) return;
+
+  // Cache hit
+  if (screenshotCache[url] && screenshotCache[url] !== 'loading') {
+    if (screenshotCache[url] === 'error') return;
+    setImageSrc(imgEl, screenshotCache[url], label);
+    return;
+  }
+  if (screenshotCache[url] === 'loading') return;
+
+  screenshotCache[url] = 'loading';
+  setImageLoading(imgEl);
+
+  try {
+    // Direct image URL → use as-is
+    if (isDirectImage(url)) {
+      screenshotCache[url] = url;
+      setImageSrc(imgEl, url, label);
+      return;
+    }
+    // All other URLs (Facebook ad previews, restaurant sites, etc.) → Puppeteer screenshot
+    const screenshotUrl = `/api/screenshot?url=${encodeURIComponent(url)}&t=${Date.now()}`;
+    // Verify the endpoint responds with an image (not an error JSON)
+    const probe = await fetch(screenshotUrl, { method: 'HEAD' }).catch(() => null);
+    if (probe && probe.ok && probe.headers.get('content-type')?.startsWith('image/')) {
+      screenshotCache[url] = screenshotUrl;
+      setImageSrc(imgEl, screenshotUrl, label || (isFacebookUrl(url) ? 'LIVE SCREENSHOT' : 'AD IMAGE'));
+    } else {
+      // Fallback: try og:image
+      const ogRes = await fetch('/api/og-image?url=' + encodeURIComponent(url));
+      const ogData = await ogRes.json();
+      if (ogData.imageUrl) {
+        screenshotCache[url] = ogData.imageUrl;
+        setImageSrc(imgEl, ogData.imageUrl, label || 'AD IMAGE');
+      } else {
+        screenshotCache[url] = 'error';
+        setImageError(imgEl);
+      }
+    }
+  } catch (e) {
+    screenshotCache[url] = 'error';
+    setImageError(imgEl);
+  }
+}
+
+// LEGACY stub — no longer used
+async function loadMetaImageLegacy(url, imgEl) {
   if (!url) return;
   if (ogImageCache[url] !== undefined) {
     if (ogImageCache[url]) {
-      imgEl.style.backgroundImage = `url(${ogImageCache[url]})`;
-      imgEl.style.backgroundSize = 'cover';
-      imgEl.style.backgroundPosition = 'center';
-      const icon = imgEl.querySelector('.img-placeholder-icon');
-      if (icon) icon.style.display = 'none';
-      const label = imgEl.querySelector('.fb-image-label, .ig-image-label');
-      if (label) label.style.display = 'none';
-    }
     return;
   }
   // Check if it's a direct image URL
@@ -1892,18 +2048,12 @@ function renderMetaAdPreviews() {
     return;
   }
 
-  // Check for Facebook Ad Manager iframe case
-  const firstUrl = (itemsWithCopy[0]?.url || itemsWithUrl[0]?.url || '').trim();
-  if (firstUrl && (firstUrl.includes('facebook.com/ads') || firstUrl.includes('business.facebook.com'))) {
-    container.innerHTML = `<div class="meta-preview-iframe-wrap" style="background:var(--dishio-dark-card);border:1px solid var(--dishio-dark-border);border-radius:var(--radius);overflow:hidden">
-      <div class="meta-preview-url-bar" style="padding:10px 16px;border-bottom:1px solid var(--dishio-dark-border);font-size:12px;color:var(--dishio-text-muted);display:flex;align-items:center;gap:8px">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
-        Live Ad Preview — <a href="${firstUrl}" target="_blank" rel="noopener" style="color:var(--dishio-green-light)">Open in Facebook</a>
-      </div>
-      <iframe src="${firstUrl}" sandbox="allow-scripts allow-same-origin" loading="lazy" style="width:100%;height:600px;border:none"></iframe>
-    </div>`;
-    return;
-  }
+  // Collect all URLs across all meta items (from copy rows and URL-only rows)
+  const allUrls = [
+    ...itemsWithCopy.map(m => m.url).filter(Boolean),
+    ...itemsWithUrl.map(m => m.url).filter(Boolean)
+  ];
+  const primaryUrl = [...new Set(allUrls)][0]?.trim() || '';
 
   // Show first item in both FB and IG mockup, then remaining in a grid
   const firstItem = itemsWithCopy[0];
@@ -2022,15 +2172,60 @@ function renderMetaAdPreviews() {
     html += `</div></div>`;
   }
 
+  // If there's a Facebook ad preview URL, append a live screenshot card below the mockups
+  if (primaryUrl && isFacebookUrl(primaryUrl)) {
+    html += `
+    <div class="ad-screenshot-card" style="margin-top:24px" id="fbScreenshotCard">
+      <div class="ad-screenshot-card-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1877F2"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        Live Ad Screenshot
+        <span style="margin-left:auto;font-size:11px;opacity:0.5;font-weight:400">Captured via Puppeteer · updates every 24h</span>
+      </div>
+      <div id="fbScreenshotImg" style="min-height:300px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center"></div>
+      <div class="ad-screenshot-card-footer">
+        <span>Pixel-perfect rendering of the actual ad</span>
+        <a href="${primaryUrl}" target="_blank" rel="noopener">Open in Facebook →</a>
+      </div>
+    </div>`;
+  }
+
   container.innerHTML = html;
 
-  // Load real images for meta items with URLs
-  const primaryUrl = (itemsWithCopy[0]?.url || itemsWithUrl[0]?.url || '').trim();
+  // Load real images into FB/IG mockup image areas
   if (primaryUrl) {
     const fbImg = container.querySelector('.fb-image-area');
     const igImg = container.querySelector('.ig-image-area');
-    if (fbImg) loadMetaImage(primaryUrl, fbImg);
-    if (igImg) loadMetaImage(primaryUrl, igImg);
+    if (fbImg) loadMetaImage(primaryUrl, fbImg, isFacebookUrl(primaryUrl) ? 'LIVE SCREENSHOT' : 'AD IMAGE');
+    if (igImg) loadMetaImage(primaryUrl, igImg, isFacebookUrl(primaryUrl) ? 'LIVE SCREENSHOT' : 'AD IMAGE');
+
+    // Also load into the dedicated screenshot card (if Facebook URL)
+    if (isFacebookUrl(primaryUrl)) {
+      const screenshotSlot = container.querySelector('#fbScreenshotImg');
+      if (screenshotSlot) {
+        screenshotSlot.classList.add('img-loading');
+        screenshotSlot.innerHTML = `
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="opacity:0.4">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          <span style="font-size:12px;color:var(--dishio-text-muted);margin-top:8px">Taking screenshot — this may take 5–10 seconds…</span>`;
+        // Fetch screenshot directly as image
+        const screenshotUrl = `/api/screenshot?url=${encodeURIComponent(primaryUrl)}`;
+        const img = new Image();
+        img.onload = () => {
+          screenshotSlot.classList.remove('img-loading');
+          screenshotSlot.innerHTML = '';
+          screenshotSlot.style.minHeight = '';
+          screenshotSlot.appendChild(img);
+        };
+        img.onerror = () => {
+          screenshotSlot.classList.remove('img-loading');
+          screenshotSlot.innerHTML = `<span style="color:var(--dishio-text-muted);font-size:13px;padding:20px">Screenshot unavailable — <a href="${primaryUrl}" target="_blank" style="color:var(--dishio-green-light)">open in Facebook</a></span>`;
+        };
+        img.src = screenshotUrl;
+        img.style.cssText = 'width:100%;display:block;border-radius:0';
+      }
+    }
   }
 }
 
