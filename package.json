@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "mcp": "node mcp-server.mjs"
+    "mcp": "node mcp-server.mjs",
+    "setup": "node setup-mcp.mjs"
   },
   "engines": {
     "node": ">=18.0.0"

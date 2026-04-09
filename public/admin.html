@@ -325,67 +325,75 @@ body::after {
   <div class="modal" style="width:720px">
     <h2 style="display:flex;align-items:center;gap:10px">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2"><path d="M12 2a5 5 0 015 5v1h1a3 3 0 013 3v1a3 3 0 01-3 3h-1v4a3 3 0 01-3 3H10a3 3 0 01-3-3v-4H6a3 3 0 01-3-3v-1a3 3 0 013-3h1V7a5 5 0 015-5z"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>
-      Connect Claude — MCP Setup
+      Connect Claude
     </h2>
-    <p>Media buyers can use Claude to create campaigns, fill in ad copy, and manage previews through natural conversation. Set up the MCP (Model Context Protocol) connection below.</p>
+    <p>Create campaigns, fill ad copy, and manage previews by talking to Claude. One-time setup takes 30 seconds.</p>
 
     <div class="claude-tabs" style="display:flex;gap:8px;margin-bottom:20px">
-      <button class="paste-section-btn active" onclick="switchClaudeTab('desktop', this)">Claude Desktop</button>
-      <button class="paste-section-btn" onclick="switchClaudeTab('code', this)">Claude Code</button>
+      <button class="paste-section-btn active" onclick="switchClaudeTab('quick', this)">Quick Setup</button>
+      <button class="paste-section-btn" onclick="switchClaudeTab('manual', this)">Manual Config</button>
       <button class="paste-section-btn" onclick="switchClaudeTab('api', this)">REST API</button>
     </div>
 
-    <!-- Claude Desktop Tab -->
-    <div id="claudeTab-desktop" class="claude-tab-content">
-      <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:6px">Step 1 — Open Claude Desktop Config</div>
-        <div style="font-size:13px;color:var(--secondary);line-height:1.6">
-          In Claude Desktop, go to <strong>Settings → Developer → Edit Config</strong>. This opens <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">claude_desktop_config.json</code>.
+    <!-- Quick Setup Tab -->
+    <div id="claudeTab-quick" class="claude-tab-content">
+      <div style="background:linear-gradient(135deg,rgba(255,217,0,0.08),rgba(0,155,0,0.05));border:1px solid rgba(255,217,0,0.2);border-radius:14px;padding:24px 28px;margin-bottom:20px;text-align:center">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--yellow);text-transform:uppercase;margin-bottom:12px">One-Click Install</div>
+        <div style="font-size:14px;color:var(--secondary);margin-bottom:16px;line-height:1.6">Open a terminal in the project folder and run:</div>
+        <div style="position:relative;display:inline-block;width:100%;max-width:480px">
+          <pre id="installCmd" style="background:#000;border:1.5px solid rgba(255,217,0,0.25);border-radius:10px;padding:14px 50px 14px 18px;font-size:13px;color:var(--green-light);font-family:'Cascadia Code','Fira Code',monospace;text-align:left;cursor:pointer;transition:border-color 0.2s" onclick="copyInstallCmd()">node setup-mcp.mjs</pre>
+          <button class="btn btn-yellow btn-sm" onclick="copyInstallCmd()" style="position:absolute;top:50%;right:8px;transform:translateY(-50%);font-size:11px;padding:5px 12px">Copy</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:10px">Then restart Claude Desktop. That's it.</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+        <div style="background:var(--surface);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">1</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:4px">Run the command</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">Open terminal in<br>project folder</div>
+        </div>
+        <div style="background:var(--surface);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">2</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:4px">Restart Claude</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">Close & reopen<br>Claude Desktop</div>
+        </div>
+        <div style="background:var(--surface);border-radius:10px;padding:16px;text-align:center">
+          <div style="font-size:20px;margin-bottom:6px">3</div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:4px">Start talking</div>
+          <div style="font-size:11px;color:var(--muted);line-height:1.5">Tell Claude what<br>campaign to build</div>
         </div>
       </div>
-      <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:6px">Step 2 — Paste This Config</div>
-        <div style="position:relative">
-          <pre id="mcpConfigBlock" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace;white-space:pre-wrap;word-break:break-all"></pre>
-          <button class="btn btn-outline btn-sm" onclick="copyMcpConfig()" style="position:absolute;top:10px;right:10px;font-size:11px">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
-          </button>
-        </div>
-      </div>
-      <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:6px">Step 3 — Restart Claude Desktop</div>
-        <div style="font-size:13px;color:var(--secondary);line-height:1.6">
-          Close and reopen Claude Desktop. You'll see a 🔨 tools icon — click it to verify <strong>dishio-campaign-preview</strong> is connected with 13 tools available.
-        </div>
-      </div>
-      <div style="background:rgba(255,217,0,0.06);border:1px solid rgba(255,217,0,0.15);border-radius:10px;padding:14px 18px;margin-bottom:8px">
-        <div style="font-size:13px;font-weight:600;color:var(--yellow);margin-bottom:4px">💡 What you can say to Claude</div>
-        <div style="font-size:12px;color:var(--secondary);line-height:1.8">
-          <div>"Create a campaign preview for Mystic Spice"</div>
-          <div>"Add these headlines: Order Now, Fresh Pizza Daily, Family Packs Available"</div>
-          <div>"Add Meta ad copy with primary text and preview URLs"</div>
-          <div>"Check which items are approved for the Mystic Spice campaign"</div>
-          <div>"Send the campaign to the client for review"</div>
+
+      <div style="background:rgba(255,217,0,0.06);border:1px solid rgba(255,217,0,0.15);border-radius:10px;padding:14px 18px">
+        <div style="font-size:13px;font-weight:600;color:var(--yellow);margin-bottom:8px">What you can say to Claude</div>
+        <div style="font-size:12px;color:var(--secondary);line-height:2;display:grid;grid-template-columns:1fr 1fr;gap:2px 20px">
+          <div>"Create a campaign for Mystic Spice"</div>
+          <div>"Check approvals for Mystic Spice"</div>
+          <div>"Add headlines: Order Now, Fresh Daily"</div>
+          <div>"Send the campaign to the client"</div>
+          <div>"Add Meta ads with this copy..."</div>
+          <div>"List all my campaigns"</div>
         </div>
       </div>
     </div>
 
-    <!-- Claude Code Tab -->
-    <div id="claudeTab-code" class="claude-tab-content" style="display:none">
-      <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:6px">Add to your project's .mcp.json</div>
-        <div style="position:relative">
-          <pre id="mcpCodeBlock" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace;white-space:pre-wrap;word-break:break-all"></pre>
-          <button class="btn btn-outline btn-sm" onclick="copyCodeConfig()" style="position:absolute;top:10px;right:10px;font-size:11px">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            Copy
-          </button>
-        </div>
+    <!-- Manual Config Tab -->
+    <div id="claudeTab-manual" class="claude-tab-content" style="display:none">
+      <div style="margin-bottom:14px;font-size:13px;color:var(--secondary);line-height:1.6">
+        If the auto-installer doesn't work, manually add this to your <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">claude_desktop_config.json</code> (Settings &rarr; Developer &rarr; Edit Config):
       </div>
-      <div style="font-size:13px;color:var(--secondary);line-height:1.6">
-        Or run from terminal: <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">CAMPAIGN_API_URL=<span class="api-url-placeholder"></span> node mcp-server.mjs</code>
+      <div style="margin-bottom:14px;padding:10px 14px;background:rgba(255,180,0,0.08);border:1px solid rgba(255,180,0,0.2);border-radius:8px;font-size:12px;color:var(--yellow);line-height:1.6">
+        <strong>Important:</strong> Merge the <code style="font-size:11px">campaign-preview</code> key into your existing <code style="font-size:11px">mcpServers</code> object. Don't replace the whole file — add it alongside your other servers (like n8n).
       </div>
+      <div style="position:relative">
+        <pre id="mcpConfigBlock" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace;white-space:pre-wrap;word-break:break-all"></pre>
+        <button class="btn btn-outline btn-sm" onclick="copyMcpConfig()" style="position:absolute;top:10px;right:10px;font-size:11px">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.6">After saving, restart Claude Desktop. You'll see the tools icon when it's connected.</div>
     </div>
 
     <!-- REST API Tab -->
@@ -653,30 +661,14 @@ document.getElementById('inputRestaurant').addEventListener('keydown', e => { if
 // ── Claude Integration Modal ──────────────────────────────────────────────────
 const API_BASE = window.location.origin;
 
-function getDesktopMcpConfig() {
+function getMcpServerBlock() {
   return JSON.stringify({
-    mcpServers: {
-      "campaign-preview": {
-        command: "node",
-        args: ["mcp-server.mjs"],
-        cwd: "C:\\Users\\neson\\Documents\\campaignpreview",
-        env: {
-          CAMPAIGN_API_URL: API_BASE
-        }
-      }
-    }
-  }, null, 2);
-}
-
-function getCodeMcpConfig() {
-  return JSON.stringify({
-    mcpServers: {
-      "campaign-preview": {
-        command: "node",
-        args: ["mcp-server.mjs"],
-        env: {
-          CAMPAIGN_API_URL: API_BASE
-        }
+    "campaign-preview": {
+      command: "node",
+      args: ["mcp-server.mjs"],
+      cwd: "C:\\Users\\neson\\Documents\\campaignpreview",
+      env: {
+        CAMPAIGN_API_URL: API_BASE
       }
     }
   }, null, 2);
@@ -684,8 +676,7 @@ function getCodeMcpConfig() {
 
 function openClaudeModal() {
   document.getElementById('claudeModal').classList.add('active');
-  document.getElementById('mcpConfigBlock').textContent = getDesktopMcpConfig();
-  document.getElementById('mcpCodeBlock').textContent = getCodeMcpConfig();
+  document.getElementById('mcpConfigBlock').textContent = getMcpServerBlock();
   document.querySelectorAll('.api-url-placeholder').forEach(el => el.textContent = API_BASE);
 }
 
@@ -701,11 +692,11 @@ function switchClaudeTab(tab, btn) {
 }
 
 function copyMcpConfig() {
-  navigator.clipboard.writeText(getDesktopMcpConfig()).then(() => showToast('MCP config copied!'));
+  navigator.clipboard.writeText(getMcpServerBlock()).then(() => showToast('MCP config copied!'));
 }
 
-function copyCodeConfig() {
-  navigator.clipboard.writeText(getCodeMcpConfig()).then(() => showToast('Config copied!'));
+function copyInstallCmd() {
+  navigator.clipboard.writeText('node setup-mcp.mjs').then(() => showToast('Install command copied!'));
 }
 
 loadCampaigns();
