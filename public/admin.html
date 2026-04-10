@@ -9,15 +9,18 @@
 :root {
   --yellow: #FFD900;
   --yellow-light: #FFE644;
+  --navy: #0033A4;
+  --navy-light: #0064E1;
+  --navy-dim: rgba(0,51,164,0.08);
   --green: #009B00;
-  --green-light: #00FF88;
+  --green-light: #00ED7E;
   --dark: #000000;
-  --card: #0D0D0D;
-  --surface: #1A1A1A;
-  --border: #2A2A2A;
-  --text: #FFFFFF;
-  --muted: #888;
-  --secondary: #AAA;
+  --card: #FFFFFF;
+  --surface: #F5F5F7;
+  --border: #E5E7EB;
+  --text: #1A1A1A;
+  --muted: #6B7280;
+  --secondary: #4B5563;
   --radius: 16px;
   --radius-sm: 10px;
 }
@@ -31,7 +34,7 @@
 
 body {
   font-family: 'Space Grotesk', 'Inter', sans-serif;
-  background: #000;
+  background: #F5F5F7;
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
@@ -40,9 +43,10 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: -2;
   background:
-    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,217,0,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,155,0,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 50% at 50% 0%, rgba(255,217,0,0.03) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,217,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,155,0,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,51,164,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 40% at 90% 10%, rgba(0,51,164,0.04) 0%, transparent 50%);
   background-size: 200% 200%;
   animation: aurora 20s ease-in-out infinite;
   pointer-events: none;
@@ -51,11 +55,12 @@ body::after {
   content: '';
   position: fixed; inset: 0; z-index: -1;
   background-image:
-    radial-gradient(circle 1.5px at 15% 25%, rgba(255,217,0,0.18) 0%, transparent 100%),
-    radial-gradient(circle 1px at 85% 15%, rgba(0,155,0,0.15) 0%, transparent 100%),
-    radial-gradient(circle 1.5px at 45% 75%, rgba(255,217,0,0.12) 0%, transparent 100%),
-    radial-gradient(circle 1px at 70% 55%, rgba(255,255,255,0.08) 0%, transparent 100%),
-    radial-gradient(circle 1px at 25% 90%, rgba(0,155,0,0.1) 0%, transparent 100%);
+    radial-gradient(circle 2px at 15% 25%, rgba(255,217,0,0.12) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 85% 15%, rgba(0,155,0,0.10) 0%, transparent 100%),
+    radial-gradient(circle 2px at 45% 75%, rgba(0,51,164,0.10) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 25% 90%, rgba(0,155,0,0.08) 0%, transparent 100%),
+    radial-gradient(circle 2px at 90% 85%, rgba(255,217,0,0.10) 0%, transparent 100%),
+    radial-gradient(circle 1.5px at 60% 40%, rgba(0,100,225,0.08) 0%, transparent 100%);
   animation: dotFloat 8s ease-in-out infinite;
   pointer-events: none;
 }
@@ -63,9 +68,9 @@ body::after {
 /* Header */
 .header {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(0,0,0,0.85);
+  background: rgba(10,10,10,0.96);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   padding: 0 40px;
   position: relative;
 }
@@ -74,7 +79,7 @@ body::after {
   position: absolute;
   bottom: -1px; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--yellow), rgba(0,255,136,0.6), var(--yellow), transparent);
+  background: linear-gradient(90deg, transparent, var(--yellow), rgba(0,100,225,0.6), var(--yellow), rgba(0,155,0,0.5), transparent);
   background-size: 200% 100%;
   animation: shimmer 4s linear infinite;
 }
@@ -95,7 +100,9 @@ body::after {
 .btn-yellow:hover { background: var(--yellow-light); box-shadow: 0 4px 30px rgba(255,217,0,0.4), 0 0 60px rgba(255,217,0,0.15); transform: translateY(-2px) scale(1.03); }
 .btn-yellow:active { transform: translateY(0) scale(0.98); }
 .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-.btn-outline:hover { border-color: var(--muted); box-shadow: 0 0 12px rgba(255,255,255,0.05); }
+.btn-outline:hover { border-color: var(--muted); box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.header .btn-outline { color: #FFFFFF; border-color: rgba(255,255,255,0.2); }
+.header .btn-outline:hover { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 12px rgba(255,255,255,0.05); }
 .btn-danger { background: rgba(239,68,68,0.12); color: #EF4444; }
 .btn-danger:hover { background: rgba(239,68,68,0.2); }
 .btn-sm { padding: 6px 14px; font-size: 12px; }
@@ -104,7 +111,7 @@ body::after {
 .main { max-width: 1200px; margin: 0 auto; padding: 48px 40px; }
 .page-title {
   font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 8px;
-  background: linear-gradient(135deg, #fff 0%, #FFD900 100%);
+  background: linear-gradient(135deg, #1A1A1A 0%, #0033A4 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   animation: fadeInUp 0.6s ease-out both;
 }
@@ -116,20 +123,21 @@ body::after {
 .stat-box {
   background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 20px; text-align: center; transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.stat-box:hover { border-color: var(--green); box-shadow: 0 0 24px rgba(0,255,136,0.08), 0 4px 20px rgba(0,0,0,0.3); transform: translateY(-2px); }
-.stat-val { font-size: 28px; font-weight: 800; color: var(--yellow); margin-bottom: 4px; text-shadow: 0 0 12px rgba(255,217,0,0.3); }
+.stat-box:hover { border-color: var(--navy-light); box-shadow: 0 4px 20px rgba(0,51,164,0.08); transform: translateY(-2px); }
+.stat-val { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
 .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Campaign list */
-.campaign-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; }
+.campaign-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
 .campaign-row {
   background: var(--card); padding: 16px 24px; display: grid;
   grid-template-columns: 4px 1fr 120px 140px 180px auto;
   align-items: center; gap: 16px; transition: background 0.15s;
   cursor: pointer;
 }
-.campaign-row:hover { background: #1A1A1A; box-shadow: inset 3px 0 0 var(--yellow); }
+.campaign-row:hover { background: #F9FAFB; box-shadow: inset 3px 0 0 var(--navy); }
 .campaign-row { animation: fadeInUp 0.4s ease-out both; }
 .row-status-bar { width: 4px; height: 36px; border-radius: 2px; }
 .status-draft { background: var(--muted); }
@@ -143,11 +151,11 @@ body::after {
   text-transform: uppercase; text-align: center; width: fit-content;
 }
 .badge-draft { background: rgba(136,136,136,0.15); color: var(--muted); }
-.badge-sent { background: rgba(0,255,136,0.12); color: var(--green-light); }
+.badge-sent { background: rgba(0,237,126,0.12); color: var(--green-light); }
 .badge-approved { background: rgba(255,217,0,0.12); color: var(--yellow); }
 .row-progress { display: flex; align-items: center; gap: 10px; }
 .row-progress-bar { flex: 1; height: 4px; background: var(--surface); border-radius: 100px; overflow: hidden; min-width: 60px; }
-.row-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-light)); border-radius: 100px; box-shadow: 0 0 8px rgba(0,255,136,0.3); transition: width 0.6s ease; }
+.row-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-light)); border-radius: 100px; box-shadow: 0 0 8px rgba(0,237,126,0.3); transition: width 0.6s ease; }
 .row-progress-text { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .row-date { font-size: 12px; color: var(--text-dim, #555); white-space: nowrap; }
 .row-actions { display: flex; gap: 6px; }
@@ -160,23 +168,24 @@ body::after {
 /* Modal */
 .modal-overlay {
   display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 200;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 200;
   align-items: center; justify-content: center; padding: 20px;
 }
 .modal-overlay.active { display: flex; }
 .modal {
-  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  background: #FFFFFF; border: 1px solid var(--border); border-radius: var(--radius);
   padding: 32px; width: 580px; max-width: 100%; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.15);
 }
 .modal h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
 .modal p { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
 .form-group { margin-bottom: 20px; }
 .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--secondary); margin-bottom: 8px; }
 .form-input {
-  width: 100%; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border);
+  width: 100%; padding: 12px 16px; background: #FAFAFA; border: 1px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text); font-family: inherit; font-size: 14px;
 }
-.form-input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px rgba(0,155,0,0.2), 0 0 20px rgba(0,155,0,0.08); }
+.form-input:focus { outline: none; border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(0,100,225,0.12), 0 0 12px rgba(0,100,225,0.06); }
 .form-input::placeholder { color: var(--muted); }
 .modal-actions { display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap; }
 
@@ -199,9 +208,9 @@ body::after {
 /* Toast */
 .toast {
   position: fixed; bottom: 32px; right: 32px; padding: 14px 24px;
-  background: var(--green-light); color: #000; border-radius: var(--radius-sm);
+  background: var(--navy); color: #FFFFFF; border-radius: var(--radius-sm);
   font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 10px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 300;
+  box-shadow: 0 8px 32px rgba(0,51,164,0.25); z-index: 300;
   opacity: 0; transform: translateY(20px); transition: all 0.3s ease; pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateY(0); }
@@ -253,8 +262,8 @@ body::after {
   <div class="stats-row" id="statsRow">
     <div class="stat-box"><div class="stat-val" id="statTotal">0</div><div class="stat-label">Total Previews</div></div>
     <div class="stat-box"><div class="stat-val" id="statDraft" style="color:var(--muted)">0</div><div class="stat-label">Drafts</div></div>
-    <div class="stat-box"><div class="stat-val" id="statSent" style="color:var(--green-light)">0</div><div class="stat-label">Sent to Client</div></div>
-    <div class="stat-box"><div class="stat-val" id="statApproved" style="color:var(--yellow)">0</div><div class="stat-label">Fully Approved</div></div>
+    <div class="stat-box"><div class="stat-val" id="statSent" style="color:var(--green)">0</div><div class="stat-label">Sent to Client</div></div>
+    <div class="stat-box"><div class="stat-val" id="statApproved" style="color:#B8860B">0</div><div class="stat-label">Fully Approved</div></div>
   </div>
 
   <!-- Campaign List -->
@@ -324,7 +333,7 @@ body::after {
 <div class="modal-overlay" id="claudeModal">
   <div class="modal" style="width:720px">
     <h2 style="display:flex;align-items:center;gap:10px">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--yellow)" stroke-width="2"><path d="M12 2a5 5 0 015 5v1h1a3 3 0 013 3v1a3 3 0 01-3 3h-1v4a3 3 0 01-3 3H10a3 3 0 01-3-3v-4H6a3 3 0 01-3-3v-1a3 3 0 013-3h1V7a5 5 0 015-5z"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2"><path d="M12 2a5 5 0 015 5v1h1a3 3 0 013 3v1a3 3 0 01-3 3h-1v4a3 3 0 01-3 3H10a3 3 0 01-3-3v-4H6a3 3 0 01-3-3v-1a3 3 0 013-3h1V7a5 5 0 015-5z"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/></svg>
       Connect Claude
     </h2>
     <p>Create campaigns, fill ad copy, and manage previews by talking to Claude. One-time setup takes 30 seconds.</p>
@@ -337,11 +346,11 @@ body::after {
 
     <!-- Quick Setup Tab -->
     <div id="claudeTab-quick" class="claude-tab-content">
-      <div style="background:linear-gradient(135deg,rgba(255,217,0,0.08),rgba(0,155,0,0.05));border:1px solid rgba(255,217,0,0.2);border-radius:14px;padding:24px 28px;margin-bottom:20px;text-align:center">
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--yellow);text-transform:uppercase;margin-bottom:12px">One-Line Config</div>
+      <div style="background:linear-gradient(135deg,rgba(255,217,0,0.06),rgba(0,51,164,0.04));border:1px solid rgba(0,51,164,0.12);border-radius:14px;padding:24px 28px;margin-bottom:20px;text-align:center">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--navy);text-transform:uppercase;margin-bottom:12px">One-Line Config</div>
         <div style="font-size:14px;color:var(--secondary);margin-bottom:16px;line-height:1.6">Add this to Claude Desktop (Settings &rarr; Developer &rarr; Edit Config).<br>Merge into your existing <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">mcpServers</code> block:</div>
         <div style="position:relative;display:inline-block;width:100%;max-width:520px">
-          <pre id="installCmd" style="background:#000;border:1.5px solid rgba(255,217,0,0.25);border-radius:10px;padding:14px 50px 14px 18px;font-size:13px;color:var(--green-light);font-family:'Cascadia Code','Fira Code',monospace;text-align:left;cursor:pointer;transition:border-color 0.2s;white-space:pre-wrap" onclick="copyInstallCmd()"></pre>
+          <pre id="installCmd" style="background:#1A1A2E;border:1.5px solid rgba(0,51,164,0.25);border-radius:10px;padding:14px 50px 14px 18px;font-size:13px;color:#00ED7E;font-family:'Cascadia Code','Fira Code',monospace;text-align:left;cursor:pointer;transition:border-color 0.2s;white-space:pre-wrap" onclick="copyInstallCmd()"></pre>
           <button class="btn btn-yellow btn-sm" onclick="copyInstallCmd()" style="position:absolute;top:10px;right:8px;font-size:11px;padding:5px 12px">Copy</button>
         </div>
         <div style="font-size:12px;color:var(--muted);margin-top:10px">Restart Claude Desktop. No installs, no files, no terminal needed.</div>
@@ -365,8 +374,8 @@ body::after {
         </div>
       </div>
 
-      <div style="background:rgba(255,217,0,0.06);border:1px solid rgba(255,217,0,0.15);border-radius:10px;padding:14px 18px">
-        <div style="font-size:13px;font-weight:600;color:var(--yellow);margin-bottom:8px">What you can say to Claude</div>
+      <div style="background:rgba(0,51,164,0.04);border:1px solid rgba(0,51,164,0.12);border-radius:10px;padding:14px 18px">
+        <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px">What you can say to Claude</div>
         <div style="font-size:12px;color:var(--secondary);line-height:2;display:grid;grid-template-columns:1fr 1fr;gap:2px 20px">
           <div>"Create a campaign for Mystic Spice"</div>
           <div>"Check approvals for Mystic Spice"</div>
@@ -383,11 +392,11 @@ body::after {
       <div style="margin-bottom:14px;font-size:13px;color:var(--secondary);line-height:1.6">
         If the auto-installer doesn't work, manually add this to your <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">claude_desktop_config.json</code> (Settings &rarr; Developer &rarr; Edit Config):
       </div>
-      <div style="margin-bottom:14px;padding:10px 14px;background:rgba(255,180,0,0.08);border:1px solid rgba(255,180,0,0.2);border-radius:8px;font-size:12px;color:var(--yellow);line-height:1.6">
+      <div style="margin-bottom:14px;padding:10px 14px;background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.15);border-radius:8px;font-size:12px;color:#B45309;line-height:1.6">
         <strong>Important:</strong> Merge the <code style="font-size:11px">campaign-preview</code> key into your existing <code style="font-size:11px">mcpServers</code> object. Don't replace the whole file — add it alongside your other servers (like n8n).
       </div>
       <div style="position:relative">
-        <pre id="mcpConfigBlock" style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace;white-space:pre-wrap;word-break:break-all"></pre>
+        <pre id="mcpConfigBlock" style="background:#1A1A2E;border:1px solid rgba(0,51,164,0.2);border-radius:10px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace;white-space:pre-wrap;word-break:break-all"></pre>
         <button class="btn btn-outline btn-sm" onclick="copyMcpConfig()" style="position:absolute;top:10px;right:10px;font-size:11px">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
           Copy
@@ -399,19 +408,19 @@ body::after {
     <!-- REST API Tab -->
     <div id="claudeTab-api" class="claude-tab-content" style="display:none">
       <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:6px">Base URL</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:6px">Base URL</div>
         <div style="position:relative">
-          <pre style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:13px;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace"><span class="api-url-placeholder"></span></pre>
+          <pre style="background:#1A1A2E;border:1px solid rgba(0,51,164,0.2);border-radius:10px;padding:14px 16px;font-size:13px;color:#ddd;font-family:'Cascadia Code','Fira Code',monospace"><span class="api-url-placeholder"></span></pre>
         </div>
       </div>
-      <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:var(--yellow)">Endpoints</div>
+      <div style="margin-bottom:8px;font-size:13px;font-weight:700;color:var(--navy)">Endpoints</div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:12px;line-height:1.7">
-        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--green-light);font-weight:700;min-width:52px">GET</span><span style="color:#ddd;font-family:monospace">/api/campaigns</span><span style="color:var(--muted);margin-left:auto">List all campaigns</span></div>
-        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--green-light);font-weight:700;min-width:52px">POST</span><span style="color:#ddd;font-family:monospace">/api/campaigns</span><span style="color:var(--muted);margin-left:auto">Create campaign</span></div>
-        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--green-light);font-weight:700;min-width:52px">GET</span><span style="color:#ddd;font-family:monospace">/api/campaigns/:id</span><span style="color:var(--muted);margin-left:auto">Get campaign details</span></div>
-        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--yellow);font-weight:700;min-width:52px">PUT</span><span style="color:#ddd;font-family:monospace">/api/campaigns/:id</span><span style="color:var(--muted);margin-left:auto">Update campaign data</span></div>
-        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:#EF4444;font-weight:700;min-width:52px">DELETE</span><span style="color:#ddd;font-family:monospace">/api/campaigns/:id</span><span style="color:var(--muted);margin-left:auto">Delete campaign</span></div>
-        <div style="padding:10px 16px;display:flex;gap:12px"><span style="color:var(--green-light);font-weight:700;min-width:52px">POST</span><span style="color:#ddd;font-family:monospace">/api/campaigns/:id/send</span><span style="color:var(--muted);margin-left:auto">Send for review</span></div>
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--green);font-weight:700;min-width:52px">GET</span><span style="color:#333;font-family:monospace">/api/campaigns</span><span style="color:var(--muted);margin-left:auto">List all campaigns</span></div>
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--green);font-weight:700;min-width:52px">POST</span><span style="color:#333;font-family:monospace">/api/campaigns</span><span style="color:var(--muted);margin-left:auto">Create campaign</span></div>
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--green);font-weight:700;min-width:52px">GET</span><span style="color:#333;font-family:monospace">/api/campaigns/:id</span><span style="color:var(--muted);margin-left:auto">Get campaign details</span></div>
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:var(--yellow);font-weight:700;min-width:52px">PUT</span><span style="color:#333;font-family:monospace">/api/campaigns/:id</span><span style="color:var(--muted);margin-left:auto">Update campaign data</span></div>
+        <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px"><span style="color:#EF4444;font-weight:700;min-width:52px">DELETE</span><span style="color:#333;font-family:monospace">/api/campaigns/:id</span><span style="color:var(--muted);margin-left:auto">Delete campaign</span></div>
+        <div style="padding:10px 16px;display:flex;gap:12px"><span style="color:var(--green);font-weight:700;min-width:52px">POST</span><span style="color:#333;font-family:monospace">/api/campaigns/:id/send</span><span style="color:var(--muted);margin-left:auto">Send for review</span></div>
       </div>
       <div style="margin-top:16px;font-size:12px;color:var(--muted);line-height:1.6">
         All endpoints accept and return JSON. Campaign data includes <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">headlines</code>, <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">longHeadlines</code>, <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">descriptions</code>, <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">meta</code>, <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">dishio</code>, <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">videos</code> arrays. Each item has <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">text</code>, <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">approved</code>, and <code style="background:var(--surface);padding:1px 4px;border-radius:3px;font-size:11px">notes</code> fields.
