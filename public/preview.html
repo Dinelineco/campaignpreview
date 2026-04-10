@@ -467,6 +467,21 @@
     .section-card-header:hover { background: rgba(0,0,0,0.02); }
     .section-card-title { flex: 1; font-size: 14px; font-weight: 600; }
     .section-card-meta { font-size: 12px; color: var(--text-dim); }
+    .section-approval-info { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+    .section-pct {
+      font-size: 12px; font-weight: 700; color: var(--text-muted);
+      background: rgba(0,0,0,0.04); padding: 3px 10px; border-radius: 100px;
+      white-space: nowrap;
+    }
+    .section-pct.all-approved { background: var(--green-bg); color: var(--green); }
+    .btn-approve-all {
+      font-family: inherit; font-size: 11px; font-weight: 700; padding: 5px 14px;
+      border-radius: 100px; border: 1.5px solid var(--green); background: transparent;
+      color: var(--green); cursor: pointer; transition: all 0.2s; white-space: nowrap;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .btn-approve-all:hover { background: var(--green); color: #fff; transform: translateY(-1px); box-shadow: 0 2px 12px rgba(0,155,0,0.15); }
+    .btn-approve-all.all-done { background: var(--green); color: #fff; opacity: 0.7; pointer-events: none; }
     .section-card-chevron {
       width: 18px; height: 18px;
       color: var(--text-dim);
@@ -1401,7 +1416,14 @@
             <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             <span class="section-card-title">Headlines</span>
             <span class="section-card-meta">30 char max</span>
-            <button class="btn-secondary" style="margin-left:auto" onclick="event.stopPropagation();openPasteModal('headlines','Headlines',30)">
+            <div class="section-approval-info">
+              <span class="section-pct" id="pct-headlines">0%</span>
+              <button class="btn-approve-all" id="approveAll-headlines" onclick="event.stopPropagation();approveAllInSection('headlines')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Approve All
+              </button>
+            </div>
+            <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('headlines','Headlines',30)">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
               Paste Headlines
             </button>
@@ -1420,7 +1442,14 @@
             <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             <span class="section-card-title">Long Headlines</span>
             <span class="section-card-meta">90 char max</span>
-            <button class="btn-secondary" style="margin-left:auto" onclick="event.stopPropagation();openPasteModal('longHeadlines','Long Headlines',90)">
+            <div class="section-approval-info">
+              <span class="section-pct" id="pct-longHeadlines">0%</span>
+              <button class="btn-approve-all" id="approveAll-longHeadlines" onclick="event.stopPropagation();approveAllInSection('longHeadlines')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Approve All
+              </button>
+            </div>
+            <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('longHeadlines','Long Headlines',90)">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
               Paste Long Headlines
             </button>
@@ -1439,7 +1468,14 @@
             <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
             <span class="section-card-title">Descriptions</span>
             <span class="section-card-meta">90 char max</span>
-            <button class="btn-secondary" style="margin-left:auto" onclick="event.stopPropagation();openPasteModal('descriptions','Descriptions',90)">
+            <div class="section-approval-info">
+              <span class="section-pct" id="pct-descriptions">0%</span>
+              <button class="btn-approve-all" id="approveAll-descriptions" onclick="event.stopPropagation();approveAllInSection('descriptions')">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Approve All
+              </button>
+            </div>
+            <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('descriptions','Descriptions',90)">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
               Paste Descriptions
             </button>
@@ -1488,7 +1524,12 @@
         <h2 class="section-header-title">Meta Ad Campaigns</h2>
         <div class="section-header-line"></div>
       </div>
-      <button class="btn-secondary" style="margin-left:24px;flex-shrink:0" onclick="openPasteModal('meta','Meta Copy',1000)">
+      <span class="section-pct" id="pct-meta" style="margin-left:16px">0%</span>
+      <button class="btn-approve-all" id="approveAll-meta" style="margin-left:8px" onclick="approveAllInSection('meta')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Approve All
+      </button>
+      <button class="btn-secondary" style="margin-left:12px;flex-shrink:0" onclick="openPasteModal('meta','Meta Copy',1000)">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
         Paste Meta Copy
       </button>
@@ -1506,6 +1547,11 @@
     <div class="section-header">
       <h2 class="section-header-title">Dish.io Smart Links</h2>
       <div class="section-header-line"></div>
+      <span class="section-pct" id="pct-dishio">0%</span>
+      <button class="btn-approve-all" id="approveAll-dishio" onclick="approveAllInSection('dishio')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Approve All
+      </button>
       <button class="btn-secondary section-header-action" onclick="openPasteModal('dishio','Dish.io Links',500)">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
         Add Links
@@ -1524,6 +1570,11 @@
     <div class="section-header">
       <h2 class="section-header-title">Video Assets</h2>
       <div class="section-header-line"></div>
+      <span class="section-pct" id="pct-videos">0%</span>
+      <button class="btn-approve-all" id="approveAll-videos" onclick="approveAllInSection('videos')">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Approve All
+      </button>
       <button class="btn-secondary section-header-action" onclick="openPasteModal('videos','Video Assets',500)">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
         Add Videos
@@ -2000,6 +2051,46 @@ function updateStats() {
   ];
   document.getElementById('progApproved').textContent = all.filter(i => i && i.approved).length;
   document.getElementById('progTotal').textContent = all.length;
+
+  // Update per-section percentages
+  ['headlines', 'longHeadlines', 'descriptions', 'meta', 'dishio', 'videos'].forEach(section => {
+    const items = data[section] || [];
+    const pctEl = document.getElementById(`pct-${section}`);
+    const btnEl = document.getElementById(`approveAll-${section}`);
+    if (!pctEl) return;
+    if (items.length === 0) {
+      pctEl.textContent = '—';
+      pctEl.classList.remove('all-approved');
+      if (btnEl) btnEl.style.display = 'none';
+      return;
+    }
+    const approved = items.filter(i => i && i.approved).length;
+    const pct = Math.round((approved / items.length) * 100);
+    pctEl.textContent = `${approved}/${items.length} (${pct}%)`;
+    const allDone = approved === items.length;
+    pctEl.classList.toggle('all-approved', allDone);
+    if (btnEl) {
+      btnEl.style.display = '';
+      btnEl.classList.toggle('all-done', allDone);
+      btnEl.innerHTML = allDone
+        ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> All Approved'
+        : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Approve All';
+    }
+  });
+}
+
+function approveAllInSection(section) {
+  const items = data[section] || [];
+  if (items.length === 0) return;
+  const allApproved = items.every(i => i.approved);
+  items.forEach(item => {
+    item.approved = !allApproved;
+    item.needsEdit = false;
+  });
+  renderAll();
+  saveToStorage();
+  const count = items.length;
+  showToast(allApproved ? `Removed approval from ${count} items` : `Approved all ${count} items`);
 }
 
 function updateTabBadges() {
@@ -2441,6 +2532,7 @@ loadFromStorage();
 
 /* ═══════════════════════════════════════════════════════════
    PERSISTENT PARTICLE BACKGROUND (runs after intro)
+   Optimized: grid-based spatial hashing for O(n) line checks
 ═══════════════════════════════════════════════════════════ */
 function initPersistentParticles() {
   const canvas = document.getElementById('particle-canvas');
@@ -2448,7 +2540,9 @@ function initPersistentParticles() {
   const ctx = canvas.getContext('2d');
   let w, h;
   const particles = [];
-  const PARTICLE_COUNT = 80;
+  const PARTICLE_COUNT = 60; // reduced from 80
+  const CONNECT_DIST = 120;
+  const CELL_SIZE = CONNECT_DIST;
   let mouseX = -1000, mouseY = -1000;
 
   function resize() {
@@ -2458,12 +2552,8 @@ function initPersistentParticles() {
   resize();
   window.addEventListener('resize', resize);
 
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
 
-  // Create particles
   for (let i = 0; i < PARTICLE_COUNT; i++) {
     particles.push({
       x: Math.random() * (w || 1200),
@@ -2479,56 +2569,64 @@ function initPersistentParticles() {
   function drawParticles() {
     ctx.clearRect(0, 0, w, h);
 
-    particles.forEach(p => {
+    // Build spatial hash grid
+    const grid = {};
+    particles.forEach((p, idx) => {
       // Mouse repulsion
-      const dx = p.x - mouseX;
-      const dy = p.y - mouseY;
+      const dx = p.x - mouseX, dy = p.y - mouseY;
       const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 150) {
+      if (dist < 150 && dist > 0) {
         const force = (150 - dist) / 150;
         p.vx += (dx / dist) * force * 0.3;
         p.vy += (dy / dist) * force * 0.3;
       }
-
-      // Friction
-      p.vx *= 0.99;
-      p.vy *= 0.99;
-
-      // Drift
-      p.x += p.vx;
-      p.y += p.vy;
-
-      // Wrap
+      p.vx *= 0.99; p.vy *= 0.99;
+      p.x += p.vx; p.y += p.vy;
       if (p.x < -10) p.x = w + 10;
       if (p.x > w + 10) p.x = -10;
       if (p.y < -10) p.y = h + 10;
       if (p.y > h + 10) p.y = -10;
 
-      // Draw
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       ctx.fillStyle = p.color;
       ctx.fill();
+
+      const gx = Math.floor(p.x / CELL_SIZE), gy = Math.floor(p.y / CELL_SIZE);
+      const key = gx + ',' + gy;
+      if (!grid[key]) grid[key] = [];
+      grid[key].push(idx);
     });
 
-    // Connection lines
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const a = particles[i], b = particles[j];
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          const alpha = (1 - dist / 120) * 0.08;
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = a.lineColor + alpha + ')';
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
+    // Connection lines using spatial hash (only check neighboring cells)
+    ctx.lineWidth = 0.5;
+    const checked = new Set();
+    particles.forEach((a, i) => {
+      const gx = Math.floor(a.x / CELL_SIZE), gy = Math.floor(a.y / CELL_SIZE);
+      for (let ox = -1; ox <= 1; ox++) {
+        for (let oy = -1; oy <= 1; oy++) {
+          const neighbors = grid[(gx + ox) + ',' + (gy + oy)];
+          if (!neighbors) continue;
+          for (const j of neighbors) {
+            if (j <= i) continue;
+            const pairKey = i * PARTICLE_COUNT + j;
+            if (checked.has(pairKey)) continue;
+            checked.add(pairKey);
+            const b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECT_DIST) {
+              const alpha = (1 - dist / CONNECT_DIST) * 0.08;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = a.lineColor + alpha + ')';
+              ctx.stroke();
+            }
+          }
         }
       }
-    }
+    });
 
     requestAnimationFrame(drawParticles);
   }
@@ -2537,36 +2635,63 @@ function initPersistentParticles() {
 
 /* ═══════════════════════════════════════════════════════════
    PHASE 2: 3D PARALLAX TILT + MAGNETIC CURSOR + RIPPLES
+   Optimized: rAF-throttled mousemove, IntersectionObserver
+   for visible cards, debounced DOM queries
 ═══════════════════════════════════════════════════════════ */
 function initPhase2() {
 
-  // ── 3D PARALLAX TILT ──
-  const tiltSelectors = '.section-card, .item-card, .meta-ad-card, .preview-card, .simple-card';
-  let tiltElements = [];
-  const TILT_MAX = 4; // degrees
-  const PERSPECTIVE = 1000;
-
-  function refreshTiltElements() {
-    tiltElements = document.querySelectorAll(tiltSelectors);
-  }
-
-  // Observe DOM changes to pick up dynamically rendered cards
-  const tiltObserver = new MutationObserver(() => {
-    setTimeout(refreshTiltElements, 100);
-  });
-  tiltObserver.observe(document.body, { childList: true, subtree: true });
-  refreshTiltElements();
+  // ── Shared mouse state (single listener) ──
+  let mouseX = 0, mouseY = 0, rafPending = false;
 
   document.addEventListener('mousemove', e => {
-    tiltElements.forEach(card => {
-      const rect = card.getBoundingClientRect();
-      // Only tilt if card is in viewport
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => {
+        processTilt();
+        processMagnetic();
+        rafPending = false;
+      });
+    }
+  }, { passive: true });
 
+  // ── 3D PARALLAX TILT (only visible cards) ──
+  const TILT_MAX = 4;
+  const PERSPECTIVE = 1000;
+  const visibleTiltCards = new Set();
+
+  const tiltVisObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) visibleTiltCards.add(e.target);
+      else {
+        visibleTiltCards.delete(e.target);
+        // Reset transform when leaving viewport
+        e.target.style.transform = '';
+        e.target.classList.remove('tilt-active');
+      }
+    });
+  }, { rootMargin: '50px' });
+
+  function observeTiltCards() {
+    document.querySelectorAll('.section-card, .item-card, .meta-ad-card, .preview-card, .simple-card').forEach(el => {
+      if (!el._tiltObserved) {
+        el._tiltObserved = true;
+        tiltVisObserver.observe(el);
+      }
+    });
+  }
+
+  const tiltMO = new MutationObserver(() => { clearTimeout(tiltMO._t); tiltMO._t = setTimeout(observeTiltCards, 150); });
+  tiltMO.observe(document.body, { childList: true, subtree: true });
+  observeTiltCards();
+
+  function processTilt() {
+    visibleTiltCards.forEach(card => {
+      const rect = card.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const dx = e.clientX - centerX;
-      const dy = e.clientY - centerY;
+      const dx = mouseX - centerX, dy = mouseY - centerY;
       const dist = Math.sqrt(dx * dx + dy * dy);
       const maxDist = 400;
 
@@ -2583,37 +2708,36 @@ function initPhase2() {
         card.classList.remove('tilt-active');
       }
     });
-  });
+  }
 
-  // Reset tilt when mouse leaves window
   document.addEventListener('mouseleave', () => {
-    tiltElements.forEach(card => {
+    visibleTiltCards.forEach(card => {
       card.style.transform = '';
       card.style.transition = 'transform 0.4s ease';
       card.classList.remove('tilt-active');
     });
   });
 
-  // ── MAGNETIC CURSOR ──
-  const magneticSelectors = '.btn-submit, .campaign-pill, .tab-btn';
-  let magneticElements = [];
+  // ── MAGNETIC CURSOR (small fixed set — buttons/pills/tabs) ──
   const MAGNETIC_RANGE = 80;
   const MAGNETIC_STRENGTH = 0.3;
+  let magneticElements = [];
 
   function refreshMagnetic() {
-    magneticElements = document.querySelectorAll(magneticSelectors);
+    magneticElements = Array.from(document.querySelectorAll('.btn-submit, .campaign-pill, .tab-btn'));
   }
-  const magObserver = new MutationObserver(() => setTimeout(refreshMagnetic, 100));
-  magObserver.observe(document.body, { childList: true, subtree: true });
+  const magMO = new MutationObserver(() => { clearTimeout(magMO._t); magMO._t = setTimeout(refreshMagnetic, 200); });
+  magMO.observe(document.body, { childList: true, subtree: true });
   refreshMagnetic();
 
-  document.addEventListener('mousemove', e => {
+  function processMagnetic() {
     magneticElements.forEach(el => {
       const rect = el.getBoundingClientRect();
+      // Quick viewport check
+      if (rect.bottom < -20 || rect.top > window.innerHeight + 20) return;
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
-      const dx = e.clientX - centerX;
-      const dy = e.clientY - centerY;
+      const dx = mouseX - centerX, dy = mouseY - centerY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist < MAGNETIC_RANGE) {
@@ -2625,13 +2749,12 @@ function initPhase2() {
         el.classList.remove('magnetic-hover');
       }
     });
-  });
+  }
 
   // ── CLICK RIPPLE EFFECT ──
   document.addEventListener('click', e => {
-    const target = e.target.closest('.btn-submit, .btn-secondary, .campaign-pill, .approval-btn, .tab-btn');
+    const target = e.target.closest('.btn-submit, .btn-secondary, .campaign-pill, .approval-btn, .tab-btn, .btn-approve-all');
     if (!target) return;
-
     const rect = target.getBoundingClientRect();
     const ripple = document.createElement('div');
     ripple.className = 'ripple-effect';
@@ -2649,16 +2772,13 @@ function initPhase2() {
   const staggerObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const el = entry.target;
-        const delay = el.dataset.stagger || 0;
-        el.style.animationDelay = delay + 'ms';
-        el.classList.add('stagger-visible');
-        staggerObserver.unobserve(el);
+        entry.target.style.animationDelay = (entry.target.dataset.stagger || 0) + 'ms';
+        entry.target.classList.add('stagger-visible');
+        staggerObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.1 });
 
-  // Apply stagger to cards as they appear
   function applyStagger() {
     document.querySelectorAll('.item-card:not(.stagger-applied), .meta-ad-card:not(.stagger-applied), .simple-card:not(.stagger-applied)').forEach((card, i) => {
       card.dataset.stagger = i * 60;
@@ -2666,29 +2786,21 @@ function initPhase2() {
       staggerObserver.observe(card);
     });
   }
-  const staggerMO = new MutationObserver(() => setTimeout(applyStagger, 50));
+  const staggerMO = new MutationObserver(() => { clearTimeout(staggerMO._t); staggerMO._t = setTimeout(applyStagger, 80); });
   staggerMO.observe(document.body, { childList: true, subtree: true });
   applyStagger();
 
   // ── ANIMATED PROGRESS NUMBER (flip-style) ──
   const progApproved = document.getElementById('progApproved');
-  const progTotal = document.getElementById('progTotal');
-  if (progApproved && progTotal) {
-    let lastApproved = progApproved.textContent;
-    let lastTotal = progTotal.textContent;
-    const flipObserver = new MutationObserver(() => {
-      if (progApproved.textContent !== lastApproved) {
-        lastApproved = progApproved.textContent;
+  if (progApproved) {
+    let lastVal = progApproved.textContent;
+    new MutationObserver(() => {
+      if (progApproved.textContent !== lastVal) {
+        lastVal = progApproved.textContent;
         progApproved.classList.add('flipping');
-        setTimeout(() => {
-          progApproved.classList.remove('flipping');
-        }, 150);
+        setTimeout(() => progApproved.classList.remove('flipping'), 150);
       }
-      if (progTotal.textContent !== lastTotal) {
-        lastTotal = progTotal.textContent;
-      }
-    });
-    flipObserver.observe(progApproved, { childList: true, characterData: true, subtree: true });
+    }).observe(progApproved, { childList: true, characterData: true, subtree: true });
   }
 }
 </script>
