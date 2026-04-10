@@ -497,6 +497,23 @@
       transform: translateY(-1px);
     }
 
+    /* ── CAMPAIGN GROUP SUBHEADERS ── */
+    .campaign-group { margin-bottom: 32px; }
+    .campaign-group:last-child { margin-bottom: 0; }
+    .campaign-group-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px; padding: 0 4px;
+    }
+    .campaign-group-name {
+      font-size: 16px; font-weight: 700;
+      background: linear-gradient(135deg, #1A1A1A, #0033A4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+    }
+    .campaign-group-line { flex: 1; height: 1px; background: var(--card-border); }
+    .campaign-group-pct { font-size: 12px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+
     /* ── ITEM CARD ── */
     .item-card {
       background: #FAFAFA;
@@ -1409,84 +1426,8 @@
   <!-- ── GOOGLE PANEL ── -->
   <div class="panel active" id="panel-google" role="tabpanel">
     <div class="google-layout">
-      <div class="google-left">
-        <!-- Headlines -->
-        <div class="section-card" id="sc-headlines">
-          <div class="section-card-header" onclick="toggleSection('headlines')">
-            <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-            <span class="section-card-title">Headlines</span>
-            <span class="section-card-meta">30 char max</span>
-            <div class="section-approval-info">
-              <span class="section-pct" id="pct-headlines">0%</span>
-              <button class="btn-approve-all" id="approveAll-headlines" onclick="event.stopPropagation();approveAllInSection('headlines')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                Approve All
-              </button>
-            </div>
-            <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('headlines','Headlines',30)">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-              Paste Headlines
-            </button>
-          </div>
-          <div class="section-card-body" id="list-headlines">
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <p>No headlines yet. Use the Paste button above to add copy.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Long Headlines -->
-        <div class="section-card" id="sc-longHeadlines">
-          <div class="section-card-header" onclick="toggleSection('longHeadlines')">
-            <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-            <span class="section-card-title">Long Headlines</span>
-            <span class="section-card-meta">90 char max</span>
-            <div class="section-approval-info">
-              <span class="section-pct" id="pct-longHeadlines">0%</span>
-              <button class="btn-approve-all" id="approveAll-longHeadlines" onclick="event.stopPropagation();approveAllInSection('longHeadlines')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                Approve All
-              </button>
-            </div>
-            <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('longHeadlines','Long Headlines',90)">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-              Paste Long Headlines
-            </button>
-          </div>
-          <div class="section-card-body" id="list-longHeadlines">
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <p>No long headlines yet.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Descriptions -->
-        <div class="section-card" id="sc-descriptions">
-          <div class="section-card-header" onclick="toggleSection('descriptions')">
-            <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-            <span class="section-card-title">Descriptions</span>
-            <span class="section-card-meta">90 char max</span>
-            <div class="section-approval-info">
-              <span class="section-pct" id="pct-descriptions">0%</span>
-              <button class="btn-approve-all" id="approveAll-descriptions" onclick="event.stopPropagation();approveAllInSection('descriptions')">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                Approve All
-              </button>
-            </div>
-            <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('descriptions','Descriptions',90)">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-              Paste Descriptions
-            </button>
-          </div>
-          <div class="section-card-body" id="list-descriptions">
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              <p>No descriptions yet.</p>
-            </div>
-          </div>
-        </div>
+      <div class="google-left" id="google-left-container">
+        <!-- JS will render campaign groups here -->
       </div>
 
       <!-- Right: live previews -->
@@ -1519,72 +1460,22 @@
 
   <!-- ── META PANEL ── -->
   <div class="panel" id="panel-meta" role="tabpanel">
-    <div class="meta-panel-header">
-      <div class="section-header" style="flex:1;margin-bottom:0">
-        <h2 class="section-header-title">Meta Ad Campaigns</h2>
-        <div class="section-header-line"></div>
-      </div>
-      <span class="section-pct" id="pct-meta" style="margin-left:16px">0%</span>
-      <button class="btn-approve-all" id="approveAll-meta" style="margin-left:8px" onclick="approveAllInSection('meta')">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Approve All
-      </button>
-      <button class="btn-secondary" style="margin-left:12px;flex-shrink:0" onclick="openPasteModal('meta','Meta Copy',1000)">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-        Paste Meta Copy
-      </button>
-    </div>
-    <div id="list-meta">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        <p>No Meta ads yet. Paste your copy to get started.</p>
-      </div>
+    <div id="meta-panel-container">
+      <!-- JS will render campaign groups here -->
     </div>
   </div>
 
   <!-- ── DISH.IO PANEL ── -->
   <div class="panel" id="panel-dishio" role="tabpanel">
-    <div class="section-header">
-      <h2 class="section-header-title">Dish.io Smart Links</h2>
-      <div class="section-header-line"></div>
-      <span class="section-pct" id="pct-dishio">0%</span>
-      <button class="btn-approve-all" id="approveAll-dishio" onclick="approveAllInSection('dishio')">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Approve All
-      </button>
-      <button class="btn-secondary section-header-action" onclick="openPasteModal('dishio','Dish.io Links',500)">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-        Add Links
-      </button>
-    </div>
-    <div id="list-dishio">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <p>No Dish.io smart links yet.</p>
-      </div>
+    <div id="dishio-panel-container">
+      <!-- JS will render campaign groups here -->
     </div>
   </div>
 
   <!-- ── VIDEOS PANEL ── -->
   <div class="panel" id="panel-videos" role="tabpanel">
-    <div class="section-header">
-      <h2 class="section-header-title">Video Assets</h2>
-      <div class="section-header-line"></div>
-      <span class="section-pct" id="pct-videos">0%</span>
-      <button class="btn-approve-all" id="approveAll-videos" onclick="approveAllInSection('videos')">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        Approve All
-      </button>
-      <button class="btn-secondary section-header-action" onclick="openPasteModal('videos','Video Assets',500)">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
-        Add Videos
-      </button>
-    </div>
-    <div id="list-videos">
-      <div class="empty-state">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
-        <p>No video assets yet.</p>
-      </div>
+    <div id="videos-panel-container">
+      <!-- JS will render campaign groups here -->
     </div>
   </div>
 
@@ -1627,6 +1518,29 @@ const data = {
 };
 let allCampaignTabs = [];
 let activeCampaignIdx = 0;
+/* Track which campaign the user last interacted with for Google ad preview */
+let previewCampaignIdx = 0;
+
+/* ════════════════════════════════
+   HELPERS
+════════════════════════════════ */
+function isMultiCampaign() { return allCampaignTabs.length > 0; }
+
+function getCampaignData(tabIdx) {
+  if (isMultiCampaign()) return allCampaignTabs[tabIdx].data;
+  return data;
+}
+
+function getCampaignName(tabIdx) {
+  if (isMultiCampaign()) return allCampaignTabs[tabIdx].name || ('Campaign ' + (tabIdx + 1));
+  return '';
+}
+
+/* Build a unique section key: e.g. 'headlines-0' or 'headlines' for single */
+function sKey(section, tabIdx) {
+  if (!isMultiCampaign()) return section;
+  return section + '-' + tabIdx;
+}
 
 /* ════════════════════════════════
    API
@@ -1639,8 +1553,8 @@ async function saveToStorage() {
   saveTimeout = setTimeout(async () => {
     if (!campaignId) return;
     try {
-      if (allCampaignTabs.length > 0) {
-        allCampaignTabs[activeCampaignIdx].data = { ...data };
+      if (isMultiCampaign()) {
+        /* All campaign data is already in allCampaignTabs — no swap needed */
         await fetch(`/api/campaigns/${campaignId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -1675,9 +1589,9 @@ async function loadFromStorage() {
     if (campaign.campaigns && campaign.campaigns.length > 0) {
       allCampaignTabs = campaign.campaigns;
       activeCampaignIdx = 0;
+      previewCampaignIdx = 0;
+      /* Also populate data from first campaign for intro stats compatibility */
       Object.assign(data, campaign.campaigns[0].data);
-      renderCampaignSwitcher();
-      document.getElementById('campaignSwitcherWrap').style.display = '';
     } else if (campaign.data) {
       Object.assign(data, campaign.data);
     }
@@ -1685,6 +1599,8 @@ async function loadFromStorage() {
     const amEl = document.getElementById('accountManagerName');
     if (amEl && campaign.accountManager) amEl.textContent = campaign.accountManager;
     document.title = `Campaign Preview — ${campaign.restaurantName}`;
+    /* Hide the old campaign switcher — we no longer use it */
+    document.getElementById('campaignSwitcherWrap').style.display = 'none';
     renderAll();
   } catch (err) { console.error('Load failed:', err); }
 }
@@ -1708,8 +1624,9 @@ function switchTab(tab) {
 /* ════════════════════════════════
    SECTION COLLAPSE
 ════════════════════════════════ */
-function toggleSection(section) {
-  const card = document.getElementById(`sc-${section}`);
+function toggleSection(section, tabIdx) {
+  const sk = sKey(section, tabIdx);
+  const card = document.getElementById(`sc-${sk}`);
   if (card) card.classList.toggle('collapsed');
 }
 
@@ -1717,110 +1634,204 @@ function toggleSection(section) {
    RENDER ALL
 ════════════════════════════════ */
 function renderAll() {
-  renderGoogleSection('headlines', 30);
-  renderGoogleSection('longHeadlines', 90);
-  renderGoogleSection('descriptions', 90);
-  renderMetaSection();
-  renderSimpleSection('dishio');
-  renderSimpleSection('videos');
+  if (isMultiCampaign()) {
+    renderAllCampaignGroups();
+  } else {
+    /* Legacy single-campaign mode */
+    renderGoogleLeftSingle();
+    renderMetaPanelSingle();
+    renderSimplePanelSingle('dishio');
+    renderSimplePanelSingle('videos');
+  }
   updateStats();
   updateTabBadges();
   renderGoogleAdPreviews();
 }
 
 /* ════════════════════════════════
-   CAMPAIGN SWITCHER
+   CAMPAIGN SWITCHER (removed — no longer used)
 ════════════════════════════════ */
-function renderCampaignSwitcher() {
-  const el = document.getElementById('campaignSwitcher');
-  el.innerHTML = allCampaignTabs.map((tab, i) => `
-    <button class="campaign-pill${i === activeCampaignIdx ? ' active' : ''}" onclick="switchCampaign(${i})">
-      ${escHtml(tab.name || `Campaign ${i + 1}`)}
-    </button>
-  `).join('');
+function renderCampaignSwitcher() { /* no-op, kept for compat */ }
+function switchCampaign() { /* no-op */ }
+
+/* ════════════════════════════════
+   MULTI-CAMPAIGN: RENDER ALL GROUPS
+════════════════════════════════ */
+function renderAllCampaignGroups() {
+  renderGoogleCampaignGroups();
+  renderMetaCampaignGroups();
+  renderSimpleCampaignGroups('dishio');
+  renderSimpleCampaignGroups('videos');
 }
 
-function switchCampaign(idx) {
-  allCampaignTabs[activeCampaignIdx].data = { ...data };
-  activeCampaignIdx = idx;
-  const empty = { headlines: [], longHeadlines: [], descriptions: [], meta: [], dishio: [], videos: [] };
-  Object.assign(data, empty);
-  Object.assign(data, allCampaignTabs[idx].data || {});
-  renderCampaignSwitcher();
-  renderAll();
+/* ── Campaign group header HTML ── */
+function campaignGroupHeaderHtml(name, pctId) {
+  return `<div class="campaign-group-header">
+    <span class="campaign-group-name">${escHtml(name)}</span>
+    <div class="campaign-group-line"></div>
+    ${pctId ? '<span class="campaign-group-pct" id="' + pctId + '"></span>' : ''}
+  </div>`;
 }
 
 /* ════════════════════════════════
-   RENDER GOOGLE SECTIONS
+   GOOGLE PANEL: MULTI-CAMPAIGN
 ════════════════════════════════ */
-function renderGoogleSection(section, maxChars) {
-  const container = document.getElementById(`list-${section}`);
+function renderGoogleCampaignGroups() {
+  const container = document.getElementById('google-left-container');
   if (!container) return;
-  const items = data[section] || [];
+  let html = '';
+  allCampaignTabs.forEach((tab, t) => {
+    const cData = tab.data || {};
+    html += `<div class="campaign-group" data-campaign-idx="${t}">`;
+    html += campaignGroupHeaderHtml(tab.name || ('Campaign ' + (t + 1)), 'campGrpPct-google-' + t);
+    html += renderGoogleSectionCard('headlines', 30, cData, t);
+    html += renderGoogleSectionCard('longHeadlines', 90, cData, t);
+    html += renderGoogleSectionCard('descriptions', 90, cData, t);
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderGoogleSectionCard(section, maxChars, cData, tabIdx) {
+  const sk = sKey(section, tabIdx);
+  const items = cData[section] || [];
+  const labels = { headlines: 'Headlines', longHeadlines: 'Long Headlines', descriptions: 'Descriptions' };
+  const labelLower = { headlines: 'headlines', longHeadlines: 'long headlines', descriptions: 'descriptions' };
+  const pasteLabels = { headlines: 'Headlines', longHeadlines: 'Long Headlines', descriptions: 'Descriptions' };
+
+  let itemsHtml;
   if (items.length === 0) {
-    const labels = { headlines: 'headlines', longHeadlines: 'long headlines', descriptions: 'descriptions' };
-    container.innerHTML = `<div class="empty-state">
+    itemsHtml = `<div class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <p>No ${labels[section] || section} yet. Use the Paste button above to add copy.</p>
+      <p>No ${labelLower[section] || section} yet. Use the Paste button above to add copy.</p>
     </div>`;
-    return;
-  }
-  container.innerHTML = items.map((item, i) => {
-    const len = (item.text || '').length;
-    const over = len > maxChars;
-    const near = !over && len > Math.floor(maxChars * 0.85);
-    const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
-    return `<div class="item-card ${state}" id="item-${section}-${i}">
-      <div class="item-card-row">
-        <span class="item-num">${i + 1}</span>
-        <div class="item-text" contenteditable="true" spellcheck="false"
-          data-placeholder="Enter copy..."
-          data-section="${section}" data-index="${i}"
-          onblur="handleTextEdit(this)"
-          oninput="updateCharCount(this,${maxChars},'${section}',${i})"
-        >${escHtml(item.text || '')}</div>
-        <span class="char-pill${over?' over':near?' near':''}" id="char-${section}-${i}">${len}/${maxChars}</span>
-      </div>
-      <div class="approval-row">
-        <div class="approval-toggle">
-          <button class="approval-btn btn-approve${item.approved?' active':''}"
-            onclick="setApproval('${section}',${i},'${item.approved?'none':'approved'}')">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            Approved
-          </button>
-          <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
-            onclick="setApproval('${section}',${i},'${item.needsEdit?'none':'needs-edit'}')">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Needs Edit
-          </button>
+  } else {
+    itemsHtml = items.map((item, i) => {
+      const len = (item.text || '').length;
+      const over = len > maxChars;
+      const near = !over && len > Math.floor(maxChars * 0.85);
+      const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
+      return `<div class="item-card ${state}" id="item-${sk}-${i}">
+        <div class="item-card-row">
+          <span class="item-num">${i + 1}</span>
+          <div class="item-text" contenteditable="true" spellcheck="false"
+            data-placeholder="Enter copy..."
+            data-section="${section}" data-index="${i}" data-tab="${tabIdx}"
+            onblur="handleTextEdit(this)"
+            oninput="updateCharCount(this,${maxChars},'${sk}',${i})"
+          >${escHtml(item.text || '')}</div>
+          <span class="char-pill${over?' over':near?' near':''}" id="char-${sk}-${i}">${len}/${maxChars}</span>
         </div>
+        <div class="approval-row">
+          <div class="approval-toggle">
+            <button class="approval-btn btn-approve${item.approved?' active':''}"
+              onclick="setApproval('${section}',${i},'${item.approved?'none':'approved'}',${tabIdx})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Approved
+            </button>
+            <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
+              onclick="setApproval('${section}',${i},'${item.needsEdit?'none':'needs-edit'}',${tabIdx})">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Needs Edit
+            </button>
+          </div>
+        </div>
+        <div class="notes-wrapper${item.needsEdit?' visible':''}" id="notes-${sk}-${i}">
+          <textarea class="notes-textarea" placeholder="Describe what needs to change..."
+            data-section="${section}" data-index="${i}" data-tab="${tabIdx}"
+            onblur="handleNotesEdit(this)" oninput="autoResize(this)"
+          >${escHtml(item.notes || '')}</textarea>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  return `<div class="section-card" id="sc-${sk}">
+    <div class="section-card-header" onclick="toggleSection('${section}',${tabIdx})">
+      <svg class="section-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      <span class="section-card-title">${labels[section]}</span>
+      <span class="section-card-meta">${maxChars} char max</span>
+      <div class="section-approval-info">
+        <span class="section-pct" id="pct-${sk}">0%</span>
+        <button class="btn-approve-all" id="approveAll-${sk}" onclick="event.stopPropagation();approveAllInSection('${section}',${tabIdx})">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Approve All
+        </button>
       </div>
-      <div class="notes-wrapper${item.needsEdit?' visible':''}" id="notes-${section}-${i}">
-        <textarea class="notes-textarea" placeholder="Describe what needs to change..."
-          data-section="${section}" data-index="${i}"
-          onblur="handleNotesEdit(this)" oninput="autoResize(this)"
-        >${escHtml(item.notes || '')}</textarea>
-      </div>
-    </div>`;
-  }).join('');
+      <button class="btn-secondary" onclick="event.stopPropagation();openPasteModal('${section}','${pasteLabels[section]}',${maxChars},${tabIdx})">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        Paste ${pasteLabels[section]}
+      </button>
+    </div>
+    <div class="section-card-body" id="list-${sk}">
+      ${itemsHtml}
+    </div>
+  </div>`;
+}
+
+/* ── Google panel: single campaign (legacy) ── */
+function renderGoogleLeftSingle() {
+  const container = document.getElementById('google-left-container');
+  if (!container) return;
+  let html = '';
+  html += renderGoogleSectionCardSingle('headlines', 30);
+  html += renderGoogleSectionCardSingle('longHeadlines', 90);
+  html += renderGoogleSectionCardSingle('descriptions', 90);
+  container.innerHTML = html;
+}
+
+function renderGoogleSectionCardSingle(section, maxChars) {
+  return renderGoogleSectionCard(section, maxChars, data, null);
 }
 
 /* ════════════════════════════════
-   RENDER META SECTION
+   META PANEL: MULTI-CAMPAIGN
 ════════════════════════════════ */
-function renderMetaSection() {
-  const container = document.getElementById('list-meta');
+function renderMetaCampaignGroups() {
+  const container = document.getElementById('meta-panel-container');
   if (!container) return;
-  const items = data.meta || [];
+  let html = '';
+  allCampaignTabs.forEach((tab, t) => {
+    const cData = tab.data || {};
+    html += `<div class="campaign-group" data-campaign-idx="${t}">`;
+    html += campaignGroupHeaderHtml(tab.name || ('Campaign ' + (t + 1)), 'campGrpPct-meta-' + t);
+    html += renderMetaPanelHeaderHtml(t);
+    html += `<div id="list-meta-${t}">`;
+    html += renderMetaItemsHtml(cData.meta || [], t);
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function renderMetaPanelHeaderHtml(tabIdx) {
+  const sk = sKey('meta', tabIdx);
+  return `<div class="meta-panel-header">
+    <div class="section-header" style="flex:1;margin-bottom:0">
+      <h2 class="section-header-title">Meta Ad Campaigns</h2>
+      <div class="section-header-line"></div>
+    </div>
+    <span class="section-pct" id="pct-${sk}" style="margin-left:16px">0%</span>
+    <button class="btn-approve-all" id="approveAll-${sk}" style="margin-left:8px" onclick="approveAllInSection('meta',${tabIdx})">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Approve All
+    </button>
+    <button class="btn-secondary" style="margin-left:12px;flex-shrink:0" onclick="openPasteModal('meta','Meta Copy',1000,${tabIdx})">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+      Paste Meta Copy
+    </button>
+  </div>`;
+}
+
+function renderMetaItemsHtml(items, tabIdx) {
+  const sk = sKey('meta', tabIdx);
   if (items.length === 0) {
-    container.innerHTML = `<div class="empty-state">
+    return `<div class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       <p>No Meta ads yet. Paste your copy to get started.</p>
     </div>`;
-    return;
   }
   const pageName = document.getElementById('clientName').textContent.trim() || 'Restaurant Name';
-  container.innerHTML = items.map((item, i) => {
+  return items.map((item, i) => {
     const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
     const statusLabel = item.approved ? 'Approved' : item.needsEdit ? 'Needs Edit' : 'Pending';
     const statusCls = item.approved ? 'approved' : item.needsEdit ? 'needs-edit' : '';
@@ -1828,7 +1839,8 @@ function renderMetaSection() {
     const domain = (item.url||'').replace(/^https?:\/\//,'').split('/')[0] || 'yourrestaurant.com';
     const preview = (item.text||'').slice(0,90) || 'Your ad copy will appear here...';
     const safeUrl = escAttr(item.url || '#');
-    return `<div class="meta-ad-card ${state}" id="meta-card-${i}">
+    const tParam = (tabIdx != null) ? tabIdx : 'null';
+    return `<div class="meta-ad-card ${state}" id="meta-card-${sk}-${i}">
       <div class="meta-card-topbar">
         <span class="meta-card-name">Meta Ad ${String(i+1).padStart(2,'0')}</span>
         <span class="meta-card-status ${statusCls}"><span class="status-dot"></span>${statusLabel}</span>
@@ -1882,7 +1894,7 @@ function renderMetaSection() {
             <div class="copy-field-label">Primary Text</div>
             <div class="copy-text-editable" contenteditable="true" spellcheck="false"
               data-placeholder="Enter primary text..."
-              data-section="meta" data-index="${i}" data-field="text"
+              data-section="meta" data-index="${i}" data-tab="${tParam}" data-field="text"
               onblur="handleMetaTextEdit(this)"
             >${escHtml(item.text || '')}</div>
           </div>
@@ -1891,10 +1903,10 @@ function renderMetaSection() {
             <div class="link-field">
               <input type="url" class="link-url" placeholder="https://yourrestaurant.com"
                 value="${escAttr(item.url||'')}"
-                data-section="meta" data-index="${i}"
+                data-section="meta" data-index="${i}" data-tab="${tParam}"
                 onblur="handleMetaUrlEdit(this)"
               />
-              <a href="${safeUrl}" target="_blank" rel="noopener" class="btn-open-link" id="meta-link-${i}">
+              <a href="${safeUrl}" target="_blank" rel="noopener" class="btn-open-link" id="meta-link-${sk}-${i}">
                 Open
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </a>
@@ -1905,19 +1917,19 @@ function renderMetaSection() {
       <div class="meta-card-footer">
         <div class="approval-toggle">
           <button class="approval-btn btn-approve${item.approved?' active':''}"
-            onclick="setApproval('meta',${i},'${item.approved?'none':'approved'}')">
+            onclick="setApproval('meta',${i},'${item.approved?'none':'approved'}',${tParam})">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
             Approved
           </button>
           <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
-            onclick="setApproval('meta',${i},'${item.needsEdit?'none':'needs-edit'}')">
+            onclick="setApproval('meta',${i},'${item.needsEdit?'none':'needs-edit'}',${tParam})">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             Needs Edit
           </button>
         </div>
-        <div class="notes-wrapper${item.needsEdit?' visible':''}" id="meta-notes-${i}" style="margin-top:12px">
+        <div class="notes-wrapper${item.needsEdit?' visible':''}" id="meta-notes-${sk}-${i}" style="margin-top:12px">
           <textarea class="notes-textarea" placeholder="Describe what needs to change..."
-            data-section="meta" data-index="${i}"
+            data-section="meta" data-index="${i}" data-tab="${tParam}"
             onblur="handleNotesEdit(this)" oninput="autoResize(this)"
           >${escHtml(item.notes || '')}</textarea>
         </div>
@@ -1926,58 +1938,102 @@ function renderMetaSection() {
   }).join('');
 }
 
-/* ════════════════════════════════
-   RENDER SIMPLE SECTIONS
-════════════════════════════════ */
-function renderSimpleSection(section) {
-  const container = document.getElementById(`list-${section}`);
+/* ── Meta panel: single campaign (legacy) ── */
+function renderMetaPanelSingle() {
+  const container = document.getElementById('meta-panel-container');
   if (!container) return;
-  const items = data[section] || [];
+  let html = renderMetaPanelHeaderHtml(null);
+  html += '<div id="list-meta">' + renderMetaItemsHtml(data.meta || [], null) + '</div>';
+  container.innerHTML = html;
+}
+
+/* ════════════════════════════════
+   SIMPLE PANELS (Dish.io / Videos): MULTI-CAMPAIGN
+════════════════════════════════ */
+function renderSimpleCampaignGroups(section) {
+  const containerEl = document.getElementById(`${section}-panel-container`);
+  if (!containerEl) return;
+  const titles = { dishio: 'Dish.io Smart Links', videos: 'Video Assets' };
+  const pasteLabels = { dishio: 'Dish.io Links', videos: 'Video Assets' };
+  let html = '';
+  allCampaignTabs.forEach((tab, t) => {
+    const cData = tab.data || {};
+    const sk = sKey(section, t);
+    html += `<div class="campaign-group" data-campaign-idx="${t}">`;
+    html += campaignGroupHeaderHtml(tab.name || ('Campaign ' + (t + 1)), 'campGrpPct-' + section + '-' + t);
+    html += renderSimpleSectionHeaderHtml(section, titles[section], pasteLabels[section], t);
+    html += `<div id="list-${sk}">`;
+    html += renderSimpleItemsHtml(section, cData[section] || [], t);
+    html += '</div></div>';
+  });
+  containerEl.innerHTML = html;
+}
+
+function renderSimpleSectionHeaderHtml(section, title, pasteLabel, tabIdx) {
+  const sk = sKey(section, tabIdx);
+  const tParam = (tabIdx != null) ? tabIdx : 'null';
+  return `<div class="section-header">
+    <h2 class="section-header-title">${escHtml(title)}</h2>
+    <div class="section-header-line"></div>
+    <span class="section-pct" id="pct-${sk}">0%</span>
+    <button class="btn-approve-all" id="approveAll-${sk}" onclick="approveAllInSection('${section}',${tParam})">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      Approve All
+    </button>
+    <button class="btn-secondary section-header-action" onclick="openPasteModal('${section}','${escHtml(pasteLabel)}',500,${tParam})">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+      ${section === 'dishio' ? 'Add Links' : 'Add Videos'}
+    </button>
+  </div>`;
+}
+
+function renderSimpleItemsHtml(section, items, tabIdx) {
+  const sk = sKey(section, tabIdx);
+  const tParam = (tabIdx != null) ? tabIdx : 'null';
   if (items.length === 0) {
     const iconPaths = {
       dishio: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
       videos: '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>'
     };
-    container.innerHTML = `<div class="empty-state">
+    return `<div class="empty-state">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">${iconPaths[section]||''}</svg>
       <p>No ${section === 'dishio' ? 'Dish.io smart links' : 'video assets'} yet.</p>
     </div>`;
-    return;
   }
-  container.innerHTML = items.map((item, i) => {
+  return items.map((item, i) => {
     const state = item.approved ? 'state-approved' : item.needsEdit ? 'state-needs-edit' : '';
     const safeUrl = escAttr(item.url || '#');
-    return `<div class="simple-card ${state}" id="simple-${section}-${i}">
+    return `<div class="simple-card ${state}" id="simple-${sk}-${i}">
       <div class="simple-card-name" contenteditable="true" spellcheck="false"
-        data-section="${section}" data-index="${i}" data-field="name"
+        data-section="${section}" data-index="${i}" data-tab="${tParam}" data-field="name"
         onblur="handleSimpleEdit(this)"
       >${escHtml(item.name || '')}</div>
       <div class="link-field" style="margin-bottom:14px">
         <input type="url" class="link-url" placeholder="https://..."
           value="${escAttr(item.url||'')}"
-          data-section="${section}" data-index="${i}"
+          data-section="${section}" data-index="${i}" data-tab="${tParam}"
           onblur="handleSimpleUrlEdit(this)"
         />
-        <a href="${safeUrl}" target="_blank" rel="noopener" class="btn-open-link" id="${section}-link-${i}">
+        <a href="${safeUrl}" target="_blank" rel="noopener" class="btn-open-link" id="${sk}-link-${i}">
           Open
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>
       </div>
       <div class="approval-toggle">
         <button class="approval-btn btn-approve${item.approved?' active':''}"
-          onclick="setApproval('${section}',${i},'${item.approved?'none':'approved'}')">
+          onclick="setApproval('${section}',${i},'${item.approved?'none':'approved'}',${tParam})">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           Approved
         </button>
         <button class="approval-btn btn-needs-edit${item.needsEdit?' active':''}"
-          onclick="setApproval('${section}',${i},'${item.needsEdit?'none':'needs-edit'}')">
+          onclick="setApproval('${section}',${i},'${item.needsEdit?'none':'needs-edit'}',${tParam})">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Needs Edit
         </button>
       </div>
-      <div class="notes-wrapper${item.needsEdit?' visible':''}" id="${section}-notes-${i}" style="margin-top:12px">
+      <div class="notes-wrapper${item.needsEdit?' visible':''}" id="${sk}-notes-${i}" style="margin-top:12px">
         <textarea class="notes-textarea" placeholder="Describe what needs to change..."
-          data-section="${section}" data-index="${i}"
+          data-section="${section}" data-index="${i}" data-tab="${tParam}"
           onblur="handleNotesEdit(this)" oninput="autoResize(this)"
         >${escHtml(item.notes || '')}</textarea>
       </div>
@@ -1985,20 +2041,41 @@ function renderSimpleSection(section) {
   }).join('');
 }
 
+/* ── Simple panel: single campaign (legacy) ── */
+function renderSimplePanelSingle(section) {
+  const containerEl = document.getElementById(`${section}-panel-container`);
+  if (!containerEl) return;
+  const titles = { dishio: 'Dish.io Smart Links', videos: 'Video Assets' };
+  const pasteLabels = { dishio: 'Dish.io Links', videos: 'Video Assets' };
+  let html = renderSimpleSectionHeaderHtml(section, titles[section], pasteLabels[section], null);
+  html += '<div id="list-' + section + '">' + renderSimpleItemsHtml(section, data[section] || [], null) + '</div>';
+  containerEl.innerHTML = html;
+}
+
 /* ════════════════════════════════
    APPROVAL
 ════════════════════════════════ */
-function setApproval(section, index, state) {
-  if (!data[section] || data[section][index] == null) return;
-  const item = data[section][index];
+function resolveData(section, tabIdx) {
+  if (tabIdx != null && isMultiCampaign()) {
+    const cData = allCampaignTabs[tabIdx].data;
+    if (!cData[section]) cData[section] = [];
+    return cData[section];
+  }
+  return data[section];
+}
+
+function setApproval(section, index, state, tabIdx) {
+  const items = resolveData(section, tabIdx);
+  if (!items || items[index] == null) return;
+  const item = items[index];
   item.approved = state === 'approved';
   item.needsEdit = state === 'needs-edit';
 
+  const sk = sKey(section, tabIdx);
   let card, notesEl;
   if (section === 'meta') {
-    card = document.getElementById(`meta-card-${index}`);
-    notesEl = document.getElementById(`meta-notes-${index}`);
-    // Update status badge inside card
+    card = document.getElementById(`meta-card-${sk}-${index}`);
+    notesEl = document.getElementById(`meta-notes-${sk}-${index}`);
     const statusEl = card && card.querySelector('.meta-card-status');
     if (statusEl) {
       const label = item.approved ? 'Approved' : item.needsEdit ? 'Needs Edit' : 'Pending';
@@ -2007,81 +2084,146 @@ function setApproval(section, index, state) {
       statusEl.innerHTML = `<span class="status-dot"></span>${label}`;
     }
   } else if (section === 'dishio' || section === 'videos') {
-    card = document.getElementById(`simple-${section}-${index}`);
-    notesEl = document.getElementById(`${section}-notes-${index}`);
+    card = document.getElementById(`simple-${sk}-${index}`);
+    notesEl = document.getElementById(`${sk}-notes-${index}`);
   } else {
-    card = document.getElementById(`item-${section}-${index}`);
-    notesEl = document.getElementById(`notes-${section}-${index}`);
+    card = document.getElementById(`item-${sk}-${index}`);
+    notesEl = document.getElementById(`notes-${sk}-${index}`);
   }
 
   if (card) {
     card.classList.toggle('state-approved', item.approved);
     card.classList.toggle('state-needs-edit', item.needsEdit);
-    // Update button states
     const approveBtn = card.querySelector('.btn-approve');
     const needsBtn = card.querySelector('.btn-needs-edit');
+    const tParam = (tabIdx != null) ? tabIdx : 'null';
     if (approveBtn) {
       approveBtn.classList.toggle('active', item.approved);
-      approveBtn.setAttribute('onclick', `setApproval('${section}',${index},'${item.approved?'none':'approved'}')`);
+      approveBtn.setAttribute('onclick', `setApproval('${section}',${index},'${item.approved?'none':'approved'}',${tParam})`);
     }
     if (needsBtn) {
       needsBtn.classList.toggle('active', item.needsEdit);
-      needsBtn.setAttribute('onclick', `setApproval('${section}',${index},'${item.needsEdit?'none':'needs-edit'}')`);
+      needsBtn.setAttribute('onclick', `setApproval('${section}',${index},'${item.needsEdit?'none':'needs-edit'}',${tParam})`);
     }
   }
   if (notesEl) notesEl.classList.toggle('visible', item.needsEdit);
 
+  if (tabIdx != null) previewCampaignIdx = tabIdx;
   updateStats();
   saveToStorage();
 }
 
-function toggleApproval(section, index) {
-  const item = data[section] && data[section][index];
+function toggleApproval(section, index, tabIdx) {
+  const items = resolveData(section, tabIdx);
+  const item = items && items[index];
   if (!item) return;
-  setApproval(section, index, item.approved ? 'none' : 'approved');
+  setApproval(section, index, item.approved ? 'none' : 'approved', tabIdx);
 }
 
 /* ════════════════════════════════
    STATS & BADGES
 ════════════════════════════════ */
 function updateStats() {
-  const all = [
-    ...data.headlines, ...data.longHeadlines, ...data.descriptions,
-    ...data.meta, ...data.dishio, ...data.videos
-  ];
-  document.getElementById('progApproved').textContent = all.filter(i => i && i.approved).length;
-  document.getElementById('progTotal').textContent = all.length;
+  const sections = ['headlines', 'longHeadlines', 'descriptions', 'meta', 'dishio', 'videos'];
 
-  // Update per-section percentages
-  ['headlines', 'longHeadlines', 'descriptions', 'meta', 'dishio', 'videos'].forEach(section => {
-    const items = data[section] || [];
-    const pctEl = document.getElementById(`pct-${section}`);
-    const btnEl = document.getElementById(`approveAll-${section}`);
-    if (!pctEl) return;
-    if (items.length === 0) {
-      pctEl.textContent = '—';
-      pctEl.classList.remove('all-approved');
-      if (btnEl) btnEl.style.display = 'none';
-      return;
-    }
-    const approved = items.filter(i => i && i.approved).length;
-    const pct = Math.round((approved / items.length) * 100);
-    pctEl.textContent = `${approved}/${items.length} (${pct}%)`;
-    const allDone = approved === items.length;
-    pctEl.classList.toggle('all-approved', allDone);
-    if (btnEl) {
-      btnEl.style.display = '';
-      btnEl.classList.toggle('all-done', allDone);
-      btnEl.innerHTML = allDone
-        ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> All Approved'
-        : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Approve All';
-    }
-  });
+  if (isMultiCampaign()) {
+    let totalAll = 0, approvedAll = 0;
+
+    allCampaignTabs.forEach((tab, t) => {
+      const cData = tab.data || {};
+      let campTotal = 0, campApproved = 0;
+
+      sections.forEach(section => {
+        const items = cData[section] || [];
+        const sk = sKey(section, t);
+        const pctEl = document.getElementById(`pct-${sk}`);
+        const btnEl = document.getElementById(`approveAll-${sk}`);
+
+        if (pctEl) {
+          if (items.length === 0) {
+            pctEl.textContent = '\u2014';
+            pctEl.classList.remove('all-approved');
+            if (btnEl) btnEl.style.display = 'none';
+          } else {
+            const approved = items.filter(i => i && i.approved).length;
+            const pct = Math.round((approved / items.length) * 100);
+            pctEl.textContent = `${approved}/${items.length} (${pct}%)`;
+            const allDone = approved === items.length;
+            pctEl.classList.toggle('all-approved', allDone);
+            if (btnEl) {
+              btnEl.style.display = '';
+              btnEl.classList.toggle('all-done', allDone);
+              btnEl.innerHTML = allDone
+                ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> All Approved'
+                : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Approve All';
+            }
+            campApproved += approved;
+          }
+        }
+        campTotal += items.length;
+        totalAll += items.length;
+        approvedAll += items.filter(i => i && i.approved).length;
+      });
+
+      /* Update campaign group percentage */
+      ['google', 'meta', 'dishio', 'videos'].forEach(panel => {
+        const grpPctEl = document.getElementById(`campGrpPct-${panel}-${t}`);
+        if (grpPctEl) {
+          let grpItems = [];
+          if (panel === 'google') grpItems = [...(cData.headlines||[]), ...(cData.longHeadlines||[]), ...(cData.descriptions||[])];
+          else grpItems = cData[panel] || [];
+          if (grpItems.length > 0) {
+            const a = grpItems.filter(i => i && i.approved).length;
+            grpPctEl.textContent = `${a}/${grpItems.length} approved`;
+          } else {
+            grpPctEl.textContent = '';
+          }
+        }
+      });
+    });
+
+    document.getElementById('progApproved').textContent = approvedAll;
+    document.getElementById('progTotal').textContent = totalAll;
+
+  } else {
+    /* Single campaign mode */
+    const all = [
+      ...data.headlines, ...data.longHeadlines, ...data.descriptions,
+      ...data.meta, ...data.dishio, ...data.videos
+    ];
+    document.getElementById('progApproved').textContent = all.filter(i => i && i.approved).length;
+    document.getElementById('progTotal').textContent = all.length;
+
+    sections.forEach(section => {
+      const items = data[section] || [];
+      const pctEl = document.getElementById(`pct-${section}`);
+      const btnEl = document.getElementById(`approveAll-${section}`);
+      if (!pctEl) return;
+      if (items.length === 0) {
+        pctEl.textContent = '\u2014';
+        pctEl.classList.remove('all-approved');
+        if (btnEl) btnEl.style.display = 'none';
+        return;
+      }
+      const approved = items.filter(i => i && i.approved).length;
+      const pct = Math.round((approved / items.length) * 100);
+      pctEl.textContent = `${approved}/${items.length} (${pct}%)`;
+      const allDone = approved === items.length;
+      pctEl.classList.toggle('all-approved', allDone);
+      if (btnEl) {
+        btnEl.style.display = '';
+        btnEl.classList.toggle('all-done', allDone);
+        btnEl.innerHTML = allDone
+          ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> All Approved'
+          : '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Approve All';
+      }
+    });
+  }
 }
 
-function approveAllInSection(section) {
-  const items = data[section] || [];
-  if (items.length === 0) return;
+function approveAllInSection(section, tabIdx) {
+  const items = resolveData(section, tabIdx);
+  if (!items || items.length === 0) return;
   const allApproved = items.every(i => i.approved);
   items.forEach(item => {
     item.approved = !allApproved;
@@ -2094,28 +2236,46 @@ function approveAllInSection(section) {
 }
 
 function updateTabBadges() {
-  const counts = {
-    google: data.headlines.length + data.longHeadlines.length + data.descriptions.length,
-    meta: data.meta.length,
-    dishio: data.dishio.length,
-    videos: data.videos.length
-  };
-  Object.entries(counts).forEach(([tab, n]) => {
-    const el = document.getElementById(`badge-${tab}`);
-    if (el) el.textContent = n;
-  });
+  if (isMultiCampaign()) {
+    let google = 0, meta = 0, dishio = 0, videos = 0;
+    allCampaignTabs.forEach(tab => {
+      const d = tab.data || {};
+      google += (d.headlines||[]).length + (d.longHeadlines||[]).length + (d.descriptions||[]).length;
+      meta += (d.meta||[]).length;
+      dishio += (d.dishio||[]).length;
+      videos += (d.videos||[]).length;
+    });
+    const el = (id, n) => { const e = document.getElementById(id); if (e) e.textContent = n; };
+    el('badge-google', google);
+    el('badge-meta', meta);
+    el('badge-dishio', dishio);
+    el('badge-videos', videos);
+  } else {
+    const counts = {
+      google: data.headlines.length + data.longHeadlines.length + data.descriptions.length,
+      meta: data.meta.length,
+      dishio: data.dishio.length,
+      videos: data.videos.length
+    };
+    Object.entries(counts).forEach(([tab, n]) => {
+      const el = document.getElementById(`badge-${tab}`);
+      if (el) el.textContent = n;
+    });
+  }
 }
 
 /* ════════════════════════════════
    GOOGLE AD PREVIEWS
 ════════════════════════════════ */
 function renderGoogleAdPreviews() {
-  const h1 = (data.headlines[0] && data.headlines[0].text) || 'Your Headline Will Appear Here';
-  const h2 = (data.headlines[1] && data.headlines[1].text) ? ` | ${data.headlines[1].text}` : '';
-  const h3 = (data.headlines[2] && data.headlines[2].text) ? ` | ${data.headlines[2].text}` : '';
-  const lh = (data.longHeadlines[0] && data.longHeadlines[0].text) || 'Your Long Headline Here';
-  const d1 = (data.descriptions[0] && data.descriptions[0].text) || 'Your description will appear here once you add ad copy above. It shows exactly as customers will see it in Google Search.';
-  const d2 = (data.descriptions[1] && data.descriptions[1].text) ? ' ' + data.descriptions[1].text : '';
+  /* Use the first campaign or whichever campaign the user last interacted with */
+  const pData = isMultiCampaign() ? getCampaignData(previewCampaignIdx) : data;
+  const h1 = (pData.headlines && pData.headlines[0] && pData.headlines[0].text) || 'Your Headline Will Appear Here';
+  const h2 = (pData.headlines && pData.headlines[1] && pData.headlines[1].text) ? ` | ${pData.headlines[1].text}` : '';
+  const h3 = (pData.headlines && pData.headlines[2] && pData.headlines[2].text) ? ` | ${pData.headlines[2].text}` : '';
+  const lh = (pData.longHeadlines && pData.longHeadlines[0] && pData.longHeadlines[0].text) || 'Your Long Headline Here';
+  const d1 = (pData.descriptions && pData.descriptions[0] && pData.descriptions[0].text) || 'Your description will appear here once you add ad copy above. It shows exactly as customers will see it in Google Search.';
+  const d2 = (pData.descriptions && pData.descriptions[1] && pData.descriptions[1].text) ? ' ' + pData.descriptions[1].text : '';
 
   const gH = document.getElementById('gsm-headline');
   const gD = document.getElementById('gsm-description');
@@ -2130,11 +2290,20 @@ function renderGoogleAdPreviews() {
 /* ════════════════════════════════
    CONTENT EDITABLE HANDLERS
 ════════════════════════════════ */
+function getTabFromEl(el) {
+  const t = el.dataset.tab;
+  if (t == null || t === '' || t === 'null' || t === 'undefined') return null;
+  return parseInt(t);
+}
+
 function handleTextEdit(el) {
   const section = el.dataset.section;
   const idx = parseInt(el.dataset.index);
-  if (data[section] && data[section][idx] != null) {
-    data[section][idx].text = el.textContent.trim();
+  const tabIdx = getTabFromEl(el);
+  const items = resolveData(section, tabIdx);
+  if (items && items[idx] != null) {
+    items[idx].text = el.textContent.trim();
+    if (tabIdx != null) previewCampaignIdx = tabIdx;
     renderGoogleAdPreviews();
     saveToStorage();
   }
@@ -2143,22 +2312,29 @@ function handleTextEdit(el) {
 function handleNotesEdit(el) {
   const section = el.dataset.section;
   const idx = parseInt(el.dataset.index);
-  if (data[section] && data[section][idx] != null) {
-    data[section][idx].notes = el.value.trim();
+  const tabIdx = getTabFromEl(el);
+  const items = resolveData(section, tabIdx);
+  if (items && items[idx] != null) {
+    items[idx].notes = el.value.trim();
     saveToStorage();
   }
 }
 
 function handleMetaTextEdit(el) {
   const idx = parseInt(el.dataset.index);
-  if (data.meta[idx] != null) { data.meta[idx].text = el.textContent.trim(); saveToStorage(); }
+  const tabIdx = getTabFromEl(el);
+  const items = resolveData('meta', tabIdx);
+  if (items && items[idx] != null) { items[idx].text = el.textContent.trim(); saveToStorage(); }
 }
 
 function handleMetaUrlEdit(el) {
   const idx = parseInt(el.dataset.index);
-  if (data.meta[idx] != null) {
-    data.meta[idx].url = el.value.trim();
-    const link = document.getElementById(`meta-link-${idx}`);
+  const tabIdx = getTabFromEl(el);
+  const items = resolveData('meta', tabIdx);
+  if (items && items[idx] != null) {
+    items[idx].url = el.value.trim();
+    const sk = sKey('meta', tabIdx);
+    const link = document.getElementById(`meta-link-${sk}-${idx}`);
     if (link) link.href = el.value.trim() || '#';
     saveToStorage();
   }
@@ -2167,23 +2343,28 @@ function handleMetaUrlEdit(el) {
 function handleSimpleEdit(el) {
   const section = el.dataset.section;
   const idx = parseInt(el.dataset.index);
-  if (data[section] && data[section][idx] != null) { data[section][idx].name = el.textContent.trim(); saveToStorage(); }
+  const tabIdx = getTabFromEl(el);
+  const items = resolveData(section, tabIdx);
+  if (items && items[idx] != null) { items[idx].name = el.textContent.trim(); saveToStorage(); }
 }
 
 function handleSimpleUrlEdit(el) {
   const section = el.dataset.section;
   const idx = parseInt(el.dataset.index);
-  if (data[section] && data[section][idx] != null) {
-    data[section][idx].url = el.value.trim();
-    const link = document.getElementById(`${section}-link-${idx}`);
+  const tabIdx = getTabFromEl(el);
+  const items = resolveData(section, tabIdx);
+  if (items && items[idx] != null) {
+    items[idx].url = el.value.trim();
+    const sk = sKey(section, tabIdx);
+    const link = document.getElementById(`${sk}-link-${idx}`);
     if (link) link.href = el.value.trim() || '#';
     saveToStorage();
   }
 }
 
-function updateCharCount(el, maxChars, section, index) {
+function updateCharCount(el, maxChars, sk, index) {
   const len = el.textContent.length;
-  const pill = document.getElementById(`char-${section}-${index}`);
+  const pill = document.getElementById(`char-${sk}-${index}`);
   if (!pill) return;
   pill.textContent = `${len}/${maxChars}`;
   pill.classList.toggle('over', len > maxChars);
@@ -2196,12 +2377,14 @@ function updateCharCount(el, maxChars, section, index) {
 let currentPasteSection = null;
 let currentPasteLabel = '';
 let currentPasteMaxChars = 500;
+let currentPasteTabIdx = null;
 let parsedPasteItems = [];
 
-function openPasteModal(section, label, maxChars) {
+function openPasteModal(section, label, maxChars, tabIdx) {
   currentPasteSection = section;
   currentPasteLabel = label;
   currentPasteMaxChars = maxChars;
+  currentPasteTabIdx = (tabIdx != null && tabIdx !== 'null') ? tabIdx : null;
   parsedPasteItems = [];
   document.getElementById('pasteModalTitle').textContent = `Paste ${label} Copy`;
   document.getElementById('pasteTextarea').value = '';
@@ -2263,13 +2446,13 @@ function previewPaste() {
   btn.disabled = false;
 }
 
-function importPastedItems(section, items) {
-  if (!data[section]) data[section] = [];
+function importPastedItems(section, items, tabIdx) {
+  const targetItems = resolveData(section, tabIdx);
   items.forEach(item => {
     if (section === 'meta' || section === 'dishio' || section === 'videos') {
-      data[section].push({ name: item.text, url: '', approved: item.approved, needsEdit: false, notes: item.notes });
+      targetItems.push({ name: item.text, url: '', approved: item.approved, needsEdit: false, notes: item.notes });
     } else {
-      data[section].push({ text: item.text, approved: item.approved, needsEdit: false, notes: item.notes });
+      targetItems.push({ text: item.text, approved: item.approved, needsEdit: false, notes: item.notes });
     }
   });
   renderAll();
@@ -2278,7 +2461,7 @@ function importPastedItems(section, items) {
 
 function confirmImport() {
   if (!currentPasteSection || parsedPasteItems.length === 0) return;
-  importPastedItems(currentPasteSection, parsedPasteItems);
+  importPastedItems(currentPasteSection, parsedPasteItems, currentPasteTabIdx);
   showToast(`Imported ${parsedPasteItems.length} item${parsedPasteItems.length!==1?'s':''} successfully.`);
   closePasteModal();
 }
@@ -2307,10 +2490,16 @@ function showToast(message, isError = false) {
 async function submitApprovals() {
   if (!campaignId) { showToast('No campaign ID found.', true); return; }
   try {
+    const payload = { restaurantName: document.getElementById('clientName').textContent };
+    if (isMultiCampaign()) {
+      payload.campaigns = allCampaignTabs;
+    } else {
+      payload.data = data;
+    }
     const res = await fetch(`/api/campaigns/${campaignId}/send`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ restaurantName: document.getElementById('clientName').textContent, data })
+      body: JSON.stringify(payload)
     });
     if (!res.ok) throw new Error('Server error');
     showToast('Approvals submitted! Your account manager has been notified.');
