@@ -14,9 +14,9 @@
       --yellow: #FFD900;
       --yellow-light: #FFE644;
       --yellow-dim: rgba(255,217,0,0.10);
-      --navy: #0033A4;
-      --navy-light: #0064E1;
-      --navy-dim: rgba(0,51,164,0.08);
+      --blue: #0033A4;
+      --blue-light: #0064E1;
+      --blue-dim: rgba(0,51,164,0.08);
       --bg: #F5F5F7;
       --card: #FFFFFF;
       --card-border: #E5E7EB;
@@ -26,8 +26,6 @@
       --green: #009B00;
       --green-light: #00C700;
       --green-bg: rgba(0,155,0,0.08);
-      --amber: #D97706;
-      --amber-light: #FBBF24;
       --emerald: #009B00;
       --emerald-light: #00C700;
       --header-h: 72px;
@@ -365,7 +363,7 @@
       inset: 0;
       border-radius: 50%;
       border: 2px solid transparent;
-      background: conic-gradient(from 0deg, var(--yellow), var(--navy-light), var(--yellow-light), var(--yellow)) border-box;
+      background: conic-gradient(from 0deg, var(--yellow), var(--blue-light), var(--yellow-light), var(--yellow)) border-box;
       -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -445,7 +443,7 @@
       width: 210px; height: 210px;
       border-width: 2px;
       border-style: dotted;
-      border-color: var(--navy-light);
+      border-color: var(--blue-light);
       opacity: 0.4;
       animation: engineSpinCCW 14s linear infinite;
     }
@@ -484,7 +482,7 @@
       font-size: 32px;
       font-weight: 700;
       letter-spacing: -0.03em;
-      background: linear-gradient(135deg, var(--yellow), var(--navy-light));
+      background: linear-gradient(135deg, var(--yellow), var(--blue-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -570,7 +568,7 @@
       position: absolute;
       top: 0; left: 0; bottom: 0;
       width: 0;
-      background: linear-gradient(90deg, var(--navy), var(--navy-light), var(--yellow), var(--yellow-light), var(--emerald));
+      background: linear-gradient(90deg, var(--blue), var(--blue-light), var(--yellow), var(--yellow-light), var(--emerald));
       border-radius: 3px;
       transition: width 1.5s var(--ease-out-expo);
     }
@@ -651,9 +649,9 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-    .timeline-card:nth-child(2) .timeline-card-icon { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+    .timeline-card:nth-child(2) .timeline-card-icon { background: linear-gradient(135deg, var(--blue), var(--blue-light)); }
     .timeline-card:nth-child(3) .timeline-card-icon { background: linear-gradient(135deg, #E6C300, #FFD900); }
-    .timeline-card:nth-child(4) .timeline-card-icon { background: linear-gradient(135deg, #0033A4, #0064E1); }
+    .timeline-card:nth-child(4) .timeline-card-icon { background: linear-gradient(135deg, var(--green), var(--green-light)); }
     .timeline-card:nth-child(5) .timeline-card-icon { background: linear-gradient(135deg, var(--emerald), var(--emerald-light)); }
 
     .timeline-card-title {
@@ -767,9 +765,9 @@
       opacity: 0.06;
       letter-spacing: -0.05em;
     }
-    .week-watermark.navy { background: linear-gradient(180deg, var(--navy), var(--navy-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.blue { background: linear-gradient(180deg, var(--blue), var(--blue-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .week-watermark.yellow { background: linear-gradient(180deg, var(--yellow), var(--yellow-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .week-watermark.navy-accent { background: linear-gradient(180deg, var(--navy), var(--navy-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.green { background: linear-gradient(180deg, var(--green), var(--green-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .week-watermark.emerald { background: linear-gradient(180deg, var(--emerald), var(--emerald-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
     /* Accent stripe left edge */
@@ -782,9 +780,9 @@
       width: 4px;
       border-radius: 4px;
     }
-    #stage-week1 .week-stage-inner::before { background: linear-gradient(180deg, var(--navy), var(--navy-light)); }
+    #stage-week1 .week-stage-inner::before { background: linear-gradient(180deg, var(--blue), var(--blue-light)); }
     #stage-week2 .week-stage-inner::before { background: linear-gradient(180deg, var(--yellow), var(--yellow-light)); }
-    #stage-week3 .week-stage-inner::before { background: linear-gradient(180deg, var(--navy), var(--navy-light)); }
+    #stage-week3 .week-stage-inner::before { background: linear-gradient(180deg, var(--green), var(--green-light)); }
     #stage-week4 .week-stage-inner::before { background: linear-gradient(180deg, var(--emerald), var(--emerald-light)); }
 
     /* Step indicator */
@@ -816,9 +814,9 @@
       transition: width 1s var(--ease-out-expo) 0.5s;
     }
     .stage.active .week-step-fill { width: var(--progress); }
-    #stage-week1 .week-step-fill { --progress: 25%; background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
+    #stage-week1 .week-step-fill { --progress: 25%; background: linear-gradient(90deg, var(--blue), var(--blue-light)); }
     #stage-week2 .week-step-fill { --progress: 50%; background: linear-gradient(90deg, var(--yellow), var(--yellow-light)); }
-    #stage-week3 .week-step-fill { --progress: 75%; background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
+    #stage-week3 .week-step-fill { --progress: 75%; background: linear-gradient(90deg, var(--green), var(--green-light)); }
     #stage-week4 .week-step-fill { --progress: 100%; background: linear-gradient(90deg, var(--emerald), var(--emerald-light)); }
 
     .week-header { margin-bottom: 36px; }
@@ -829,9 +827,9 @@
       letter-spacing: 0.12em;
       margin-bottom: 8px;
     }
-    .week-label.navy { color: var(--navy); }
+    .week-label.blue { color: var(--blue); }
     .week-label.yellow { color: var(--yellow); }
-    .week-label.navy-accent { color: var(--navy); }
+    .week-label.green { color: var(--green); }
     .week-label.emerald { color: var(--emerald); }
 
     .week-title {
@@ -875,12 +873,12 @@
       fill: none;
     }
     /* Color per week accent */
-    #stage-week1 .week-section-chip { background: var(--navy-dim); color: var(--navy); }
-    #stage-week1 .week-section-chip svg { stroke: var(--navy); }
+    #stage-week1 .week-section-chip { background: var(--blue-dim); color: var(--blue); }
+    #stage-week1 .week-section-chip svg { stroke: var(--blue); }
     #stage-week2 .week-section-chip { background: var(--yellow-dim); color: #B8A000; }
     #stage-week2 .week-section-chip svg { stroke: #B8A000; }
-    #stage-week3 .week-section-chip { background: var(--navy-dim); color: var(--navy); }
-    #stage-week3 .week-section-chip svg { stroke: var(--navy); }
+    #stage-week3 .week-section-chip { background: var(--green-bg); color: var(--green); }
+    #stage-week3 .week-section-chip svg { stroke: var(--green); }
     #stage-week4 .week-section-chip { background: rgba(5,150,105,0.08); color: var(--emerald); }
     #stage-week4 .week-section-chip svg { stroke: var(--emerald); }
 
@@ -908,9 +906,9 @@
       stroke-linejoin: round;
       fill: none;
     }
-    #stage-week1 .week-section li svg { stroke: var(--navy); }
+    #stage-week1 .week-section li svg { stroke: var(--blue); }
     #stage-week2 .week-section li svg { stroke: var(--yellow); }
-    #stage-week3 .week-section li svg { stroke: var(--navy); }
+    #stage-week3 .week-section li svg { stroke: var(--green); }
     #stage-week4 .week-section li svg { stroke: var(--emerald); }
 
     .week-section p {
@@ -935,9 +933,9 @@
       -webkit-backdrop-filter: blur(16px);
       box-shadow: 0 4px 24px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5);
     }
-    .week-callout.navy-border { border-left-color: var(--navy); }
+    .week-callout.blue-border { border-left-color: var(--blue); }
     .week-callout.yellow-border { border-left-color: var(--yellow); }
-    .week-callout.navy-border-accent { border-left-color: var(--navy); }
+    .week-callout.green-border { border-left-color: var(--green); }
     .week-callout.emerald-border { border-left-color: var(--emerald); }
 
     /* Week stage aurora */
@@ -953,7 +951,7 @@
     }
     #stage-week3::before {
       background:
-        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(0,51,164,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(0,155,0,0.06) 0%, transparent 60%),
         radial-gradient(ellipse 50% 50% at 70% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
     }
     #stage-week4::before {
@@ -1027,7 +1025,7 @@
       justify-content: center;
       position: relative;
     }
-    .info-stage-icon.navy { background: linear-gradient(135deg, var(--navy), var(--navy-light)); box-shadow: 0 8px 32px rgba(0,51,164,0.2); }
+    .info-stage-icon.blue { background: linear-gradient(135deg, var(--blue), var(--blue-light)); box-shadow: 0 8px 32px rgba(0,51,164,0.2); }
     .info-stage-icon.yellow { background: linear-gradient(135deg, var(--yellow), var(--yellow-light)); box-shadow: 0 8px 32px rgba(255,217,0,0.2); }
     .info-stage-icon svg { width: 32px; height: 32px; stroke: white; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
@@ -1098,7 +1096,7 @@
       border-radius: 100px;
       margin-bottom: 20px;
     }
-    .info-label.navy { background: rgba(0,100,225,0.15); color: var(--navy-light); }
+    .info-label.blue { background: rgba(0,100,225,0.15); color: var(--blue-light); }
     .info-label.yellow { background: rgba(255,217,0,0.12); color: #B8A000; }
 
     /* Pill CTA buttons */
@@ -1591,7 +1589,7 @@
         <!-- Calls -->
         <div class="timeline-details-row">
           <div class="timeline-details-label">
-            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <svg viewBox="0 0 24 24" stroke="var(--blue)"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Calls You Attend
           </div>
           <div class="timeline-details-cell">Call #1: Overview & QR Code Planning</div>
@@ -1602,7 +1600,7 @@
         <!-- Account Manager -->
         <div class="timeline-details-row">
           <div class="timeline-details-label">
-            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <svg viewBox="0 0 24 24" stroke="var(--blue)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Account Manager
           </div>
           <div class="timeline-details-cell">Strategy alignment, goal setting, QR planning</div>
@@ -1613,7 +1611,7 @@
         <!-- Integrations -->
         <div class="timeline-details-row">
           <div class="timeline-details-label">
-            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m2 12 5 3 5-6 4 4 6-5"/></svg>
+            <svg viewBox="0 0 24 24" stroke="var(--blue)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m2 12 5 3 5-6 4 4 6-5"/></svg>
             Integrations Specialist
           </div>
           <div class="timeline-details-cell">--</div>
@@ -1624,7 +1622,7 @@
         <!-- Billing -->
         <div class="timeline-details-row">
           <div class="timeline-details-label">
-            <svg viewBox="0 0 24 24" stroke="var(--navy)"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <svg viewBox="0 0 24 24" stroke="var(--blue)"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             Billing
           </div>
           <div class="timeline-details-cell">ACH + backup card setup</div>
@@ -1635,7 +1633,7 @@
         <!-- QR Codes -->
         <div class="timeline-details-row">
           <div class="timeline-details-label">
-            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            <svg viewBox="0 0 24 24" stroke="var(--blue)"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
             QR Code Shipment
           </div>
           <div class="timeline-details-cell">QR codes designed & ordered</div>
@@ -1987,7 +1985,7 @@
   <!-- ═══════════════ STAGE 3: WEEK 1 — Strategy & Setup ═══════════════ -->
   <section class="stage" id="stage-week1" aria-label="Week 1: Strategy and Setup">
     <div class="week-stage-inner">
-      <div class="week-watermark navy">01</div>
+      <div class="week-watermark blue">01</div>
 
       <div class="week-step-indicator">
         <span class="week-step-text">Week 1 of 4</span>
@@ -1995,7 +1993,7 @@
       </div>
 
       <div class="week-header">
-        <div class="week-label navy">Week 1</div>
+        <div class="week-label blue">Week 1</div>
         <h2 class="week-title">Strategy & Setup</h2>
         <p class="week-focus">Alignment and foundations. This is where we set expectations and design the system that will capture guest data inside your restaurant.</p>
       </div>
@@ -2033,7 +2031,7 @@
         </ul>
       </div>
 
-      <div class="week-callout navy-border">This step matters because everything else builds on the Dishio system.</div>
+      <div class="week-callout blue-border">This step matters because everything else builds on the Dishio system.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(4)">
       <span>Continue</span>
@@ -2101,7 +2099,7 @@
   <!-- ═══════════════ STAGE 5: WEEK 3 — Activation & Ad Strategy ═══════════════ -->
   <section class="stage" id="stage-week3" aria-label="Week 3: Activation and Ad Strategy">
     <div class="week-stage-inner">
-      <div class="week-watermark navy-accent">03</div>
+      <div class="week-watermark green">03</div>
 
       <div class="week-step-indicator">
         <span class="week-step-text">Week 3 of 4</span>
@@ -2109,7 +2107,7 @@
       </div>
 
       <div class="week-header">
-        <div class="week-label navy-accent">Week 3</div>
+        <div class="week-label green">Week 3</div>
         <h2 class="week-title">Activation & Ad Strategy</h2>
         <p class="week-focus">Turning the system on and adding fuel. Your QR codes go live in-store and we finalize your ad campaigns.</p>
       </div>
@@ -2149,7 +2147,7 @@
         </ul>
       </div>
 
-      <div class="week-callout navy-border-accent">At this point, the system is live in-store -- ads are what scale it.</div>
+      <div class="week-callout green-border">At this point, the system is live in-store -- ads are what scale it.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(6)">
       <span>Continue</span>
@@ -2220,13 +2218,13 @@
   <!-- ═══════════════ STAGE 7: CONTRACT ═══════════════ -->
   <section class="stage" id="stage-contract" aria-label="Contract Review">
     <div class="info-stage-content">
-      <div class="info-stage-icon navy">
+      <div class="info-stage-icon blue">
         <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <h2 class="info-stage-title">Your Agreement</h2>
       <div class="info-stage-brand">Dish.io + Dineline</div>
       <div class="info-card">
-        <div class="info-label navy">Agreement</div>
+        <div class="info-label blue">Agreement</div>
         <p>Please review your service agreement below. This contract outlines the scope of services, pricing structure, and terms of your partnership with Dish.io and Dineline.</p>
         <p>Your Account Manager is available to walk you through any questions or clarifications you may need before signing.</p>
       </div>
