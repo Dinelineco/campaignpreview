@@ -1530,8 +1530,8 @@
         <div class="engine-ring engine-ring-inner"></div>
         <div class="engine-core">
           <div class="engine-label">Revenue<br>Growth Engine</div>
-          <div class="engine-counter" id="engineCounter">$0</div>
-          <div class="engine-counter-label">Projected Growth</div>
+          <div class="engine-counter" id="engineCounter">0%</div>
+          <div class="engine-counter-label">Estimated Growth in 90 Days</div>
         </div>
       </div>
       <div class="welcome-am glass-dark">Managed by <strong id="welcomeAM">Your Account Manager</strong></div>
@@ -2532,15 +2532,11 @@ document.addEventListener('keydown', (e) => {
 (function initEngineCounter() {
   const el = document.getElementById('engineCounter');
   if (!el) return;
-  let value = 0;
-  const target = 125000;
-  const duration = 4000;
+  const targetLow = 10;
+  const targetHigh = 20;
+  const duration = 3000;
   let startTime = null;
   let started = false;
-
-  function fmt(n) {
-    return '$' + Math.floor(n).toLocaleString('en-US');
-  }
 
   function tick(ts) {
     if (!startTime) startTime = ts;
@@ -2548,8 +2544,9 @@ document.addEventListener('keydown', (e) => {
     const progress = Math.min(elapsed / duration, 1);
     // ease-out cubic
     const eased = 1 - Math.pow(1 - progress, 3);
-    value = eased * target;
-    el.textContent = fmt(value);
+    const low = Math.floor(eased * targetLow);
+    const high = Math.floor(eased * targetHigh);
+    el.textContent = low === high ? high + '%' : low + '–' + high + '%';
     if (progress < 1) {
       requestAnimationFrame(tick);
     }
