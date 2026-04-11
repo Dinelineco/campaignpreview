@@ -571,6 +571,8 @@ app.get('/api/screenshot', async (req, res) => {
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
 app.get('/preview/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'preview.html')));
+app.get('/onboarding', (req, res) => res.sendFile(path.join(__dirname, 'public', 'onboarding.html')));
+app.get('/onboarding/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'onboarding.html')));
 
 // ── Remote MCP Server (Streamable HTTP) ─────────────────────────────────────
 // Lets media buyers connect Claude Desktop with just a URL — no local files.

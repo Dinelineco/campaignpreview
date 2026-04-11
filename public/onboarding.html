@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Onboarding — Dish.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #FFD900;
+      --yellow-light: #FFE644;
+      --yellow-dim: rgba(255,217,0,0.10);
+      --navy: #0033A4;
+      --navy-light: #0064E1;
+      --navy-dim: rgba(0,51,164,0.08);
+      --bg: #F5F5F7;
+      --card: #FFFFFF;
+      --card-border: #E5E7EB;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --text-dim: #9CA3AF;
+      --green: #009B00;
+      --green-light: #00ED7E;
+      --green-bg: rgba(0,155,0,0.08);
+      --header-h: 72px;
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes aurora {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulseDown {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(10px); opacity: 1; }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,217,0,0.15), 0 0 60px rgba(255,217,0,0.05); }
+      50% { box-shadow: 0 0 30px rgba(255,217,0,0.3), 0 0 80px rgba(255,217,0,0.1); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,217,0,0.4); }
+      50% { transform: scale(1.3); box-shadow: 0 0 0 6px rgba(255,217,0,0); }
+    }
+    @keyframes drawLine {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes logoSpin {
+      from { transform: rotate(0deg) scale(0.5); opacity: 0; }
+      to { transform: rotate(360deg) scale(1); opacity: 1; }
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    @keyframes borderGlow {
+      0%, 100% { border-color: rgba(255,217,0,0.2); }
+      50% { border-color: rgba(255,217,0,0.5); }
+    }
+    @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @keyframes dotFloat {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.15; }
+      50% { transform: translateY(-20px) scale(1.3); opacity: 0.35; }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 0; height: 0; }
+
+    /* ── PARTICLE CANVAS ── */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── HEADER ── */
+    #siteHeader {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(10,10,10,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 24px;
+    }
+    #siteHeader::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--yellow), rgba(0,100,225,0.6), var(--yellow), rgba(0,155,0,0.5), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 4s linear infinite;
+    }
+
+    .header-logo { flex-shrink: 0; display: flex; align-items: center; }
+    .header-logo svg {
+      height: 26px; width: auto; fill: var(--yellow);
+      filter: drop-shadow(0 0 8px rgba(255,217,0,0.4));
+      transition: filter 0.3s;
+    }
+    .header-logo svg:hover { filter: drop-shadow(0 0 16px rgba(255,217,0,0.6)); }
+
+    .header-center { flex: 1; text-align: center; min-width: 0; }
+    #clientName {
+      font-size: 16px; font-weight: 700; color: #FFFFFF;
+      display: inline-block;
+    }
+    #accountManagerName {
+      font-size: 12px; color: rgba(255,255,255,0.6);
+      display: block; margin-top: 2px;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .header-stage-label {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .header-stage-label span { color: var(--yellow); }
+
+    /* ── STAGE CONTAINER ── */
+    .stage-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+    .stage-container::-webkit-scrollbar { display: none; }
+
+    .stage {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: calc(var(--header-h) + 24px) 48px 48px;
+    }
+
+    /* Aurora wash per stage */
+    .stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-size: 200% 200%;
+      animation: aurora 20s ease-in-out infinite;
+    }
+    .stage > * { position: relative; z-index: 1; }
+
+    #stage-welcome::before {
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,217,0,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,155,0,0.04) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,51,164,0.04) 0%, transparent 50%);
+    }
+    #stage-timeline::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 50%, rgba(0,51,164,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
+    }
+    #stage-week1::before {
+      background:
+        radial-gradient(ellipse 60% 60% at 20% 40%, rgba(0,51,164,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 70%, rgba(255,217,0,0.04) 0%, transparent 50%);
+    }
+    #stage-week2::before {
+      background:
+        radial-gradient(ellipse 60% 60% at 80% 40%, rgba(0,155,0,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 20% 70%, rgba(0,51,164,0.04) 0%, transparent 50%);
+    }
+    #stage-week3::before {
+      background:
+        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(255,217,0,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 70% 30%, rgba(0,155,0,0.04) 0%, transparent 50%);
+    }
+    #stage-week4::before {
+      background:
+        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(0,155,0,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 30% 70%, rgba(255,217,0,0.05) 0%, transparent 50%);
+    }
+    #stage-contract::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 40%, rgba(0,51,164,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 50% 80%, rgba(255,217,0,0.04) 0%, transparent 50%);
+    }
+    #stage-billing::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 40%, rgba(0,155,0,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 30% 80%, rgba(0,51,164,0.04) 0%, transparent 50%);
+    }
+
+    /* ── NAV DOTS ── */
+    .stage-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+    .stage-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.15);
+      border: 2px solid rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .stage-dot:hover { background: rgba(0,0,0,0.3); transform: scale(1.3); }
+    .stage-dot.active {
+      background: var(--yellow);
+      border-color: var(--yellow);
+      animation: dotPulse 2s ease-in-out infinite;
+    }
+    .stage-dot-label {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      background: white;
+      padding: 3px 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .stage-dot:hover .stage-dot-label { opacity: 1; }
+
+    /* ── SCROLL DOWN INDICATOR ── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: pulseDown 2s ease-in-out infinite;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .scroll-indicator span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .scroll-indicator svg {
+      width: 20px; height: 20px;
+      stroke: var(--text-dim);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* ═══════════════════════════════════════
+       STAGE 1: WELCOME
+    ═══════════════════════════════════════ */
+    .welcome-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+      max-width: 700px;
+    }
+    .welcome-logo {
+      width: 120px; height: auto;
+      fill: var(--navy);
+      filter: drop-shadow(0 0 20px rgba(0,51,164,0.2));
+    }
+    .welcome-logo.animate { animation: logoSpin 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+    .welcome-restaurant {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .welcome-subtitle {
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: -0.01em;
+    }
+    .welcome-tagline {
+      font-size: 16px;
+      color: var(--text-dim);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .welcome-tagline::before,
+    .welcome-tagline::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
+    }
+    .welcome-am {
+      font-size: 14px;
+      color: var(--text-muted);
+      background: white;
+      padding: 8px 20px;
+      border-radius: 100px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .welcome-am strong { color: var(--navy); }
+
+    /* Animate children */
+    .welcome-content > * {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .stage.active .welcome-content > * {
+      animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .stage.active .welcome-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .welcome-content > *:nth-child(2) { animation-delay: 0.3s; }
+    .stage.active .welcome-content > *:nth-child(3) { animation-delay: 0.5s; }
+    .stage.active .welcome-content > *:nth-child(4) { animation-delay: 0.7s; }
+    .stage.active .welcome-content > *:nth-child(5) { animation-delay: 0.9s; }
+
+    /* ═══════════════════════════════════════
+       STAGE 2: TIMELINE
+    ═══════════════════════════════════════ */
+    .timeline-content {
+      width: 100%;
+      max-width: 1200px;
+    }
+    .timeline-title {
+      text-align: center;
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+    .timeline-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+      margin-bottom: 48px;
+    }
+
+    /* Connecting progress line */
+    .timeline-line {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 3px;
+      background: var(--card-border);
+      border-radius: 3px;
+      z-index: 0;
+      transform: translateY(-50%);
+    }
+    .timeline-line-fill {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 0;
+      background: linear-gradient(90deg, var(--navy), var(--green-light), var(--yellow));
+      border-radius: 3px;
+      transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .stage.active .timeline-line-fill { width: 100%; }
+
+    .timeline-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+      will-change: transform;
+    }
+    .timeline-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      border-color: var(--yellow);
+    }
+    .timeline-card-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .timeline-card:nth-child(1) .timeline-card-num { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+    .timeline-card:nth-child(2) .timeline-card-num { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+    .timeline-card:nth-child(3) .timeline-card-num { background: linear-gradient(135deg, #D97706, #FBBF24); }
+    .timeline-card:nth-child(4) .timeline-card-num { background: linear-gradient(135deg, var(--green), #34D399); }
+    .timeline-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .timeline-card-week {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Stagger animation */
+    .timeline-card {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .stage.active .timeline-card {
+      animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .stage.active .timeline-card:nth-child(1) { animation-delay: 0.2s; }
+    .stage.active .timeline-card:nth-child(2) { animation-delay: 0.4s; }
+    .stage.active .timeline-card:nth-child(3) { animation-delay: 0.6s; }
+    .stage.active .timeline-card:nth-child(4) { animation-delay: 0.8s; }
+
+    /* Timeline detail rows */
+    .timeline-details {
+      display: grid;
+      grid-template-columns: 180px repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+    }
+    .timeline-details-row {
+      display: contents;
+    }
+    .timeline-details-label {
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      background: rgba(0,0,0,0.02);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+    }
+    .timeline-details-cell {
+      padding: 14px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-bottom: 1px solid var(--card-border);
+      border-left: 1px solid var(--card-border);
+    }
+    .timeline-details-row:last-child .timeline-details-label,
+    .timeline-details-row:last-child .timeline-details-cell {
+      border-bottom: none;
+    }
+
+    .timeline-details {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .stage.active .timeline-details {
+      animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 1s forwards;
+    }
+
+    /* ═══════════════════════════════════════
+       WEEK STAGES (3-6)
+    ═══════════════════════════════════════ */
+    .week-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+    }
+    .week-layout.mirrored { direction: rtl; }
+    .week-layout.mirrored > * { direction: ltr; }
+
+    .week-hero {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .week-number {
+      font-size: clamp(80px, 12vw, 160px);
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.06;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .week-layout:not(.mirrored) .week-number { left: -20px; }
+    .week-layout.mirrored .week-number { right: -20px; }
+
+    .week-label {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .week-label.navy { color: var(--navy); }
+    .week-label.green { color: var(--green); }
+    .week-label.amber { color: #D97706; }
+
+    .week-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--text);
+    }
+    .week-focus {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 500px;
+    }
+    .week-accent-bar {
+      width: 60px;
+      height: 4px;
+      border-radius: 2px;
+    }
+    .week-accent-bar.navy { background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
+    .week-accent-bar.green { background: linear-gradient(90deg, var(--green), var(--green-light)); }
+    .week-accent-bar.amber { background: linear-gradient(90deg, #D97706, #FBBF24); }
+
+    .week-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      will-change: transform;
+    }
+    .week-card:hover {
+      box-shadow: 0 12px 48px rgba(0,0,0,0.08);
+    }
+
+    .week-section {
+      margin-bottom: 24px;
+    }
+    .week-section:last-child { margin-bottom: 0; }
+    .week-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .week-section-title .icon {
+      width: 18px; height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .week-section ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .week-section li {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+      padding-left: 20px;
+      position: relative;
+    }
+    .week-section li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--yellow);
+    }
+    .week-section p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .week-callout {
+      margin-top: 24px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 3px solid var(--yellow);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .week-callout.navy-bg {
+      background: linear-gradient(135deg, rgba(0,51,164,0.05), rgba(0,100,225,0.03));
+      border-left-color: var(--navy);
+    }
+    .week-callout.green-bg {
+      background: linear-gradient(135deg, rgba(0,155,0,0.05), rgba(0,237,126,0.03));
+      border-left-color: var(--green);
+    }
+    .week-callout.amber-bg {
+      background: linear-gradient(135deg, rgba(217,119,6,0.05), rgba(251,191,36,0.03));
+      border-left-color: #D97706;
+    }
+    .week-callout.celebration {
+      background: linear-gradient(135deg, rgba(0,155,0,0.08), rgba(0,237,126,0.04));
+      border-left-color: var(--green);
+    }
+
+    /* Week stage animation */
+    .week-hero, .week-card {
+      opacity: 0;
+    }
+    .stage.active .week-hero {
+      animation: fadeInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
+    }
+    .stage.active .week-layout.mirrored .week-hero {
+      animation: fadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
+    }
+    .stage.active .week-card {
+      animation: fadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
+    }
+    .stage.active .week-layout.mirrored .week-card {
+      animation: fadeInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
+    }
+
+    /* ═══════════════════════════════════════
+       STAGE 7 & 8: CONTRACT & BILLING
+    ═══════════════════════════════════════ */
+    .info-stage-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 32px;
+      max-width: 640px;
+    }
+    .info-stage-icon {
+      width: 64px; height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .info-stage-icon.navy { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+    .info-stage-icon.green { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+    .info-stage-icon svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .info-stage-title {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--text);
+    }
+    .info-stage-brand {
+      font-size: 14px;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px;
+      text-align: left;
+      width: 100%;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.04);
+    }
+    .info-card p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .info-card p:last-child { margin-bottom: 0; }
+    .info-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .info-card li {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.5;
+      padding-left: 20px;
+      position: relative;
+    }
+    .info-card li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--yellow);
+    }
+    .info-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+    }
+    .info-label.navy { background: var(--navy-dim); color: var(--navy); }
+    .info-label.green { background: var(--green-bg); color: var(--green); }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 20px rgba(255,217,0,0.2);
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+    .btn-cta:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 30px rgba(255,217,0,0.4); }
+    .btn-cta svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    .info-note {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    /* Info stage animation */
+    .info-stage-content > * {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .stage.active .info-stage-content > * {
+      animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .stage.active .info-stage-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .info-stage-content > *:nth-child(2) { animation-delay: 0.2s; }
+    .stage.active .info-stage-content > *:nth-child(3) { animation-delay: 0.3s; }
+    .stage.active .info-stage-content > *:nth-child(4) { animation-delay: 0.4s; }
+    .stage.active .info-stage-content > *:nth-child(5) { animation-delay: 0.5s; }
+    .stage.active .info-stage-content > *:nth-child(6) { animation-delay: 0.6s; }
+
+    /* ═══════════════════════════════════════
+       CONFETTI (Stage 6 celebration)
+    ═══════════════════════════════════════ */
+    .confetti-container {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      top: -20px;
+      opacity: 0;
+    }
+    .stage.active .confetti-piece {
+      animation: confettiFall var(--duration) linear var(--delay) forwards;
+    }
+
+    /* ═══════════════════════════════════════
+       MOBILE RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .stage { padding: calc(var(--header-h) + 16px) 24px 24px; }
+
+      .timeline-cards { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .timeline-line { display: none; }
+      .timeline-details { grid-template-columns: 1fr; }
+      .timeline-details-row { display: grid; grid-template-columns: 1fr 1fr; }
+      .timeline-details-label { grid-column: 1 / -1; }
+
+      .week-layout,
+      .week-layout.mirrored {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        direction: ltr;
+      }
+      .week-layout.mirrored > * { direction: ltr; }
+      .week-number { display: none; }
+      .week-card { padding: 24px; }
+
+      .stage-nav { right: 10px; gap: 8px; }
+      .stage-dot { width: 8px; height: 8px; }
+      .stage-dot-label { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      :root { --header-h: 60px; }
+      #siteHeader { padding: 0 16px; gap: 12px; }
+      .header-logo svg { height: 20px; }
+      #clientName { font-size: 14px; }
+      .header-right { display: none; }
+
+      .stage { padding: calc(var(--header-h) + 12px) 16px 16px; }
+      .timeline-cards { grid-template-columns: 1fr 1fr; }
+      .timeline-details { display: none; }
+      .timeline-title { font-size: 24px; margin-bottom: 24px; }
+
+      .welcome-content { gap: 16px; }
+      .welcome-logo { width: 80px; }
+
+      .week-card { padding: 20px; }
+      .info-card { padding: 24px; }
+
+      .stage-nav { right: 6px; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     PERSISTENT PARTICLE CANVAS
+════════════════════════════════════════════════ -->
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<!-- ═══════════════════════════════════════════════
+     STICKY HEADER
+════════════════════════════════════════════════ -->
+<header id="siteHeader">
+  <div class="header-logo">
+    <svg viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io">
+      <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+    </svg>
+  </div>
+  <div class="header-center">
+    <div id="clientName">Your Restaurant</div>
+    <div id="accountManagerName">Your Account Manager</div>
+  </div>
+  <div class="header-right">
+    <div class="header-stage-label">Stage <span id="headerStageNum">1</span> / 8</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     STAGE NAV DOTS
+════════════════════════════════════════════════ -->
+<nav class="stage-nav" aria-label="Stage navigation">
+  <div class="stage-dot active" data-stage="0"><span class="stage-dot-label">Welcome</span></div>
+  <div class="stage-dot" data-stage="1"><span class="stage-dot-label">Timeline</span></div>
+  <div class="stage-dot" data-stage="2"><span class="stage-dot-label">Week 1</span></div>
+  <div class="stage-dot" data-stage="3"><span class="stage-dot-label">Week 2</span></div>
+  <div class="stage-dot" data-stage="4"><span class="stage-dot-label">Week 3</span></div>
+  <div class="stage-dot" data-stage="5"><span class="stage-dot-label">Week 4</span></div>
+  <div class="stage-dot" data-stage="6"><span class="stage-dot-label">Contract</span></div>
+  <div class="stage-dot" data-stage="7"><span class="stage-dot-label">Billing</span></div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     STAGE CONTAINER
+════════════════════════════════════════════════ -->
+<div class="stage-container" id="stageContainer">
+
+  <!-- ═══════════════ STAGE 1: WELCOME ═══════════════ -->
+  <section class="stage active" id="stage-welcome" aria-label="Welcome">
+    <div class="welcome-content">
+      <svg class="welcome-logo animate" viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io logo">
+        <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+      </svg>
+      <div class="welcome-restaurant" id="welcomeRestaurant">Your Restaurant</div>
+      <div class="welcome-subtitle">Strategy + Setup 2026</div>
+      <div class="welcome-tagline">Your AI Growth Engine</div>
+      <div class="welcome-am">Managed by <strong id="welcomeAM">Your Account Manager</strong></div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(1)">
+      <span>Scroll to begin</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 2: TIMELINE ═══════════════ -->
+  <section class="stage" id="stage-timeline" aria-label="Timeline Overview">
+    <div class="timeline-content">
+      <h2 class="timeline-title">Client Onboarding Timeline</h2>
+
+      <div class="timeline-cards">
+        <div class="timeline-line"><div class="timeline-line-fill"></div></div>
+        <div class="timeline-card" onclick="scrollToStage(2)">
+          <div class="timeline-card-num">1</div>
+          <div class="timeline-card-title">Strategy & Setup</div>
+          <div class="timeline-card-week">Week 1</div>
+        </div>
+        <div class="timeline-card" onclick="scrollToStage(3)">
+          <div class="timeline-card-num">2</div>
+          <div class="timeline-card-title">Technical Integrations</div>
+          <div class="timeline-card-week">Week 2</div>
+        </div>
+        <div class="timeline-card" onclick="scrollToStage(4)">
+          <div class="timeline-card-num">3</div>
+          <div class="timeline-card-title">Activation & Ad Strategy</div>
+          <div class="timeline-card-week">Week 3</div>
+        </div>
+        <div class="timeline-card" onclick="scrollToStage(5)">
+          <div class="timeline-card-num">4</div>
+          <div class="timeline-card-title">Final Review & Go-Live</div>
+          <div class="timeline-card-week">Week 4</div>
+        </div>
+      </div>
+
+      <div class="timeline-details">
+        <div class="timeline-details-row">
+          <div class="timeline-details-label">Calls You Attend</div>
+          <div class="timeline-details-cell">Call #1: Overview & QR Code Planning</div>
+          <div class="timeline-details-cell">Call #2: Technical Setup & Integrations</div>
+          <div class="timeline-details-cell">Call #3: QR Implementation + Ad Strategy</div>
+          <div class="timeline-details-cell">No call unless changes needed</div>
+        </div>
+        <div class="timeline-details-row">
+          <div class="timeline-details-label">Account Manager</div>
+          <div class="timeline-details-cell">Strategy alignment, goal setting, QR planning</div>
+          <div class="timeline-details-cell">Project management, stays involved</div>
+          <div class="timeline-details-cell">Campaign direction, ad strategy review</div>
+          <div class="timeline-details-cell">Final approval coordination</div>
+        </div>
+        <div class="timeline-details-row">
+          <div class="timeline-details-label">Integrations Specialist</div>
+          <div class="timeline-details-cell">--</div>
+          <div class="timeline-details-cell">POS, online ordering, reservation integrations</div>
+          <div class="timeline-details-cell">--</div>
+          <div class="timeline-details-cell">--</div>
+        </div>
+        <div class="timeline-details-row">
+          <div class="timeline-details-label">Billing</div>
+          <div class="timeline-details-cell">ACH + backup card setup</div>
+          <div class="timeline-details-cell">--</div>
+          <div class="timeline-details-cell">--</div>
+          <div class="timeline-details-cell">Monthly billing begins</div>
+        </div>
+        <div class="timeline-details-row">
+          <div class="timeline-details-label">QR Code Shipment</div>
+          <div class="timeline-details-cell">QR codes designed & ordered</div>
+          <div class="timeline-details-cell">In production</div>
+          <div class="timeline-details-cell">QR codes arrive & activated in-store</div>
+          <div class="timeline-details-cell">Live and operational</div>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(2)">
+      <span>Continue</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 3: WEEK 1 ═══════════════ -->
+  <section class="stage" id="stage-week1" aria-label="Week 1: Strategy and Setup">
+    <div class="week-layout">
+      <div class="week-hero">
+        <div class="week-number">01</div>
+        <div class="week-accent-bar navy"></div>
+        <div class="week-label navy">Week 1</div>
+        <h2 class="week-title">Strategy & Setup</h2>
+        <p class="week-focus">Alignment and foundations. This is where we set expectations and design the system that will capture guest data inside your restaurant.</p>
+      </div>
+      <div class="week-card">
+        <div class="week-section">
+          <div class="week-section-title">What you'll do</div>
+          <ul>
+            <li>Attend Call #1 (Overview & QR Code Planning) with your dedicated Account Manager</li>
+            <li>Review goals, success metrics, and overall strategy</li>
+            <li>Finalize QR code placement and usage inside your restaurant</li>
+            <li>Set up billing (ACH + backup card)</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">Who you'll talk to</div>
+          <p>Your Dedicated Account Manager -- your main point of contact throughout the entire process.</p>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">What we're doing internally</div>
+          <ul>
+            <li>Building your Dishio account (menus, smart site, flows)</li>
+            <li>Preparing QR codes tied directly to your Dishio system</li>
+            <li>Initiating QR code printing or shipment</li>
+          </ul>
+        </div>
+        <div class="week-callout navy-bg">This step matters because everything else builds on the Dishio system.</div>
+      </div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(3)">
+      <span>Continue</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 4: WEEK 2 ═══════════════ -->
+  <section class="stage" id="stage-week2" aria-label="Week 2: Technical Integrations">
+    <div class="week-layout mirrored">
+      <div class="week-hero">
+        <div class="week-number">02</div>
+        <div class="week-accent-bar green"></div>
+        <div class="week-label green">Week 2</div>
+        <h2 class="week-title">Technical Integrations</h2>
+        <p class="week-focus">Making sure all systems "talk" to each other. We need to integrate to your key systems such as POS, online orders, reservation system, etc.</p>
+      </div>
+      <div class="week-card">
+        <div class="week-section">
+          <div class="week-section-title">What you'll do</div>
+          <ul>
+            <li>Attend Call #2 (Technical Setup & Integrations)</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">Who you'll talk to</div>
+          <ul>
+            <li>Integration Specialist (technical setup)</li>
+            <li>Account Manager stays involved and project manages</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">What we're doing internally</div>
+          <ul>
+            <li>Integrating Dishio with POS system, online ordering, reservation platforms</li>
+            <li>Validating data flow and tracking</li>
+            <li>Finalizing backend setup</li>
+          </ul>
+        </div>
+        <div class="week-callout green-bg">By the end of this week, Dishio is fully connected to your existing tech stack.</div>
+      </div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(4)">
+      <span>Continue</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 5: WEEK 3 ═══════════════ -->
+  <section class="stage" id="stage-week3" aria-label="Week 3: Activation and Ad Strategy">
+    <div class="week-layout">
+      <div class="week-hero">
+        <div class="week-number">03</div>
+        <div class="week-accent-bar amber"></div>
+        <div class="week-label amber">Week 3</div>
+        <h2 class="week-title">Activation & Ad Strategy</h2>
+        <p class="week-focus">Turning the system on and adding fuel. Your QR codes go live in-store and we finalize your ad campaigns.</p>
+      </div>
+      <div class="week-card">
+        <div class="week-section">
+          <div class="week-section-title">What you'll do</div>
+          <ul>
+            <li>Attend Call #3 (QR Code Implementation + Ad Strategy)</li>
+            <li>Review campaign direction and targeting</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">Who you'll talk to</div>
+          <ul>
+            <li>Your Account Manager</li>
+            <li>Media strategy input supported by our Media Buying Team</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">What we're doing internally</div>
+          <ul>
+            <li>QR codes arrive and are activated in-store</li>
+            <li>Staff training on QR usage (if needed)</li>
+            <li>Building ad creative and campaign assets</li>
+            <li>Finalizing ad strategy tied directly to Dishio data</li>
+          </ul>
+        </div>
+        <div class="week-callout amber-bg">At this point, the system is live in-store -- ads are what scale it.</div>
+      </div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(5)">
+      <span>Continue</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 6: WEEK 4 ═══════════════ -->
+  <section class="stage" id="stage-week4" aria-label="Week 4: Final Review and Go-Live">
+    <div class="confetti-container" id="confettiContainer"></div>
+    <div class="week-layout mirrored">
+      <div class="week-hero">
+        <div class="week-number">04</div>
+        <div class="week-accent-bar green"></div>
+        <div class="week-label green">Week 4</div>
+        <h2 class="week-title">Final Review & Go-Live</h2>
+        <p class="week-focus">Approval and launch. Everything comes together -- your system is live, your ads are ready, and your growth engine is about to turn on.</p>
+      </div>
+      <div class="week-card">
+        <div class="week-section">
+          <div class="week-section-title">What you'll do</div>
+          <ul>
+            <li>Review ads and strategy</li>
+            <li>Give us the thumbs up to go live</li>
+            <li>No call required unless changes are needed</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">Who's involved</div>
+          <ul>
+            <li>Your Account Manager</li>
+            <li>Media Buying Team</li>
+          </ul>
+        </div>
+        <div class="week-section">
+          <div class="week-section-title">What happens internally</div>
+          <ul>
+            <li>Ads launch on Meta & Google</li>
+            <li>Monthly billing officially begins</li>
+            <li>Ongoing optimization and reporting starts</li>
+          </ul>
+        </div>
+        <div class="week-callout celebration">Your account is now fully onboarded and actively driving traffic, collecting data, and generating revenue.</div>
+      </div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(6)">
+      <span>Continue</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 7: CONTRACT ═══════════════ -->
+  <section class="stage" id="stage-contract" aria-label="Contract Review">
+    <div class="info-stage-content">
+      <div class="info-stage-icon navy">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <h2 class="info-stage-title">Contract Review</h2>
+      <div class="info-stage-brand">Dish.io + Dineline</div>
+      <div class="info-card">
+        <div class="info-label navy">Agreement</div>
+        <p>Please review your service agreement below. This contract outlines the scope of services, pricing structure, and terms of your partnership with Dish.io and Dineline.</p>
+        <p>Your Account Manager is available to walk you through any questions or clarifications you may need before signing.</p>
+      </div>
+      <a href="#" class="btn-cta" target="_blank" rel="noopener">
+        Review Contract
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(7)">
+      <span>Continue</span>
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 8: BILLING ═══════════════ -->
+  <section class="stage" id="stage-billing" aria-label="Billing Setup">
+    <div class="info-stage-content">
+      <div class="info-stage-icon green">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      </div>
+      <h2 class="info-stage-title">Billing Setup</h2>
+      <div class="info-stage-brand">ACH + Backup Credit Card</div>
+      <div class="info-card">
+        <div class="info-label green">Management + Ad Spend</div>
+        <p><strong>No charges for ad spend or management fees are applied today.</strong> We will propose and finalize ad budgets on a future onboarding call.</p>
+        <p>Billing for management fees will begin once all onboarding requirements are successfully completed.</p>
+        <ul>
+          <li>No transaction fees with ACH; 4% processing fee with credit card</li>
+          <li>Once ACH is submitted, we will need the 6-letter code from your bank statement to verify</li>
+          <li>Please provide a backup credit card on file</li>
+        </ul>
+      </div>
+      <a href="#" class="btn-cta" target="_blank" rel="noopener">
+        Complete the Billing Form
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <div class="info-note">If you have any questions about billing, reach out to your Account Manager at any time.</div>
+    </div>
+  </section>
+
+</div><!-- end stage-container -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   DATA LOADING — URL params
+═══════════════════════════════════════════════════════════ */
+(function loadData() {
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('name') || 'Your Restaurant';
+  const am = params.get('am') || 'Your Account Manager';
+
+  document.getElementById('clientName').textContent = name;
+  document.getElementById('accountManagerName').textContent = am;
+  document.getElementById('welcomeRestaurant').textContent = name;
+  document.getElementById('welcomeAM').textContent = am;
+  document.title = name + ' — Onboarding — Dish.io';
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   STAGE NAVIGATION & INTERSECTION OBSERVER
+═══════════════════════════════════════════════════════════ */
+const container = document.getElementById('stageContainer');
+const stages = document.querySelectorAll('.stage');
+const dots = document.querySelectorAll('.stage-dot');
+const headerStageNum = document.getElementById('headerStageNum');
+let currentStage = 0;
+let isScrolling = false;
+
+function scrollToStage(index) {
+  if (index < 0 || index >= stages.length) return;
+  isScrolling = true;
+  stages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => { isScrolling = false; }, 800);
+}
+
+// Dot click navigation
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    scrollToStage(parseInt(dot.dataset.stage));
+  });
+});
+
+// IntersectionObserver for active stage detection
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+      const index = Array.from(stages).indexOf(entry.target);
+      if (index !== -1 && index !== currentStage) {
+        currentStage = index;
+        updateActiveStage(index);
+      }
+    }
+  });
+}, {
+  root: container,
+  threshold: [0.4, 0.6]
+});
+
+stages.forEach(stage => observer.observe(stage));
+
+function updateActiveStage(index) {
+  // Update dots
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === index);
+  });
+
+  // Update header counter
+  headerStageNum.textContent = index + 1;
+
+  // Add/remove active class for animations
+  stages.forEach((stage, i) => {
+    if (i === index) {
+      stage.classList.add('active');
+    } else {
+      // Keep active class for visited stages so content stays visible
+      // but could optionally remove for re-animation
+    }
+  });
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+    e.preventDefault();
+    scrollToStage(currentStage + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault();
+    scrollToStage(currentStage - 1);
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    scrollToStage(0);
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    scrollToStage(stages.length - 1);
+  }
+});
+
+/* ═══════════════════════════════════════════════════════════
+   PARTICLE CANVAS — Spatial hash grid optimized
+   Lighter density for onboarding (40 particles)
+═══════════════════════════════════════════════════════════ */
+(function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  const particles = [];
+  const PARTICLE_COUNT = 40;
+  const CONNECT_DIST = 120;
+  const CELL_SIZE = CONNECT_DIST;
+  let mouseX = -1000, mouseY = -1000;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * (w || 1200),
+      y: Math.random() * (h || 800),
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      size: 1 + Math.random() * 1.8,
+      color: ['rgba(255,217,0,0.15)', 'rgba(0,51,164,0.12)', 'rgba(0,155,0,0.12)', 'rgba(0,100,225,0.10)'][Math.floor(Math.random() * 4)],
+      lineColor: ['rgba(255,217,0,', 'rgba(0,51,164,', 'rgba(0,155,0,', 'rgba(0,100,225,'][Math.floor(Math.random() * 4)]
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const grid = {};
+
+    particles.forEach((p, idx) => {
+      const dx = p.x - mouseX, dy = p.y - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150 && dist > 0) {
+        const force = (150 - dist) / 150;
+        p.vx += (dx / dist) * force * 0.25;
+        p.vy += (dy / dist) * force * 0.25;
+      }
+      p.vx *= 0.99; p.vy *= 0.99;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -10) p.x = w + 10;
+      if (p.x > w + 10) p.x = -10;
+      if (p.y < -10) p.y = h + 10;
+      if (p.y > h + 10) p.y = -10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+
+      const gx = Math.floor(p.x / CELL_SIZE), gy = Math.floor(p.y / CELL_SIZE);
+      const key = gx + ',' + gy;
+      if (!grid[key]) grid[key] = [];
+      grid[key].push(idx);
+    });
+
+    ctx.lineWidth = 0.5;
+    const checked = new Set();
+    particles.forEach((a, i) => {
+      const gx = Math.floor(a.x / CELL_SIZE), gy = Math.floor(a.y / CELL_SIZE);
+      for (let ox = -1; ox <= 1; ox++) {
+        for (let oy = -1; oy <= 1; oy++) {
+          const neighbors = grid[(gx + ox) + ',' + (gy + oy)];
+          if (!neighbors) continue;
+          for (const j of neighbors) {
+            if (j <= i) continue;
+            const pairKey = i * PARTICLE_COUNT + j;
+            if (checked.has(pairKey)) continue;
+            checked.add(pairKey);
+            const b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECT_DIST) {
+              const alpha = (1 - dist / CONNECT_DIST) * 0.06;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = a.lineColor + alpha + ')';
+              ctx.stroke();
+            }
+          }
+        }
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   3D TILT on cards — rAF-throttled
+═══════════════════════════════════════════════════════════ */
+(function initTilt() {
+  let rafPending = false;
+  let mouseX = 0, mouseY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => {
+        applyTilt();
+        rafPending = false;
+      });
+    }
+  }, { passive: true });
+
+  function applyTilt() {
+    const cards = document.querySelectorAll('.timeline-card, .week-card, .info-card');
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      // Only process visible cards
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (mouseX - cx) / rect.width;
+      const dy = (mouseY - cy) / rect.height;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < 1.5) {
+        const rotateX = dy * -6;
+        const rotateY = dx * 6;
+        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
+      } else {
+        card.style.transform = '';
+      }
+    });
+  }
+
+  // Reset on mouse leave
+  document.addEventListener('mouseleave', () => {
+    document.querySelectorAll('.timeline-card, .week-card, .info-card').forEach(card => {
+      card.style.transform = '';
+    });
+  });
+})();
+
+/* ═══════════════════════════════════════════════════════════
+   CONFETTI — Week 4 celebration
+═══════════════════════════════════════════════════════════ */
+(function initConfetti() {
+  const container = document.getElementById('confettiContainer');
+  if (!container) return;
+  const colors = ['#FFD900', '#00ED7E', '#0064E1', '#009B00', '#FFE644', '#0033A4'];
+  const shapes = ['circle', 'square'];
+
+  for (let i = 0; i < 50; i++) {
+    const piece = document.createElement('div');
+    piece.classList.add('confetti-piece');
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    const size = 6 + Math.random() * 8;
+
+    piece.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${size}px;
+      height: ${size}px;
+      background: ${color};
+      border-radius: ${shape === 'circle' ? '50%' : '2px'};
+      --delay: ${Math.random() * 2}s;
+      --duration: ${2 + Math.random() * 3}s;
+    `;
+    container.appendChild(piece);
+  }
+})();
+
+</script>
+</body>
+</html>
