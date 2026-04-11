@@ -24,12 +24,12 @@
       --text-muted: #6B7280;
       --text-dim: #9CA3AF;
       --green: #009B00;
-      --green-light: #00ED7E;
+      --green-light: #00C700;
       --green-bg: rgba(0,155,0,0.08);
       --amber: #D97706;
       --amber-light: #FBBF24;
-      --emerald: #059669;
-      --emerald-light: #34D399;
+      --emerald: #009B00;
+      --emerald-light: #00C700;
       --header-h: 72px;
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -365,7 +365,7 @@
       inset: 0;
       border-radius: 50%;
       border: 2px solid transparent;
-      background: conic-gradient(from 0deg, var(--yellow), var(--navy-light), var(--green-light), var(--yellow)) border-box;
+      background: conic-gradient(from 0deg, var(--yellow), var(--navy-light), var(--yellow-light), var(--yellow)) border-box;
       -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
       mask-composite: exclude;
@@ -445,13 +445,13 @@
       width: 210px; height: 210px;
       border-width: 2px;
       border-style: dotted;
-      border-color: var(--green-light);
+      border-color: var(--navy-light);
       opacity: 0.4;
       animation: engineSpinCCW 14s linear infinite;
     }
     .engine-ring-inner {
       width: 150px; height: 150px;
-      border-color: var(--navy-light);
+      border-color: var(--yellow);
       opacity: 0.5;
       animation: engineSpinCW 9s linear infinite;
     }
@@ -484,7 +484,7 @@
       font-size: 32px;
       font-weight: 700;
       letter-spacing: -0.03em;
-      background: linear-gradient(135deg, var(--yellow), var(--green-light));
+      background: linear-gradient(135deg, var(--yellow), var(--navy-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -570,7 +570,7 @@
       position: absolute;
       top: 0; left: 0; bottom: 0;
       width: 0;
-      background: linear-gradient(90deg, var(--navy), var(--navy-light), var(--green), var(--amber-light), var(--emerald));
+      background: linear-gradient(90deg, var(--navy), var(--navy-light), var(--yellow), var(--yellow-light), var(--emerald));
       border-radius: 3px;
       transition: width 1.5s var(--ease-out-expo);
     }
@@ -652,8 +652,8 @@
       stroke-linejoin: round;
     }
     .timeline-card:nth-child(2) .timeline-card-icon { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
-    .timeline-card:nth-child(3) .timeline-card-icon { background: linear-gradient(135deg, var(--green), var(--green-light)); }
-    .timeline-card:nth-child(4) .timeline-card-icon { background: linear-gradient(135deg, var(--amber), var(--amber-light)); }
+    .timeline-card:nth-child(3) .timeline-card-icon { background: linear-gradient(135deg, #E6C300, #FFD900); }
+    .timeline-card:nth-child(4) .timeline-card-icon { background: linear-gradient(135deg, #0033A4, #0064E1); }
     .timeline-card:nth-child(5) .timeline-card-icon { background: linear-gradient(135deg, var(--emerald), var(--emerald-light)); }
 
     .timeline-card-title {
@@ -768,8 +768,8 @@
       letter-spacing: -0.05em;
     }
     .week-watermark.navy { background: linear-gradient(180deg, var(--navy), var(--navy-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .week-watermark.green { background: linear-gradient(180deg, var(--green), var(--green-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .week-watermark.amber { background: linear-gradient(180deg, var(--amber), var(--amber-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.yellow { background: linear-gradient(180deg, var(--yellow), var(--yellow-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.navy-accent { background: linear-gradient(180deg, var(--navy), var(--navy-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
     .week-watermark.emerald { background: linear-gradient(180deg, var(--emerald), var(--emerald-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
     /* Accent stripe left edge */
@@ -783,8 +783,8 @@
       border-radius: 4px;
     }
     #stage-week1 .week-stage-inner::before { background: linear-gradient(180deg, var(--navy), var(--navy-light)); }
-    #stage-week2 .week-stage-inner::before { background: linear-gradient(180deg, var(--green), var(--green-light)); }
-    #stage-week3 .week-stage-inner::before { background: linear-gradient(180deg, var(--amber), var(--amber-light)); }
+    #stage-week2 .week-stage-inner::before { background: linear-gradient(180deg, var(--yellow), var(--yellow-light)); }
+    #stage-week3 .week-stage-inner::before { background: linear-gradient(180deg, var(--navy), var(--navy-light)); }
     #stage-week4 .week-stage-inner::before { background: linear-gradient(180deg, var(--emerald), var(--emerald-light)); }
 
     /* Step indicator */
@@ -817,8 +817,8 @@
     }
     .stage.active .week-step-fill { width: var(--progress); }
     #stage-week1 .week-step-fill { --progress: 25%; background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
-    #stage-week2 .week-step-fill { --progress: 50%; background: linear-gradient(90deg, var(--green), var(--green-light)); }
-    #stage-week3 .week-step-fill { --progress: 75%; background: linear-gradient(90deg, var(--amber), var(--amber-light)); }
+    #stage-week2 .week-step-fill { --progress: 50%; background: linear-gradient(90deg, var(--yellow), var(--yellow-light)); }
+    #stage-week3 .week-step-fill { --progress: 75%; background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
     #stage-week4 .week-step-fill { --progress: 100%; background: linear-gradient(90deg, var(--emerald), var(--emerald-light)); }
 
     .week-header { margin-bottom: 36px; }
@@ -830,8 +830,8 @@
       margin-bottom: 8px;
     }
     .week-label.navy { color: var(--navy); }
-    .week-label.green { color: var(--green); }
-    .week-label.amber { color: var(--amber); }
+    .week-label.yellow { color: var(--yellow); }
+    .week-label.navy-accent { color: var(--navy); }
     .week-label.emerald { color: var(--emerald); }
 
     .week-title {
@@ -877,10 +877,10 @@
     /* Color per week accent */
     #stage-week1 .week-section-chip { background: var(--navy-dim); color: var(--navy); }
     #stage-week1 .week-section-chip svg { stroke: var(--navy); }
-    #stage-week2 .week-section-chip { background: var(--green-bg); color: var(--green); }
-    #stage-week2 .week-section-chip svg { stroke: var(--green); }
-    #stage-week3 .week-section-chip { background: rgba(217,119,6,0.08); color: var(--amber); }
-    #stage-week3 .week-section-chip svg { stroke: var(--amber); }
+    #stage-week2 .week-section-chip { background: var(--yellow-dim); color: #B8A000; }
+    #stage-week2 .week-section-chip svg { stroke: #B8A000; }
+    #stage-week3 .week-section-chip { background: var(--navy-dim); color: var(--navy); }
+    #stage-week3 .week-section-chip svg { stroke: var(--navy); }
     #stage-week4 .week-section-chip { background: rgba(5,150,105,0.08); color: var(--emerald); }
     #stage-week4 .week-section-chip svg { stroke: var(--emerald); }
 
@@ -909,8 +909,8 @@
       fill: none;
     }
     #stage-week1 .week-section li svg { stroke: var(--navy); }
-    #stage-week2 .week-section li svg { stroke: var(--green); }
-    #stage-week3 .week-section li svg { stroke: var(--amber); }
+    #stage-week2 .week-section li svg { stroke: var(--yellow); }
+    #stage-week3 .week-section li svg { stroke: var(--navy); }
     #stage-week4 .week-section li svg { stroke: var(--emerald); }
 
     .week-section p {
@@ -936,8 +936,8 @@
       box-shadow: 0 4px 24px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5);
     }
     .week-callout.navy-border { border-left-color: var(--navy); }
-    .week-callout.green-border { border-left-color: var(--green); }
-    .week-callout.amber-border { border-left-color: var(--amber); }
+    .week-callout.yellow-border { border-left-color: var(--yellow); }
+    .week-callout.navy-border-accent { border-left-color: var(--navy); }
     .week-callout.emerald-border { border-left-color: var(--emerald); }
 
     /* Week stage aurora */
@@ -948,12 +948,12 @@
     }
     #stage-week2::before {
       background:
-        radial-gradient(ellipse 60% 60% at 80% 40%, rgba(0,155,0,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 40%, rgba(255,217,0,0.06) 0%, transparent 60%),
         radial-gradient(ellipse 50% 50% at 20% 70%, rgba(0,51,164,0.04) 0%, transparent 50%);
     }
     #stage-week3::before {
       background:
-        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(217,119,6,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(0,51,164,0.06) 0%, transparent 60%),
         radial-gradient(ellipse 50% 50% at 70% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
     }
     #stage-week4::before {
@@ -1028,7 +1028,7 @@
       position: relative;
     }
     .info-stage-icon.navy { background: linear-gradient(135deg, var(--navy), var(--navy-light)); box-shadow: 0 8px 32px rgba(0,51,164,0.2); }
-    .info-stage-icon.green { background: linear-gradient(135deg, var(--green), var(--green-light)); box-shadow: 0 8px 32px rgba(0,155,0,0.2); }
+    .info-stage-icon.yellow { background: linear-gradient(135deg, var(--yellow), var(--yellow-light)); box-shadow: 0 8px 32px rgba(255,217,0,0.2); }
     .info-stage-icon svg { width: 32px; height: 32px; stroke: white; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
     .info-stage-title {
@@ -1099,7 +1099,7 @@
       margin-bottom: 20px;
     }
     .info-label.navy { background: rgba(0,100,225,0.15); color: var(--navy-light); }
-    .info-label.green { background: rgba(0,237,126,0.12); color: var(--green-light); }
+    .info-label.yellow { background: rgba(255,217,0,0.12); color: #B8A000; }
 
     /* Pill CTA buttons */
     .btn-cta {
@@ -2044,7 +2044,7 @@
   <!-- ═══════════════ STAGE 4: WEEK 2 — Technical Integrations ═══════════════ -->
   <section class="stage" id="stage-week2" aria-label="Week 2: Technical Integrations">
     <div class="week-stage-inner">
-      <div class="week-watermark green">02</div>
+      <div class="week-watermark yellow">02</div>
 
       <div class="week-step-indicator">
         <span class="week-step-text">Week 2 of 4</span>
@@ -2052,7 +2052,7 @@
       </div>
 
       <div class="week-header">
-        <div class="week-label green">Week 2</div>
+        <div class="week-label yellow">Week 2</div>
         <h2 class="week-title">Technical Integrations</h2>
         <p class="week-focus">Making sure all systems "talk" to each other. We need to integrate to your key systems such as POS, online orders, reservation system, etc.</p>
       </div>
@@ -2090,7 +2090,7 @@
         </ul>
       </div>
 
-      <div class="week-callout green-border">By the end of this week, Dishio is fully connected to your existing tech stack.</div>
+      <div class="week-callout yellow-border">By the end of this week, Dishio is fully connected to your existing tech stack.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(5)">
       <span>Continue</span>
@@ -2101,7 +2101,7 @@
   <!-- ═══════════════ STAGE 5: WEEK 3 — Activation & Ad Strategy ═══════════════ -->
   <section class="stage" id="stage-week3" aria-label="Week 3: Activation and Ad Strategy">
     <div class="week-stage-inner">
-      <div class="week-watermark amber">03</div>
+      <div class="week-watermark navy-accent">03</div>
 
       <div class="week-step-indicator">
         <span class="week-step-text">Week 3 of 4</span>
@@ -2109,7 +2109,7 @@
       </div>
 
       <div class="week-header">
-        <div class="week-label amber">Week 3</div>
+        <div class="week-label navy-accent">Week 3</div>
         <h2 class="week-title">Activation & Ad Strategy</h2>
         <p class="week-focus">Turning the system on and adding fuel. Your QR codes go live in-store and we finalize your ad campaigns.</p>
       </div>
@@ -2149,7 +2149,7 @@
         </ul>
       </div>
 
-      <div class="week-callout amber-border">At this point, the system is live in-store -- ads are what scale it.</div>
+      <div class="week-callout navy-border-accent">At this point, the system is live in-store -- ads are what scale it.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(6)">
       <span>Continue</span>
@@ -2504,7 +2504,7 @@ document.addEventListener('keydown', (e) => {
 (function initConfetti() {
   const container = document.getElementById('confettiContainer');
   if (!container) return;
-  const colors = ['#FFD900', '#00ED7E', '#0064E1', '#009B00', '#FFE644', '#0033A4', '#34D399'];
+  const colors = ['#FFD900', '#009B00', '#0033A4', '#FFE644', '#00C700', '#0064E1'];
   const shapes = ['circle', 'square'];
 
   for (let i = 0; i < 60; i++) {
