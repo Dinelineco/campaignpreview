@@ -26,7 +26,12 @@
       --green: #009B00;
       --green-light: #00ED7E;
       --green-bg: rgba(0,155,0,0.08);
+      --amber: #D97706;
+      --amber-light: #FBBF24;
+      --emerald: #059669;
+      --emerald-light: #34D399;
       --header-h: 72px;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* ── KEYFRAMES ── */
@@ -42,59 +47,75 @@
       from { opacity: 0; transform: translateY(32px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInLeft {
-      from { opacity: 0; transform: translateX(-40px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fadeInRight {
-      from { opacity: 0; transform: translateX(40px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
     @keyframes scaleIn {
-      from { opacity: 0; transform: scale(0.8); }
+      from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-    @keyframes pulseDown {
-      0%, 100% { transform: translateY(0); opacity: 0.6; }
-      50% { transform: translateY(10px); opacity: 1; }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes logoGlow {
+      0%, 100% {
+        filter: drop-shadow(0 0 20px rgba(255,217,0,0.3)) drop-shadow(0 0 60px rgba(255,217,0,0.1));
+      }
+      50% {
+        filter: drop-shadow(0 0 40px rgba(255,217,0,0.6)) drop-shadow(0 0 80px rgba(255,217,0,0.2));
+      }
+    }
+    @keyframes portalRing {
+      0% { transform: scale(0.8) rotate(0deg); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: scale(1) rotate(360deg); opacity: 1; }
+    }
+    @keyframes morphArrow {
+      0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.6; }
+      40% { transform: translateY(8px) scaleY(1.3); opacity: 1; }
+      60% { transform: translateY(12px) scaleY(0.8); opacity: 0.9; }
+      80% { transform: translateY(6px) scaleY(1.1); opacity: 0.7; }
+    }
+    @keyframes textGradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes borderShimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes beamFlow {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
     @keyframes glowPulse {
       0%, 100% { box-shadow: 0 0 20px rgba(255,217,0,0.15), 0 0 60px rgba(255,217,0,0.05); }
       50% { box-shadow: 0 0 30px rgba(255,217,0,0.3), 0 0 80px rgba(255,217,0,0.1); }
     }
-    @keyframes dotPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,217,0,0.4); }
-      50% { transform: scale(1.3); box-shadow: 0 0 0 6px rgba(255,217,0,0); }
-    }
-    @keyframes drawLine {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes logoSpin {
-      from { transform: rotate(0deg) scale(0.5); opacity: 0; }
-      to { transform: rotate(360deg) scale(1); opacity: 1; }
-    }
     @keyframes confettiFall {
       0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
-    @keyframes borderGlow {
-      0%, 100% { border-color: rgba(255,217,0,0.2); }
-      50% { border-color: rgba(255,217,0,0.5); }
+    @keyframes floatStat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes navPillExpand {
+      from { width: 10px; }
+      to { width: auto; }
+    }
+    @keyframes progressFill {
+      from { width: 0%; }
+      to { width: var(--progress); }
     }
     @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-    @keyframes dotFloat {
-      0%, 100% { transform: translateY(0) scale(1); opacity: 0.15; }
-      50% { transform: translateY(-20px) scale(1.3); opacity: 0.35; }
-    }
 
     html { scroll-behavior: smooth; }
 
@@ -107,6 +128,7 @@
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow: hidden;
+      font-feature-settings: 'ss01';
     }
 
     ::-webkit-scrollbar { width: 0; height: 0; }
@@ -117,6 +139,22 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
+    }
+
+    /* ── GLASSMORPHISM UTILITY ── */
+    .glass {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .glass-dark {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
     }
 
     /* ── HEADER ── */
@@ -155,7 +193,7 @@
     .header-center { flex: 1; text-align: center; min-width: 0; }
     #clientName {
       font-size: 16px; font-weight: 700; color: #FFFFFF;
-      display: inline-block;
+      display: inline-block; letter-spacing: -0.03em;
     }
     #accountManagerName {
       font-size: 12px; color: rgba(255,255,255,0.6);
@@ -202,17 +240,663 @@
     }
     .stage > * { position: relative; z-index: 1; }
 
+    /* ── NAV DOTS — Pill Style ── */
+    .stage-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+    .stage-nav::before {
+      content: '';
+      position: absolute;
+      right: 5px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.08) 80%, transparent);
+      z-index: -1;
+    }
+    .stage-dot {
+      height: 10px;
+      min-width: 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.12);
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      overflow: hidden;
+      padding: 0;
+    }
+    .stage-dot:hover {
+      background: rgba(0,0,0,0.25);
+      min-width: 14px;
+    }
+    .stage-dot.active {
+      background: var(--yellow);
+      min-width: 80px;
+      height: 22px;
+      border-radius: 11px;
+      padding: 0 10px;
+      box-shadow: 0 2px 12px rgba(255,217,0,0.3);
+    }
+    .stage-dot-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(0,0,0,0.7);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .stage-dot.active .stage-dot-label {
+      opacity: 1;
+    }
+
+    /* ── SCROLL INDICATOR — Morphing Arrow ── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .scroll-indicator span {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+    .scroll-indicator .morph-arrow {
+      width: 24px;
+      height: 24px;
+      animation: morphArrow 2.5s ease-in-out infinite;
+    }
+    .scroll-indicator .morph-arrow path {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ═══════════════════════════════════════
+       STAGE 1: WELCOME — Cinematic Dark Hero
+    ═══════════════════════════════════════ */
+    #stage-welcome {
+      background: linear-gradient(145deg, #080B1A 0%, #0A1628 30%, #0D1F3C 60%, #091220 100%);
+    }
     #stage-welcome::before {
       background:
-        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,217,0,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,155,0,0.04) 0%, transparent 50%),
-        radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,51,164,0.04) 0%, transparent 50%);
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,217,0,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,155,0,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,100,225,0.08) 0%, transparent 50%);
     }
+
+    .welcome-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 28px;
+      max-width: 800px;
+    }
+
+    .welcome-logo-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .welcome-logo-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: conic-gradient(from 0deg, var(--yellow), var(--navy-light), var(--green-light), var(--yellow)) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+    }
+    .stage.active .welcome-logo-ring {
+      animation: portalRing 2s var(--ease-out-expo) 0.2s forwards;
+    }
+    .welcome-logo {
+      width: 90px;
+      height: auto;
+      fill: var(--yellow);
+      filter: drop-shadow(0 0 20px rgba(255,217,0,0.4));
+      animation: logoGlow 3s ease-in-out infinite;
+    }
+
+    .welcome-restaurant {
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #FFFFFF 0%, #E0E7FF 30%, var(--yellow-light) 60%, #FFFFFF 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGradientShift 6s ease-in-out infinite;
+    }
+
+    .welcome-subtitle {
+      font-size: clamp(18px, 2.5vw, 26px);
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: -0.01em;
+    }
+
+    .welcome-tagline {
+      font-size: 14px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .welcome-tagline::before,
+    .welcome-tagline::after {
+      content: '';
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,217,0,0.4), transparent);
+    }
+
+    .welcome-stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 8px;
+    }
+    .welcome-stat {
+      padding: 14px 24px;
+      border-radius: 16px;
+      text-align: center;
+      animation: floatStat 4s ease-in-out infinite;
+    }
+    .welcome-stat:nth-child(1) { animation-delay: 0s; }
+    .welcome-stat:nth-child(2) { animation-delay: 0.5s; }
+    .welcome-stat:nth-child(3) { animation-delay: 1s; }
+    .welcome-stat-num {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--yellow);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .welcome-stat-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .welcome-am {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      padding: 10px 24px;
+      border-radius: 100px;
+    }
+    .welcome-am strong { color: var(--yellow); }
+
+    #stage-welcome .scroll-indicator span { color: rgba(255,255,255,0.3); }
+    #stage-welcome .scroll-indicator .morph-arrow path { stroke: rgba(255,255,255,0.3); }
+
+    /* Animate children */
+    .welcome-content > * {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .stage.active .welcome-content > * {
+      animation: fadeInUp 0.9s var(--ease-out-expo) forwards;
+    }
+    .stage.active .welcome-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .welcome-content > *:nth-child(2) { animation-delay: 0.35s; }
+    .stage.active .welcome-content > *:nth-child(3) { animation-delay: 0.55s; }
+    .stage.active .welcome-content > *:nth-child(4) { animation-delay: 0.75s; }
+    .stage.active .welcome-content > *:nth-child(5) { animation-delay: 0.95s; }
+    .stage.active .welcome-content > *:nth-child(6) { animation-delay: 1.1s; }
+
+    /* ═══════════════════════════════════════
+       STAGE 2: TIMELINE — Holographic Card Runway
+    ═══════════════════════════════════════ */
     #stage-timeline::before {
       background:
         radial-gradient(ellipse 70% 50% at 20% 50%, rgba(0,51,164,0.05) 0%, transparent 60%),
         radial-gradient(ellipse 60% 60% at 80% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
     }
+
+    .timeline-content {
+      width: 100%;
+      max-width: 1200px;
+    }
+    .timeline-title {
+      text-align: center;
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 48px;
+      letter-spacing: -0.03em;
+    }
+    .timeline-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+      margin-bottom: 48px;
+    }
+
+    /* Gradient beam connecting line */
+    .timeline-line {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 3px;
+      background: rgba(0,0,0,0.04);
+      border-radius: 3px;
+      z-index: 0;
+      transform: translateY(-50%);
+      overflow: hidden;
+    }
+    .timeline-line-fill {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 0;
+      background: linear-gradient(90deg, var(--navy), var(--navy-light), var(--green), var(--amber-light), var(--emerald));
+      border-radius: 3px;
+      transition: width 1.5s var(--ease-out-expo);
+    }
+    .timeline-line-fill::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+      background-size: 40% 100%;
+      animation: beamFlow 2s linear infinite;
+    }
+    .stage.active .timeline-line-fill { width: 100%; }
+
+    /* Glassmorphic timeline cards */
+    .timeline-card {
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      transition: all 0.4s var(--ease-out-expo);
+      cursor: pointer;
+      will-change: transform;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6);
+      overflow: hidden;
+    }
+    /* Shimmer border on hover */
+    .timeline-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 1.5px;
+      background: linear-gradient(135deg, transparent 30%, var(--yellow) 50%, transparent 70%);
+      background-size: 200% 200%;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s;
+      animation: borderShimmer 3s linear infinite;
+    }
+    .timeline-card:hover::before { opacity: 1; }
+    .timeline-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+    }
+
+    /* Colored border glow per card */
+    .timeline-card:nth-child(2) { border-color: rgba(0,51,164,0.15); }
+    .timeline-card:nth-child(2):hover { box-shadow: 0 16px 48px rgba(0,51,164,0.12); }
+    .timeline-card:nth-child(3) { border-color: rgba(0,155,0,0.15); }
+    .timeline-card:nth-child(3):hover { box-shadow: 0 16px 48px rgba(0,155,0,0.12); }
+    .timeline-card:nth-child(4) { border-color: rgba(217,119,6,0.15); }
+    .timeline-card:nth-child(4):hover { box-shadow: 0 16px 48px rgba(217,119,6,0.12); }
+    .timeline-card:nth-child(5) { border-color: rgba(5,150,105,0.15); }
+    .timeline-card:nth-child(5):hover { box-shadow: 0 16px 48px rgba(5,150,105,0.12); }
+
+    .timeline-card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .timeline-card-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: white;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .timeline-card:nth-child(2) .timeline-card-icon { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+    .timeline-card:nth-child(3) .timeline-card-icon { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+    .timeline-card:nth-child(4) .timeline-card-icon { background: linear-gradient(135deg, var(--amber), var(--amber-light)); }
+    .timeline-card:nth-child(5) .timeline-card-icon { background: linear-gradient(135deg, var(--emerald), var(--emerald-light)); }
+
+    .timeline-card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+    .timeline-card-week {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Stagger animation */
+    .timeline-card {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    .stage.active .timeline-card {
+      animation: fadeInUp 0.7s var(--ease-out-expo) forwards;
+    }
+    .stage.active .timeline-card:nth-child(2) { animation-delay: 0.2s; }
+    .stage.active .timeline-card:nth-child(3) { animation-delay: 0.35s; }
+    .stage.active .timeline-card:nth-child(4) { animation-delay: 0.5s; }
+    .stage.active .timeline-card:nth-child(5) { animation-delay: 0.65s; }
+
+    /* Timeline detail rows — Horizontal accordion */
+    .timeline-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .timeline-details-row {
+      display: grid;
+      grid-template-columns: 200px repeat(4, 1fr);
+      gap: 0;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .timeline-details-row:hover {
+      background: rgba(255,255,255,0.85);
+      transform: translateX(4px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .timeline-details-label {
+      padding: 14px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-right: 1px solid rgba(0,0,0,0.04);
+    }
+    .timeline-details-label svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    .timeline-details-cell {
+      padding: 14px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      border-left: 1px solid rgba(0,0,0,0.03);
+    }
+
+    .timeline-details {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .stage.active .timeline-details {
+      animation: fadeInUp 0.8s var(--ease-out-expo) 1s forwards;
+    }
+
+    /* ═══════════════════════════════════════
+       WEEK STAGES (3-6) — Editorial Magazine Layout
+    ═══════════════════════════════════════ */
+    .week-stage-inner {
+      max-width: 720px;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Large background watermark number */
+    .week-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(200px, 30vw, 400px);
+      font-weight: 700;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.06;
+      letter-spacing: -0.05em;
+    }
+    .week-watermark.navy { background: linear-gradient(180deg, var(--navy), var(--navy-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.green { background: linear-gradient(180deg, var(--green), var(--green-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.amber { background: linear-gradient(180deg, var(--amber), var(--amber-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .week-watermark.emerald { background: linear-gradient(180deg, var(--emerald), var(--emerald-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* Accent stripe left edge */
+    .week-stage-inner::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 10%;
+      bottom: 10%;
+      width: 4px;
+      border-radius: 4px;
+    }
+    #stage-week1 .week-stage-inner::before { background: linear-gradient(180deg, var(--navy), var(--navy-light)); }
+    #stage-week2 .week-stage-inner::before { background: linear-gradient(180deg, var(--green), var(--green-light)); }
+    #stage-week3 .week-stage-inner::before { background: linear-gradient(180deg, var(--amber), var(--amber-light)); }
+    #stage-week4 .week-stage-inner::before { background: linear-gradient(180deg, var(--emerald), var(--emerald-light)); }
+
+    /* Step indicator */
+    .week-step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .week-step-text {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+    .week-step-bar {
+      flex: 1;
+      max-width: 120px;
+      height: 3px;
+      background: rgba(0,0,0,0.06);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .week-step-fill {
+      height: 100%;
+      border-radius: 3px;
+      width: 0;
+      transition: width 1s var(--ease-out-expo) 0.5s;
+    }
+    .stage.active .week-step-fill { width: var(--progress); }
+    #stage-week1 .week-step-fill { --progress: 25%; background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
+    #stage-week2 .week-step-fill { --progress: 50%; background: linear-gradient(90deg, var(--green), var(--green-light)); }
+    #stage-week3 .week-step-fill { --progress: 75%; background: linear-gradient(90deg, var(--amber), var(--amber-light)); }
+    #stage-week4 .week-step-fill { --progress: 100%; background: linear-gradient(90deg, var(--emerald), var(--emerald-light)); }
+
+    .week-header { margin-bottom: 36px; }
+    .week-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 8px;
+    }
+    .week-label.navy { color: var(--navy); }
+    .week-label.green { color: var(--green); }
+    .week-label.amber { color: var(--amber); }
+    .week-label.emerald { color: var(--emerald); }
+
+    .week-title {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+    .week-focus {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* Section label chips */
+    .week-section {
+      margin-bottom: 28px;
+    }
+    .week-section:last-of-type { margin-bottom: 0; }
+    .week-section-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+    .week-section-chip svg {
+      width: 13px;
+      height: 13px;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    /* Color per week accent */
+    #stage-week1 .week-section-chip { background: var(--navy-dim); color: var(--navy); }
+    #stage-week1 .week-section-chip svg { stroke: var(--navy); }
+    #stage-week2 .week-section-chip { background: var(--green-bg); color: var(--green); }
+    #stage-week2 .week-section-chip svg { stroke: var(--green); }
+    #stage-week3 .week-section-chip { background: rgba(217,119,6,0.08); color: var(--amber); }
+    #stage-week3 .week-section-chip svg { stroke: var(--amber); }
+    #stage-week4 .week-section-chip { background: rgba(5,150,105,0.08); color: var(--emerald); }
+    #stage-week4 .week-section-chip svg { stroke: var(--emerald); }
+
+    .week-section ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .week-section li {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      padding-left: 28px;
+      position: relative;
+    }
+    .week-section li svg {
+      position: absolute;
+      left: 0;
+      top: 3px;
+      width: 16px;
+      height: 16px;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+    #stage-week1 .week-section li svg { stroke: var(--navy); }
+    #stage-week2 .week-section li svg { stroke: var(--green); }
+    #stage-week3 .week-section li svg { stroke: var(--amber); }
+    #stage-week4 .week-section li svg { stroke: var(--emerald); }
+
+    .week-section p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* Glassmorphic callout card */
+    .week-callout {
+      margin-top: 32px;
+      padding: 20px 24px;
+      border-radius: 16px;
+      border-left: 4px solid;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-style: italic;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .week-callout.navy-border { border-left-color: var(--navy); }
+    .week-callout.green-border { border-left-color: var(--green); }
+    .week-callout.amber-border { border-left-color: var(--amber); }
+    .week-callout.emerald-border { border-left-color: var(--emerald); }
+
+    /* Week stage aurora */
     #stage-week1::before {
       background:
         radial-gradient(ellipse 60% 60% at 20% 40%, rgba(0,51,164,0.06) 0%, transparent 60%),
@@ -225,14 +909,52 @@
     }
     #stage-week3::before {
       background:
-        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(255,217,0,0.06) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 50% at 70% 30%, rgba(0,155,0,0.04) 0%, transparent 50%);
+        radial-gradient(ellipse 60% 60% at 30% 50%, rgba(217,119,6,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 70% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
     }
     #stage-week4::before {
       background:
-        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(0,155,0,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(5,150,105,0.08) 0%, transparent 60%),
         radial-gradient(ellipse 50% 50% at 30% 70%, rgba(255,217,0,0.05) 0%, transparent 50%);
     }
+
+    /* Week stage animation — staggered children */
+    .week-stage-inner > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .stage.active .week-stage-inner > * {
+      animation: fadeInUp 0.7s var(--ease-out-expo) forwards;
+    }
+    .stage.active .week-stage-inner > *:nth-child(1) { animation-delay: 0.08s; }
+    .stage.active .week-stage-inner > *:nth-child(2) { animation-delay: 0.16s; }
+    .stage.active .week-stage-inner > *:nth-child(3) { animation-delay: 0.24s; }
+    .stage.active .week-stage-inner > *:nth-child(4) { animation-delay: 0.32s; }
+    .stage.active .week-stage-inner > *:nth-child(5) { animation-delay: 0.40s; }
+    .stage.active .week-stage-inner > *:nth-child(6) { animation-delay: 0.48s; }
+    .stage.active .week-stage-inner > *:nth-child(7) { animation-delay: 0.56s; }
+    .stage.active .week-stage-inner > *:nth-child(8) { animation-delay: 0.64s; }
+
+    /* Animate list items individually */
+    .stage.active .week-section li {
+      opacity: 0;
+      animation: slideInLeft 0.5s var(--ease-out-expo) forwards;
+    }
+    .stage.active .week-section li:nth-child(1) { animation-delay: 0.4s; }
+    .stage.active .week-section li:nth-child(2) { animation-delay: 0.5s; }
+    .stage.active .week-section li:nth-child(3) { animation-delay: 0.6s; }
+    .stage.active .week-section li:nth-child(4) { animation-delay: 0.7s; }
+    .stage.active .week-section li:nth-child(5) { animation-delay: 0.8s; }
+
+    /* Callout scale in */
+    .stage.active .week-callout {
+      animation: scaleIn 0.6s var(--ease-out-expo) 0.7s forwards;
+      opacity: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       CONTRACT & BILLING — Premium Feel
+    ═══════════════════════════════════════ */
     #stage-contract::before {
       background:
         radial-gradient(ellipse 70% 50% at 50% 40%, rgba(0,51,164,0.05) 0%, transparent 60%),
@@ -244,520 +966,60 @@
         radial-gradient(ellipse 50% 50% at 30% 80%, rgba(0,51,164,0.04) 0%, transparent 50%);
     }
 
-    /* ── NAV DOTS ── */
-    .stage-nav {
-      position: fixed;
-      right: 24px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 90;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-    }
-    .stage-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.15);
-      border: 2px solid rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-    .stage-dot:hover { background: rgba(0,0,0,0.3); transform: scale(1.3); }
-    .stage-dot.active {
-      background: var(--yellow);
-      border-color: var(--yellow);
-      animation: dotPulse 2s ease-in-out infinite;
-    }
-    .stage-dot-label {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      white-space: nowrap;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      background: white;
-      padding: 3px 10px;
-      border-radius: 6px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
-    .stage-dot:hover .stage-dot-label { opacity: 1; }
-
-    /* ── SCROLL DOWN INDICATOR ── */
-    .scroll-indicator {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      animation: pulseDown 2s ease-in-out infinite;
-      cursor: pointer;
-      z-index: 5;
-    }
-    .scroll-indicator span {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-dim);
-      font-weight: 600;
-    }
-    .scroll-indicator svg {
-      width: 20px; height: 20px;
-      stroke: var(--text-dim);
-      fill: none;
-      stroke-width: 2;
-    }
-
-    /* ═══════════════════════════════════════
-       STAGE 1: WELCOME
-    ═══════════════════════════════════════ */
-    .welcome-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 24px;
-      max-width: 700px;
-    }
-    .welcome-logo {
-      width: 120px; height: auto;
-      fill: var(--navy);
-      filter: drop-shadow(0 0 20px rgba(0,51,164,0.2));
-    }
-    .welcome-logo.animate { animation: logoSpin 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-    .welcome-restaurant {
-      font-size: clamp(32px, 5vw, 56px);
-      font-weight: 700;
-      line-height: 1.1;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .welcome-subtitle {
-      font-size: clamp(18px, 2.5vw, 24px);
-      font-weight: 500;
-      color: var(--text-muted);
-      letter-spacing: -0.01em;
-    }
-    .welcome-tagline {
-      font-size: 16px;
-      color: var(--text-dim);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .welcome-tagline::before,
-    .welcome-tagline::after {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--yellow), transparent);
-    }
-    .welcome-am {
-      font-size: 14px;
-      color: var(--text-muted);
-      background: white;
-      padding: 8px 20px;
-      border-radius: 100px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-    }
-    .welcome-am strong { color: var(--navy); }
-
-    /* Animate children */
-    .welcome-content > * {
-      opacity: 0;
-      transform: translateY(24px);
-    }
-    .stage.active .welcome-content > * {
-      animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-    }
-    .stage.active .welcome-content > *:nth-child(1) { animation-delay: 0.1s; }
-    .stage.active .welcome-content > *:nth-child(2) { animation-delay: 0.3s; }
-    .stage.active .welcome-content > *:nth-child(3) { animation-delay: 0.5s; }
-    .stage.active .welcome-content > *:nth-child(4) { animation-delay: 0.7s; }
-    .stage.active .welcome-content > *:nth-child(5) { animation-delay: 0.9s; }
-
-    /* ═══════════════════════════════════════
-       STAGE 2: TIMELINE
-    ═══════════════════════════════════════ */
-    .timeline-content {
-      width: 100%;
-      max-width: 1200px;
-    }
-    .timeline-title {
-      text-align: center;
-      font-size: clamp(24px, 3vw, 36px);
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 48px;
-    }
-    .timeline-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      position: relative;
-      margin-bottom: 48px;
-    }
-
-    /* Connecting progress line */
-    .timeline-line {
-      position: absolute;
-      top: 50%;
-      left: 5%;
-      right: 5%;
-      height: 3px;
-      background: var(--card-border);
-      border-radius: 3px;
-      z-index: 0;
-      transform: translateY(-50%);
-    }
-    .timeline-line-fill {
-      position: absolute;
-      top: 0; left: 0; bottom: 0;
-      width: 0;
-      background: linear-gradient(90deg, var(--navy), var(--green-light), var(--yellow));
-      border-radius: 3px;
-      transition: width 1.5s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .stage.active .timeline-line-fill { width: 100%; }
-
-    .timeline-card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 28px 24px;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-      cursor: pointer;
-      will-change: transform;
-    }
-    .timeline-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-      border-color: var(--yellow);
-    }
-    .timeline-card-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 16px;
-    }
-    .timeline-card:nth-child(1) .timeline-card-num { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
-    .timeline-card:nth-child(2) .timeline-card-num { background: linear-gradient(135deg, var(--green), var(--green-light)); }
-    .timeline-card:nth-child(3) .timeline-card-num { background: linear-gradient(135deg, #D97706, #FBBF24); }
-    .timeline-card:nth-child(4) .timeline-card-num { background: linear-gradient(135deg, var(--green), #34D399); }
-    .timeline-card-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .timeline-card-week {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    /* Stagger animation */
-    .timeline-card {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    .stage.active .timeline-card {
-      animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-    }
-    .stage.active .timeline-card:nth-child(1) { animation-delay: 0.2s; }
-    .stage.active .timeline-card:nth-child(2) { animation-delay: 0.4s; }
-    .stage.active .timeline-card:nth-child(3) { animation-delay: 0.6s; }
-    .stage.active .timeline-card:nth-child(4) { animation-delay: 0.8s; }
-
-    /* Timeline detail rows */
-    .timeline-details {
-      display: grid;
-      grid-template-columns: 180px repeat(4, 1fr);
-      gap: 0;
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      overflow: hidden;
-      background: white;
-    }
-    .timeline-details-row {
-      display: contents;
-    }
-    .timeline-details-label {
-      padding: 14px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      background: rgba(0,0,0,0.02);
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-    }
-    .timeline-details-cell {
-      padding: 14px 16px;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.5;
-      border-bottom: 1px solid var(--card-border);
-      border-left: 1px solid var(--card-border);
-    }
-    .timeline-details-row:last-child .timeline-details-label,
-    .timeline-details-row:last-child .timeline-details-cell {
-      border-bottom: none;
-    }
-
-    .timeline-details {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    .stage.active .timeline-details {
-      animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) 1s forwards;
-    }
-
-    /* ═══════════════════════════════════════
-       WEEK STAGES (3-6)
-    ═══════════════════════════════════════ */
-    .week-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      max-width: 1200px;
-      width: 100%;
-    }
-    .week-layout.mirrored { direction: rtl; }
-    .week-layout.mirrored > * { direction: ltr; }
-
-    .week-hero {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .week-number {
-      font-size: clamp(80px, 12vw, 160px);
-      font-weight: 700;
-      line-height: 1;
-      opacity: 0.06;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-    .week-layout:not(.mirrored) .week-number { left: -20px; }
-    .week-layout.mirrored .week-number { right: -20px; }
-
-    .week-label {
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .week-label.navy { color: var(--navy); }
-    .week-label.green { color: var(--green); }
-    .week-label.amber { color: #D97706; }
-
-    .week-title {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--text);
-    }
-    .week-focus {
-      font-size: 16px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 500px;
-    }
-    .week-accent-bar {
-      width: 60px;
-      height: 4px;
-      border-radius: 2px;
-    }
-    .week-accent-bar.navy { background: linear-gradient(90deg, var(--navy), var(--navy-light)); }
-    .week-accent-bar.green { background: linear-gradient(90deg, var(--green), var(--green-light)); }
-    .week-accent-bar.amber { background: linear-gradient(90deg, #D97706, #FBBF24); }
-
-    .week-card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 36px;
-      box-shadow: 0 4px 40px rgba(0,0,0,0.04);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      will-change: transform;
-    }
-    .week-card:hover {
-      box-shadow: 0 12px 48px rgba(0,0,0,0.08);
-    }
-
-    .week-section {
-      margin-bottom: 24px;
-    }
-    .week-section:last-child { margin-bottom: 0; }
-    .week-section-title {
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-dim);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .week-section-title .icon {
-      width: 18px; height: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .week-section ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .week-section li {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.5;
-      padding-left: 20px;
-      position: relative;
-    }
-    .week-section li::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 8px;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--yellow);
-    }
-    .week-section p {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.6;
-    }
-
-    .week-callout {
-      margin-top: 24px;
-      padding: 16px 20px;
-      border-radius: 12px;
-      border-left: 3px solid var(--yellow);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      line-height: 1.6;
-      font-style: italic;
-    }
-    .week-callout.navy-bg {
-      background: linear-gradient(135deg, rgba(0,51,164,0.05), rgba(0,100,225,0.03));
-      border-left-color: var(--navy);
-    }
-    .week-callout.green-bg {
-      background: linear-gradient(135deg, rgba(0,155,0,0.05), rgba(0,237,126,0.03));
-      border-left-color: var(--green);
-    }
-    .week-callout.amber-bg {
-      background: linear-gradient(135deg, rgba(217,119,6,0.05), rgba(251,191,36,0.03));
-      border-left-color: #D97706;
-    }
-    .week-callout.celebration {
-      background: linear-gradient(135deg, rgba(0,155,0,0.08), rgba(0,237,126,0.04));
-      border-left-color: var(--green);
-    }
-
-    /* Week stage animation */
-    .week-hero, .week-card {
-      opacity: 0;
-    }
-    .stage.active .week-hero {
-      animation: fadeInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
-    }
-    .stage.active .week-layout.mirrored .week-hero {
-      animation: fadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.2s forwards;
-    }
-    .stage.active .week-card {
-      animation: fadeInRight 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
-    }
-    .stage.active .week-layout.mirrored .week-card {
-      animation: fadeInLeft 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.4s forwards;
-    }
-
-    /* ═══════════════════════════════════════
-       STAGE 7 & 8: CONTRACT & BILLING
-    ═══════════════════════════════════════ */
     .info-stage-content {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 32px;
+      gap: 28px;
       max-width: 640px;
     }
     .info-stage-icon {
-      width: 64px; height: 64px;
-      border-radius: 16px;
+      width: 80px;
+      height: 80px;
+      border-radius: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
-    .info-stage-icon.navy { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
-    .info-stage-icon.green { background: linear-gradient(135deg, var(--green), var(--green-light)); }
-    .info-stage-icon svg { width: 28px; height: 28px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .info-stage-icon.navy { background: linear-gradient(135deg, var(--navy), var(--navy-light)); box-shadow: 0 8px 32px rgba(0,51,164,0.2); }
+    .info-stage-icon.green { background: linear-gradient(135deg, var(--green), var(--green-light)); box-shadow: 0 8px 32px rgba(0,155,0,0.2); }
+    .info-stage-icon svg { width: 32px; height: 32px; stroke: white; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
     .info-stage-title {
-      font-size: clamp(24px, 3vw, 36px);
+      font-size: clamp(28px, 3vw, 40px);
       font-weight: 700;
       color: var(--text);
+      letter-spacing: -0.03em;
     }
     .info-stage-brand {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-dim);
-      font-weight: 500;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
+    /* Dark card on light bg for premium feel */
     .info-card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 36px;
+      background: #1A1A2E;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 40px;
       text-align: left;
       width: 100%;
-      box-shadow: 0 4px 40px rgba(0,0,0,0.04);
+      box-shadow: 0 16px 64px rgba(0,0,0,0.12);
+      color: rgba(255,255,255,0.85);
     }
     .info-card p {
       font-size: 14px;
-      color: var(--text);
       line-height: 1.7;
       margin-bottom: 16px;
+      color: rgba(255,255,255,0.7);
     }
     .info-card p:last-child { margin-bottom: 0; }
+    .info-card p strong { color: white; }
     .info-card ul {
       list-style: none;
       display: flex;
@@ -767,9 +1029,9 @@
     }
     .info-card li {
       font-size: 14px;
-      color: var(--text);
+      color: rgba(255,255,255,0.7);
       line-height: 1.5;
-      padding-left: 20px;
+      padding-left: 24px;
       position: relative;
     }
     .info-card li::before {
@@ -781,44 +1043,50 @@
       background: var(--yellow);
     }
     .info-label {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 4px 12px;
-      border-radius: 6px;
-      margin-bottom: 16px;
+      letter-spacing: 0.1em;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
     }
-    .info-label.navy { background: var(--navy-dim); color: var(--navy); }
-    .info-label.green { background: var(--green-bg); color: var(--green); }
+    .info-label.navy { background: rgba(0,100,225,0.15); color: var(--navy-light); }
+    .info-label.green { background: rgba(0,237,126,0.12); color: var(--green-light); }
 
+    /* Pill CTA buttons */
     .btn-cta {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--yellow);
+      gap: 10px;
+      background: linear-gradient(135deg, var(--yellow), var(--yellow-light));
       color: #000;
       border: none;
-      border-radius: 12px;
-      padding: 14px 28px;
+      border-radius: 100px;
+      padding: 16px 36px;
       font-size: 15px;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
       text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(255,217,0,0.2);
-      animation: glowPulse 3s ease-in-out infinite;
+      transition: all 0.4s var(--ease-out-expo);
+      box-shadow: 0 4px 24px rgba(255,217,0,0.25);
+      letter-spacing: -0.01em;
     }
-    .btn-cta:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 0 30px rgba(255,217,0,0.4); }
+    .btn-cta:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 40px rgba(255,217,0,0.4);
+    }
     .btn-cta svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
 
     .info-note {
       font-size: 12px;
       color: var(--text-dim);
       line-height: 1.6;
-      margin-top: 12px;
+      margin-top: 8px;
     }
 
     /* Info stage animation */
@@ -827,14 +1095,23 @@
       transform: translateY(24px);
     }
     .stage.active .info-stage-content > * {
-      animation: fadeInUp 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      animation: fadeInUp 0.7s var(--ease-out-expo) forwards;
     }
-    .stage.active .info-stage-content > *:nth-child(1) { animation-delay: 0.1s; }
-    .stage.active .info-stage-content > *:nth-child(2) { animation-delay: 0.2s; }
-    .stage.active .info-stage-content > *:nth-child(3) { animation-delay: 0.3s; }
-    .stage.active .info-stage-content > *:nth-child(4) { animation-delay: 0.4s; }
-    .stage.active .info-stage-content > *:nth-child(5) { animation-delay: 0.5s; }
-    .stage.active .info-stage-content > *:nth-child(6) { animation-delay: 0.6s; }
+    .stage.active .info-stage-content > *:nth-child(1) { animation-delay: 0.08s; }
+    .stage.active .info-stage-content > *:nth-child(2) { animation-delay: 0.16s; }
+    .stage.active .info-stage-content > *:nth-child(3) { animation-delay: 0.24s; }
+    .stage.active .info-stage-content > *:nth-child(4) { animation-delay: 0.32s; }
+    .stage.active .info-stage-content > *:nth-child(5) { animation-delay: 0.40s; }
+    .stage.active .info-stage-content > *:nth-child(6) { animation-delay: 0.48s; }
+
+    /* Billing card 3D perspective */
+    #stage-billing .info-stage-icon {
+      transform: perspective(600px) rotateY(-8deg) rotateX(5deg);
+      transition: transform 0.6s var(--ease-out-expo);
+    }
+    #stage-billing .info-stage-icon:hover {
+      transform: perspective(600px) rotateY(0deg) rotateX(0deg);
+    }
 
     /* ═══════════════════════════════════════
        CONFETTI (Stage 6 celebration)
@@ -865,23 +1142,19 @@
 
       .timeline-cards { grid-template-columns: repeat(2, 1fr); gap: 16px; }
       .timeline-line { display: none; }
-      .timeline-details { grid-template-columns: 1fr; }
-      .timeline-details-row { display: grid; grid-template-columns: 1fr 1fr; }
-      .timeline-details-label { grid-column: 1 / -1; }
+      .timeline-details-row { grid-template-columns: 1fr; }
+      .timeline-details-cell { border-left: none; }
 
-      .week-layout,
-      .week-layout.mirrored {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        direction: ltr;
-      }
-      .week-layout.mirrored > * { direction: ltr; }
-      .week-number { display: none; }
-      .week-card { padding: 24px; }
+      .week-stage-inner::before { display: none; }
+      .week-watermark { display: none; }
+      .week-stage-inner { max-width: 100%; }
 
-      .stage-nav { right: 10px; gap: 8px; }
-      .stage-dot { width: 8px; height: 8px; }
-      .stage-dot-label { display: none; }
+      .welcome-stats { flex-direction: row; gap: 12px; }
+      .welcome-stat { padding: 10px 16px; }
+
+      .stage-nav { right: 10px; gap: 4px; }
+      .stage-dot.active { min-width: 60px; }
+      .stage-dot-label { font-size: 8px; }
     }
 
     @media (max-width: 600px) {
@@ -897,12 +1170,14 @@
       .timeline-title { font-size: 24px; margin-bottom: 24px; }
 
       .welcome-content { gap: 16px; }
-      .welcome-logo { width: 80px; }
+      .welcome-logo-wrap { width: 100px; height: 100px; }
+      .welcome-logo { width: 60px; }
+      .welcome-stats { flex-wrap: wrap; justify-content: center; }
 
-      .week-card { padding: 20px; }
       .info-card { padding: 24px; }
 
-      .stage-nav { right: 6px; gap: 6px; }
+      .stage-nav { right: 6px; gap: 4px; }
+      .stage-dot.active { min-width: 50px; height: 18px; }
     }
   </style>
 </head>
@@ -932,7 +1207,7 @@
 </header>
 
 <!-- ═══════════════════════════════════════════════
-     STAGE NAV DOTS
+     STAGE NAV DOTS — Pill Style
 ════════════════════════════════════════════════ -->
 <nav class="stage-nav" aria-label="Stage navigation">
   <div class="stage-dot active" data-stage="0"><span class="stage-dot-label">Welcome</span></div>
@@ -950,83 +1225,136 @@
 ════════════════════════════════════════════════ -->
 <div class="stage-container" id="stageContainer">
 
-  <!-- ═══════════════ STAGE 1: WELCOME ═══════════════ -->
+  <!-- ═══════════════ STAGE 1: WELCOME — Cinematic Dark Hero ═══════════════ -->
   <section class="stage active" id="stage-welcome" aria-label="Welcome">
     <div class="welcome-content">
-      <svg class="welcome-logo animate" viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io logo">
-        <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
-      </svg>
+      <div class="welcome-logo-wrap">
+        <div class="welcome-logo-ring"></div>
+        <svg class="welcome-logo" viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io logo">
+          <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+        </svg>
+      </div>
       <div class="welcome-restaurant" id="welcomeRestaurant">Your Restaurant</div>
       <div class="welcome-subtitle">Strategy + Setup 2026</div>
       <div class="welcome-tagline">Your AI Growth Engine</div>
-      <div class="welcome-am">Managed by <strong id="welcomeAM">Your Account Manager</strong></div>
+      <div class="welcome-stats">
+        <div class="welcome-stat glass-dark">
+          <div class="welcome-stat-num">4</div>
+          <div class="welcome-stat-label">Weeks</div>
+        </div>
+        <div class="welcome-stat glass-dark">
+          <div class="welcome-stat-num">3</div>
+          <div class="welcome-stat-label">Calls</div>
+        </div>
+        <div class="welcome-stat glass-dark">
+          <div class="welcome-stat-num">1</div>
+          <div class="welcome-stat-label">Goal</div>
+        </div>
+      </div>
+      <div class="welcome-am glass-dark">Managed by <strong id="welcomeAM">Your Account Manager</strong></div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(1)">
-      <span>Scroll to begin</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <span>Begin your journey</span>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="currentColor"/></svg>
     </div>
   </section>
 
-  <!-- ═══════════════ STAGE 2: TIMELINE ═══════════════ -->
+  <!-- ═══════════════ STAGE 2: TIMELINE — Holographic Card Runway ═══════════════ -->
   <section class="stage" id="stage-timeline" aria-label="Timeline Overview">
     <div class="timeline-content">
       <h2 class="timeline-title">Client Onboarding Timeline</h2>
 
       <div class="timeline-cards">
         <div class="timeline-line"><div class="timeline-line-fill"></div></div>
+
+        <!-- Week 1: Compass -->
         <div class="timeline-card" onclick="scrollToStage(2)">
-          <div class="timeline-card-num">1</div>
+          <div class="timeline-card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="rgba(255,255,255,0.2)"/></svg>
+          </div>
           <div class="timeline-card-title">Strategy & Setup</div>
           <div class="timeline-card-week">Week 1</div>
         </div>
+
+        <!-- Week 2: Circuit -->
         <div class="timeline-card" onclick="scrollToStage(3)">
-          <div class="timeline-card-num">2</div>
+          <div class="timeline-card-icon">
+            <svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/><path d="M10 7h4v3a1 1 0 0 0 1 1h3M14 17h-4v-3a1 1 0 0 0-1-1H6"/></svg>
+          </div>
           <div class="timeline-card-title">Technical Integrations</div>
           <div class="timeline-card-week">Week 2</div>
         </div>
+
+        <!-- Week 3: Rocket -->
         <div class="timeline-card" onclick="scrollToStage(4)">
-          <div class="timeline-card-num">3</div>
+          <div class="timeline-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+          </div>
           <div class="timeline-card-title">Activation & Ad Strategy</div>
           <div class="timeline-card-week">Week 3</div>
         </div>
+
+        <!-- Week 4: Trophy -->
         <div class="timeline-card" onclick="scrollToStage(5)">
-          <div class="timeline-card-num">4</div>
+          <div class="timeline-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          </div>
           <div class="timeline-card-title">Final Review & Go-Live</div>
           <div class="timeline-card-week">Week 4</div>
         </div>
       </div>
 
       <div class="timeline-details">
+        <!-- Calls -->
         <div class="timeline-details-row">
-          <div class="timeline-details-label">Calls You Attend</div>
+          <div class="timeline-details-label">
+            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Calls You Attend
+          </div>
           <div class="timeline-details-cell">Call #1: Overview & QR Code Planning</div>
           <div class="timeline-details-cell">Call #2: Technical Setup & Integrations</div>
           <div class="timeline-details-cell">Call #3: QR Implementation + Ad Strategy</div>
           <div class="timeline-details-cell">No call unless changes needed</div>
         </div>
+        <!-- Account Manager -->
         <div class="timeline-details-row">
-          <div class="timeline-details-label">Account Manager</div>
+          <div class="timeline-details-label">
+            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Account Manager
+          </div>
           <div class="timeline-details-cell">Strategy alignment, goal setting, QR planning</div>
           <div class="timeline-details-cell">Project management, stays involved</div>
           <div class="timeline-details-cell">Campaign direction, ad strategy review</div>
           <div class="timeline-details-cell">Final approval coordination</div>
         </div>
+        <!-- Integrations -->
         <div class="timeline-details-row">
-          <div class="timeline-details-label">Integrations Specialist</div>
+          <div class="timeline-details-label">
+            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m2 12 5 3 5-6 4 4 6-5"/></svg>
+            Integrations Specialist
+          </div>
           <div class="timeline-details-cell">--</div>
           <div class="timeline-details-cell">POS, online ordering, reservation integrations</div>
           <div class="timeline-details-cell">--</div>
           <div class="timeline-details-cell">--</div>
         </div>
+        <!-- Billing -->
         <div class="timeline-details-row">
-          <div class="timeline-details-label">Billing</div>
+          <div class="timeline-details-label">
+            <svg viewBox="0 0 24 24" stroke="var(--navy)"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Billing
+          </div>
           <div class="timeline-details-cell">ACH + backup card setup</div>
           <div class="timeline-details-cell">--</div>
           <div class="timeline-details-cell">--</div>
           <div class="timeline-details-cell">Monthly billing begins</div>
         </div>
+        <!-- QR Codes -->
         <div class="timeline-details-row">
-          <div class="timeline-details-label">QR Code Shipment</div>
+          <div class="timeline-details-label">
+            <svg viewBox="0 0 24 24" stroke="var(--navy)"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            QR Code Shipment
+          </div>
           <div class="timeline-details-cell">QR codes designed & ordered</div>
           <div class="timeline-details-cell">In production</div>
           <div class="timeline-details-cell">QR codes arrive & activated in-store</div>
@@ -1036,176 +1364,240 @@
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(2)">
       <span>Continue</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
     </div>
   </section>
 
-  <!-- ═══════════════ STAGE 3: WEEK 1 ═══════════════ -->
+  <!-- ═══════════════ STAGE 3: WEEK 1 — Strategy & Setup ═══════════════ -->
   <section class="stage" id="stage-week1" aria-label="Week 1: Strategy and Setup">
-    <div class="week-layout">
-      <div class="week-hero">
-        <div class="week-number">01</div>
-        <div class="week-accent-bar navy"></div>
+    <div class="week-stage-inner">
+      <div class="week-watermark navy">01</div>
+
+      <div class="week-step-indicator">
+        <span class="week-step-text">Week 1 of 4</span>
+        <div class="week-step-bar"><div class="week-step-fill"></div></div>
+      </div>
+
+      <div class="week-header">
         <div class="week-label navy">Week 1</div>
         <h2 class="week-title">Strategy & Setup</h2>
         <p class="week-focus">Alignment and foundations. This is where we set expectations and design the system that will capture guest data inside your restaurant.</p>
       </div>
-      <div class="week-card">
-        <div class="week-section">
-          <div class="week-section-title">What you'll do</div>
-          <ul>
-            <li>Attend Call #1 (Overview & QR Code Planning) with your dedicated Account Manager</li>
-            <li>Review goals, success metrics, and overall strategy</li>
-            <li>Finalize QR code placement and usage inside your restaurant</li>
-            <li>Set up billing (ACH + backup card)</li>
-          </ul>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          What you'll do
         </div>
-        <div class="week-section">
-          <div class="week-section-title">Who you'll talk to</div>
-          <p>Your Dedicated Account Manager -- your main point of contact throughout the entire process.</p>
-        </div>
-        <div class="week-section">
-          <div class="week-section-title">What we're doing internally</div>
-          <ul>
-            <li>Building your Dishio account (menus, smart site, flows)</li>
-            <li>Preparing QR codes tied directly to your Dishio system</li>
-            <li>Initiating QR code printing or shipment</li>
-          </ul>
-        </div>
-        <div class="week-callout navy-bg">This step matters because everything else builds on the Dishio system.</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Attend Call #1 (Overview & QR Code Planning) with your dedicated Account Manager</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Review goals, success metrics, and overall strategy</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Finalize QR code placement and usage inside your restaurant</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Set up billing (ACH + backup card)</li>
+        </ul>
       </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Who you'll talk to
+        </div>
+        <p>Your Dedicated Account Manager -- your main point of contact throughout the entire process.</p>
+      </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          What we're doing internally
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Building your Dishio account (menus, smart site, flows)</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Preparing QR codes tied directly to your Dishio system</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Initiating QR code printing or shipment</li>
+        </ul>
+      </div>
+
+      <div class="week-callout navy-border">This step matters because everything else builds on the Dishio system.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(3)">
       <span>Continue</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
     </div>
   </section>
 
-  <!-- ═══════════════ STAGE 4: WEEK 2 ═══════════════ -->
+  <!-- ═══════════════ STAGE 4: WEEK 2 — Technical Integrations ═══════════════ -->
   <section class="stage" id="stage-week2" aria-label="Week 2: Technical Integrations">
-    <div class="week-layout mirrored">
-      <div class="week-hero">
-        <div class="week-number">02</div>
-        <div class="week-accent-bar green"></div>
+    <div class="week-stage-inner">
+      <div class="week-watermark green">02</div>
+
+      <div class="week-step-indicator">
+        <span class="week-step-text">Week 2 of 4</span>
+        <div class="week-step-bar"><div class="week-step-fill"></div></div>
+      </div>
+
+      <div class="week-header">
         <div class="week-label green">Week 2</div>
         <h2 class="week-title">Technical Integrations</h2>
         <p class="week-focus">Making sure all systems "talk" to each other. We need to integrate to your key systems such as POS, online orders, reservation system, etc.</p>
       </div>
-      <div class="week-card">
-        <div class="week-section">
-          <div class="week-section-title">What you'll do</div>
-          <ul>
-            <li>Attend Call #2 (Technical Setup & Integrations)</li>
-          </ul>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          What you'll do
         </div>
-        <div class="week-section">
-          <div class="week-section-title">Who you'll talk to</div>
-          <ul>
-            <li>Integration Specialist (technical setup)</li>
-            <li>Account Manager stays involved and project manages</li>
-          </ul>
-        </div>
-        <div class="week-section">
-          <div class="week-section-title">What we're doing internally</div>
-          <ul>
-            <li>Integrating Dishio with POS system, online ordering, reservation platforms</li>
-            <li>Validating data flow and tracking</li>
-            <li>Finalizing backend setup</li>
-          </ul>
-        </div>
-        <div class="week-callout green-bg">By the end of this week, Dishio is fully connected to your existing tech stack.</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Attend Call #2 (Technical Setup & Integrations)</li>
+        </ul>
       </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Who you'll talk to
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Integration Specialist (technical setup)</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account Manager stays involved and project manages</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>
+          What we're doing internally
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Integrating Dishio with POS system, online ordering, reservation platforms</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Validating data flow and tracking</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Finalizing backend setup</li>
+        </ul>
+      </div>
+
+      <div class="week-callout green-border">By the end of this week, Dishio is fully connected to your existing tech stack.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(4)">
       <span>Continue</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
     </div>
   </section>
 
-  <!-- ═══════════════ STAGE 5: WEEK 3 ═══════════════ -->
+  <!-- ═══════════════ STAGE 5: WEEK 3 — Activation & Ad Strategy ═══════════════ -->
   <section class="stage" id="stage-week3" aria-label="Week 3: Activation and Ad Strategy">
-    <div class="week-layout">
-      <div class="week-hero">
-        <div class="week-number">03</div>
-        <div class="week-accent-bar amber"></div>
+    <div class="week-stage-inner">
+      <div class="week-watermark amber">03</div>
+
+      <div class="week-step-indicator">
+        <span class="week-step-text">Week 3 of 4</span>
+        <div class="week-step-bar"><div class="week-step-fill"></div></div>
+      </div>
+
+      <div class="week-header">
         <div class="week-label amber">Week 3</div>
         <h2 class="week-title">Activation & Ad Strategy</h2>
         <p class="week-focus">Turning the system on and adding fuel. Your QR codes go live in-store and we finalize your ad campaigns.</p>
       </div>
-      <div class="week-card">
-        <div class="week-section">
-          <div class="week-section-title">What you'll do</div>
-          <ul>
-            <li>Attend Call #3 (QR Code Implementation + Ad Strategy)</li>
-            <li>Review campaign direction and targeting</li>
-          </ul>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          What you'll do
         </div>
-        <div class="week-section">
-          <div class="week-section-title">Who you'll talk to</div>
-          <ul>
-            <li>Your Account Manager</li>
-            <li>Media strategy input supported by our Media Buying Team</li>
-          </ul>
-        </div>
-        <div class="week-section">
-          <div class="week-section-title">What we're doing internally</div>
-          <ul>
-            <li>QR codes arrive and are activated in-store</li>
-            <li>Staff training on QR usage (if needed)</li>
-            <li>Building ad creative and campaign assets</li>
-            <li>Finalizing ad strategy tied directly to Dishio data</li>
-          </ul>
-        </div>
-        <div class="week-callout amber-bg">At this point, the system is live in-store -- ads are what scale it.</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Attend Call #3 (QR Code Implementation + Ad Strategy)</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Review campaign direction and targeting</li>
+        </ul>
       </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Who you'll talk to
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Your Account Manager</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Media strategy input supported by our Media Buying Team</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>
+          What we're doing internally
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>QR codes arrive and are activated in-store</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Staff training on QR usage (if needed)</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Building ad creative and campaign assets</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Finalizing ad strategy tied directly to Dishio data</li>
+        </ul>
+      </div>
+
+      <div class="week-callout amber-border">At this point, the system is live in-store -- ads are what scale it.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(5)">
       <span>Continue</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
     </div>
   </section>
 
-  <!-- ═══════════════ STAGE 6: WEEK 4 ═══════════════ -->
+  <!-- ═══════════════ STAGE 6: WEEK 4 — Final Review & Go-Live ═══════════════ -->
   <section class="stage" id="stage-week4" aria-label="Week 4: Final Review and Go-Live">
     <div class="confetti-container" id="confettiContainer"></div>
-    <div class="week-layout mirrored">
-      <div class="week-hero">
-        <div class="week-number">04</div>
-        <div class="week-accent-bar green"></div>
-        <div class="week-label green">Week 4</div>
+    <div class="week-stage-inner">
+      <div class="week-watermark emerald">04</div>
+
+      <div class="week-step-indicator">
+        <span class="week-step-text">Week 4 of 4</span>
+        <div class="week-step-bar"><div class="week-step-fill"></div></div>
+      </div>
+
+      <div class="week-header">
+        <div class="week-label emerald">Week 4</div>
         <h2 class="week-title">Final Review & Go-Live</h2>
         <p class="week-focus">Approval and launch. Everything comes together -- your system is live, your ads are ready, and your growth engine is about to turn on.</p>
       </div>
-      <div class="week-card">
-        <div class="week-section">
-          <div class="week-section-title">What you'll do</div>
-          <ul>
-            <li>Review ads and strategy</li>
-            <li>Give us the thumbs up to go live</li>
-            <li>No call required unless changes are needed</li>
-          </ul>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          What you'll do
         </div>
-        <div class="week-section">
-          <div class="week-section-title">Who's involved</div>
-          <ul>
-            <li>Your Account Manager</li>
-            <li>Media Buying Team</li>
-          </ul>
-        </div>
-        <div class="week-section">
-          <div class="week-section-title">What happens internally</div>
-          <ul>
-            <li>Ads launch on Meta & Google</li>
-            <li>Monthly billing officially begins</li>
-            <li>Ongoing optimization and reporting starts</li>
-          </ul>
-        </div>
-        <div class="week-callout celebration">Your account is now fully onboarded and actively driving traffic, collecting data, and generating revenue.</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Review ads and strategy</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Give us the thumbs up to go live</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>No call required unless changes are needed</li>
+        </ul>
       </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Who's involved
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Your Account Manager</li>
+          <li><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Media Buying Team</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>
+          What happens internally
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Ads launch on Meta & Google</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Monthly billing officially begins</li>
+          <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06"/></svg>Ongoing optimization and reporting starts</li>
+        </ul>
+      </div>
+
+      <div class="week-callout emerald-border">Your account is now fully onboarded and actively driving traffic, collecting data, and generating revenue.</div>
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(6)">
       <span>Continue</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
     </div>
   </section>
 
@@ -1213,9 +1605,9 @@
   <section class="stage" id="stage-contract" aria-label="Contract Review">
     <div class="info-stage-content">
       <div class="info-stage-icon navy">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-      <h2 class="info-stage-title">Contract Review</h2>
+      <h2 class="info-stage-title">Your Agreement</h2>
       <div class="info-stage-brand">Dish.io + Dineline</div>
       <div class="info-card">
         <div class="info-label navy">Agreement</div>
@@ -1229,7 +1621,7 @@
     </div>
     <div class="scroll-indicator" onclick="scrollToStage(7)">
       <span>Continue</span>
-      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
     </div>
   </section>
 
@@ -1332,9 +1724,6 @@ function updateActiveStage(index) {
   stages.forEach((stage, i) => {
     if (i === index) {
       stage.classList.add('active');
-    } else {
-      // Keep active class for visited stages so content stays visible
-      // but could optionally remove for re-animation
     }
   });
 }
@@ -1357,8 +1746,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ═══════════════════════════════════════════════════════════
-   PARTICLE CANVAS — Spatial hash grid optimized
-   Lighter density for onboarding (40 particles)
+   PARTICLE CANVAS — Enhanced for dark welcome stage
 ═══════════════════════════════════════════════════════════ */
 (function initParticles() {
   const canvas = document.getElementById('particle-canvas');
@@ -1366,8 +1754,8 @@ document.addEventListener('keydown', (e) => {
   const ctx = canvas.getContext('2d');
   let w, h;
   const particles = [];
-  const PARTICLE_COUNT = 40;
-  const CONNECT_DIST = 120;
+  const PARTICLE_COUNT = 50;
+  const CONNECT_DIST = 130;
   const CELL_SIZE = CONNECT_DIST;
   let mouseX = -1000, mouseY = -1000;
 
@@ -1379,21 +1767,41 @@ document.addEventListener('keydown', (e) => {
   window.addEventListener('resize', resize, { passive: true });
   document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
 
+  // Determine if welcome stage is visible for brighter particles
+  function isWelcomeVisible() {
+    return currentStage === 0;
+  }
+
   for (let i = 0; i < PARTICLE_COUNT; i++) {
     particles.push({
       x: Math.random() * (w || 1200),
       y: Math.random() * (h || 800),
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      size: 1 + Math.random() * 1.8,
-      color: ['rgba(255,217,0,0.15)', 'rgba(0,51,164,0.12)', 'rgba(0,155,0,0.12)', 'rgba(0,100,225,0.10)'][Math.floor(Math.random() * 4)],
-      lineColor: ['rgba(255,217,0,', 'rgba(0,51,164,', 'rgba(0,155,0,', 'rgba(0,100,225,'][Math.floor(Math.random() * 4)]
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      size: 1.2 + Math.random() * 2,
+      colorIdx: Math.floor(Math.random() * 4)
     });
   }
+
+  const lightColors = [
+    { dot: 'rgba(255,217,0,0.15)', line: 'rgba(255,217,0,' },
+    { dot: 'rgba(0,51,164,0.12)', line: 'rgba(0,51,164,' },
+    { dot: 'rgba(0,155,0,0.12)', line: 'rgba(0,155,0,' },
+    { dot: 'rgba(0,100,225,0.10)', line: 'rgba(0,100,225,' }
+  ];
+  const darkColors = [
+    { dot: 'rgba(255,217,0,0.4)', line: 'rgba(255,217,0,' },
+    { dot: 'rgba(100,180,255,0.3)', line: 'rgba(100,180,255,' },
+    { dot: 'rgba(0,237,126,0.3)', line: 'rgba(0,237,126,' },
+    { dot: 'rgba(255,230,100,0.25)', line: 'rgba(255,230,100,' }
+  ];
 
   function draw() {
     ctx.clearRect(0, 0, w, h);
     const grid = {};
+    const isDark = isWelcomeVisible();
+    const palette = isDark ? darkColors : lightColors;
+    const lineAlphaMultiplier = isDark ? 0.12 : 0.06;
 
     particles.forEach((p, idx) => {
       const dx = p.x - mouseX, dy = p.y - mouseY;
@@ -1411,8 +1819,8 @@ document.addEventListener('keydown', (e) => {
       if (p.y > h + 10) p.y = -10;
 
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
+      ctx.arc(p.x, p.y, isDark ? p.size * 1.3 : p.size, 0, Math.PI * 2);
+      ctx.fillStyle = palette[p.colorIdx].dot;
       ctx.fill();
 
       const gx = Math.floor(p.x / CELL_SIZE), gy = Math.floor(p.y / CELL_SIZE);
@@ -1421,7 +1829,7 @@ document.addEventListener('keydown', (e) => {
       grid[key].push(idx);
     });
 
-    ctx.lineWidth = 0.5;
+    ctx.lineWidth = isDark ? 0.8 : 0.5;
     const checked = new Set();
     particles.forEach((a, i) => {
       const gx = Math.floor(a.x / CELL_SIZE), gy = Math.floor(a.y / CELL_SIZE);
@@ -1438,11 +1846,11 @@ document.addEventListener('keydown', (e) => {
             const dx = a.x - b.x, dy = a.y - b.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < CONNECT_DIST) {
-              const alpha = (1 - dist / CONNECT_DIST) * 0.06;
+              const alpha = (1 - dist / CONNECT_DIST) * lineAlphaMultiplier;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
               ctx.lineTo(b.x, b.y);
-              ctx.strokeStyle = a.lineColor + alpha + ')';
+              ctx.strokeStyle = palette[a.colorIdx].line + alpha + ')';
               ctx.stroke();
             }
           }
@@ -1475,10 +1883,9 @@ document.addEventListener('keydown', (e) => {
   }, { passive: true });
 
   function applyTilt() {
-    const cards = document.querySelectorAll('.timeline-card, .week-card, .info-card');
+    const cards = document.querySelectorAll('.timeline-card, .info-card');
     cards.forEach(card => {
       const rect = card.getBoundingClientRect();
-      // Only process visible cards
       if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
       const cx = rect.left + rect.width / 2;
@@ -1488,8 +1895,8 @@ document.addEventListener('keydown', (e) => {
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist < 1.5) {
-        const rotateX = dy * -6;
-        const rotateY = dx * 6;
+        const rotateX = dy * -5;
+        const rotateY = dx * 5;
         card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
       } else {
         card.style.transform = '';
@@ -1497,9 +1904,8 @@ document.addEventListener('keydown', (e) => {
     });
   }
 
-  // Reset on mouse leave
   document.addEventListener('mouseleave', () => {
-    document.querySelectorAll('.timeline-card, .week-card, .info-card').forEach(card => {
+    document.querySelectorAll('.timeline-card, .info-card').forEach(card => {
       card.style.transform = '';
     });
   });
@@ -1511,10 +1917,10 @@ document.addEventListener('keydown', (e) => {
 (function initConfetti() {
   const container = document.getElementById('confettiContainer');
   if (!container) return;
-  const colors = ['#FFD900', '#00ED7E', '#0064E1', '#009B00', '#FFE644', '#0033A4'];
+  const colors = ['#FFD900', '#00ED7E', '#0064E1', '#009B00', '#FFE644', '#0033A4', '#34D399'];
   const shapes = ['circle', 'square'];
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 60; i++) {
     const piece = document.createElement('div');
     piece.classList.add('confetti-piece');
     const color = colors[Math.floor(Math.random() * colors.length)];
