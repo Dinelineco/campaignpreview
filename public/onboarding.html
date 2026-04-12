@@ -184,15 +184,15 @@
     }
     .header-logo svg:hover { filter: drop-shadow(0 0 16px rgba(255,217,0,0.6)); }
 
-    .header-nav { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .header-nav-link {
-      padding: 6px 14px; border-radius: 100px; font-family: 'Space Grotesk', sans-serif;
-      font-size: 12px; font-weight: 600; cursor: pointer; border: none;
-      background: transparent; color: rgba(255,255,255,0.5);
-      transition: all 0.3s ease; text-decoration: none;
+    .header-nav { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .nav-link {
+      padding: 8px 16px; border-radius: 100px; font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+      background: transparent; color: rgba(255,255,255,0.6);
+      transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
     }
-    .header-nav-link:hover { color: #FFFFFF; background: rgba(255,255,255,0.08); }
-    .header-nav-link.active { color: #FFFFFF; background: rgba(255,255,255,0.12); }
+    .nav-link:hover { color: #FFFFFF; background: rgba(255,255,255,0.08); }
+    .nav-link.active { color: #FFFFFF; background: rgba(255,255,255,0.12); }
 
     .header-center { flex: 1; text-align: center; min-width: 0; }
     #clientName {
@@ -1669,9 +1669,9 @@
   </div>
 
   <nav class="header-nav">
-    <a href="/" class="header-nav-link">Admin</a>
-    <a href="/dashboard" class="header-nav-link">Dashboard</a>
-    <a href="/onboarding" class="header-nav-link active">Onboarding</a>
+    <a href="/" class="nav-link">Admin</a>
+    <a href="/dashboard" class="nav-link">Dashboard</a>
+    <a href="/onboarding" class="nav-link active">Onboarding</a>
   </nav>
   <div class="header-center">
     <div id="clientName">Your Restaurant</div>
