@@ -401,6 +401,21 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       animation: textGradientShift 6s ease-in-out infinite;
+      min-height: 1.1em;
+    }
+    .welcome-restaurant .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--yellow);
+      margin-left: 4px;
+      vertical-align: baseline;
+      animation: cursorBlink 0.7s step-end infinite;
+      -webkit-text-fill-color: initial;
+    }
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
     }
 
     .welcome-subtitle {
@@ -2522,9 +2537,28 @@
 
   document.getElementById('clientName').textContent = name;
   document.getElementById('accountManagerName').textContent = am;
-  document.getElementById('welcomeRestaurant').textContent = name;
   document.getElementById('welcomeAM').textContent = am;
   document.title = name + ' — Onboarding — Dish.io';
+
+  // Typewriter effect for restaurant name
+  const el = document.getElementById('welcomeRestaurant');
+  el.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  el.appendChild(cursor);
+  let i = 0;
+  const speed = 80;
+  function typeNext() {
+    if (i < name.length) {
+      el.insertBefore(document.createTextNode(name[i]), cursor);
+      i++;
+      setTimeout(typeNext, speed + Math.random() * 40);
+    } else {
+      // Remove cursor after a pause
+      setTimeout(() => { cursor.style.animation = 'none'; cursor.style.opacity = '0'; cursor.style.transition = 'opacity 0.5s'; }, 1500);
+    }
+  }
+  setTimeout(typeNext, 600);
 })();
 
 /* ═══════════════════════════════════════════════════════════
