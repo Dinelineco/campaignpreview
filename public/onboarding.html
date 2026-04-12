@@ -1018,6 +1018,165 @@
         radial-gradient(ellipse 50% 50% at 30% 80%, rgba(0,51,164,0.04) 0%, transparent 50%);
     }
 
+    /* Billing Info stage — yellow tint aurora like week2 */
+    #stage-billing-info::before {
+      background:
+        radial-gradient(ellipse 60% 60% at 70% 40%, rgba(255,217,0,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 30% 70%, rgba(0,51,164,0.04) 0%, transparent 50%);
+    }
+    #stage-billing-info .week-stage-inner::before { background: linear-gradient(180deg, var(--yellow), var(--yellow-light)); }
+    #stage-billing-info .week-section-chip { background: var(--yellow-dim); color: #B8A000; }
+    #stage-billing-info .week-section-chip svg { stroke: #B8A000; }
+    #stage-billing-info .week-section li svg { stroke: var(--yellow); }
+
+    /* Complete Onboarding button — green prominent */
+    .btn-complete {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      padding: 16px 36px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.4s var(--ease-out-expo);
+      box-shadow: 0 4px 24px rgba(0,155,0,0.25);
+      letter-spacing: -0.01em;
+      margin-top: 12px;
+    }
+    .btn-complete:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 40px rgba(0,155,0,0.4);
+    }
+    .btn-complete svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+    /* Onboarding Complete Modal */
+    .onboarding-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    .onboarding-modal-overlay.visible { display: flex; }
+    .onboarding-modal {
+      background: var(--card);
+      border-radius: 24px;
+      padding: 40px;
+      max-width: 520px;
+      width: 90%;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+      position: relative;
+      animation: scaleIn 0.4s var(--ease-out-expo);
+    }
+    .onboarding-modal h3 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .onboarding-modal p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .onboarding-modal label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .onboarding-modal input[type="text"],
+    .onboarding-modal input[type="email"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg);
+      margin-bottom: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .onboarding-modal input:focus { border-color: var(--green); }
+    .onboarding-modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .onboarding-modal-actions .btn-complete { flex: 1; justify-content: center; margin-top: 0; }
+    .onboarding-modal-actions .btn-cancel {
+      flex: 0 0 auto;
+      padding: 16px 24px;
+      border: 1px solid var(--card-border);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .onboarding-modal-actions .btn-cancel:hover { background: var(--bg); }
+    .onboarding-modal .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: var(--bg);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: background 0.2s;
+    }
+    .onboarding-modal .modal-close:hover { background: var(--card-border); }
+
+    /* Success state */
+    .onboarding-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+      padding: 20px 0;
+    }
+    .onboarding-success.visible { display: flex; }
+    .onboarding-success .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: scaleIn 0.5s var(--ease-out-expo);
+    }
+    .onboarding-success .success-icon svg { width: 32px; height: 32px; stroke: white; fill: none; stroke-width: 2.5; }
+    .onboarding-success h3 { font-size: 24px; font-weight: 700; color: var(--text); }
+    .onboarding-success p { font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 360px; }
+
     .info-stage-content {
       display: flex;
       flex-direction: column;
@@ -1504,7 +1663,7 @@
     <div id="accountManagerName">Your Account Manager</div>
   </div>
   <div class="header-right">
-    <div class="header-stage-label">Stage <span id="headerStageNum">1</span> / 8</div>
+    <div class="header-stage-label">Stage <span id="headerStageNum">1</span> / 9</div>
   </div>
 </header>
 
@@ -1519,7 +1678,8 @@
   <div class="stage-dot" data-stage="4"><span class="stage-dot-label">Week 2</span></div>
   <div class="stage-dot" data-stage="5"><span class="stage-dot-label">Week 3</span></div>
   <div class="stage-dot" data-stage="6"><span class="stage-dot-label">Week 4</span></div>
-  <div class="stage-dot" data-stage="7"><span class="stage-dot-label">Contract</span></div>
+  <div class="stage-dot" data-stage="7"><span class="stage-dot-label">Billing</span></div>
+  <div class="stage-dot" data-stage="8"><span class="stage-dot-label">Contract</span></div>
 </nav>
 
 <!-- ═══════════════════════════════════════════════
@@ -2232,7 +2392,50 @@
     </div>
   </section>
 
-  <!-- ═══════════════ STAGE 7: CONTRACT ═══════════════ -->
+  <!-- ═══════════════ STAGE 7: BILLING INFO ═══════════════ -->
+  <section class="stage" id="stage-billing-info" aria-label="Billing and Payment Setup">
+    <div class="week-stage-inner">
+      <div class="week-watermark yellow">$</div>
+
+      <div class="week-header">
+        <div class="week-label yellow">Billing</div>
+        <h2 class="week-title">Billing &amp; Payment Setup</h2>
+        <p class="week-focus">Secure payment setup ensures uninterrupted service. We accept ACH and credit card payments.</p>
+      </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Payment Methods
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>ACH bank transfer (preferred — lower processing fees)</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Credit card on file as backup</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Monthly invoicing with Net-15 terms</li>
+        </ul>
+      </div>
+
+      <div class="week-section">
+        <div class="week-section-chip">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          What to prepare
+        </div>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Bank routing and account numbers for ACH setup</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Backup credit card details</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Billing contact name and email</li>
+        </ul>
+      </div>
+
+      <div class="week-callout yellow-border">All payment information is securely processed and encrypted. Your Account Manager will walk you through setup on your first call.</div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(8)">
+      <span>Continue</span>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="var(--text-dim)"/></svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════ STAGE 8: CONTRACT ═══════════════ -->
   <section class="stage" id="stage-contract" aria-label="Contract Review">
     <div class="info-stage-content">
       <div class="info-stage-icon blue">
@@ -2249,9 +2452,49 @@
         Review Contract
         <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
+      <button class="btn-complete" id="btnCompleteOnboarding" onclick="openOnboardingModal()">
+        Complete Onboarding
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
     </div>
   </section>
 
+
+<!-- Onboarding Complete Modal -->
+<div class="onboarding-modal-overlay" id="onboardingModal">
+  <div class="onboarding-modal">
+    <button class="modal-close" onclick="closeOnboardingModal()" aria-label="Close">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div id="onboardingFormView">
+      <h3>Complete Onboarding</h3>
+      <p>Confirm the details below to finalize onboarding. A welcome email will be sent to the client.</p>
+
+      <label for="modalClientEmail">Client Email</label>
+      <input type="email" id="modalClientEmail" placeholder="client@restaurant.com" />
+
+      <label for="modalAmEmail">Account Manager Email</label>
+      <input type="email" id="modalAmEmail" placeholder="am@dish.io" />
+
+      <div class="onboarding-modal-actions">
+        <button class="btn-cancel" onclick="closeOnboardingModal()">Cancel</button>
+        <button class="btn-complete" id="btnConfirmComplete" onclick="submitOnboardingComplete()">
+          Confirm &amp; Send
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="onboarding-success" id="onboardingSuccessView">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3>Onboarding Complete!</h3>
+      <p>A welcome email has been sent. Your Account Manager is your main point of contact going forward.</p>
+    </div>
+  </div>
+</div>
 
 </div><!-- end stage-container -->
 
@@ -2679,6 +2922,90 @@ document.addEventListener('keydown', (e) => {
     }
   });
 })();
+
+/* ═══════════════════════════════════════════════════════════
+   ONBOARDING COMPLETE — Modal + API submission + Confetti
+═══════════════════════════════════════════════════════════ */
+function openOnboardingModal() {
+  const params = new URLSearchParams(window.location.search);
+  const clientEmail = params.get('email') || '';
+  const amEmail = params.get('am_email') || '';
+  document.getElementById('modalClientEmail').value = clientEmail;
+  document.getElementById('modalAmEmail').value = amEmail;
+  document.getElementById('onboardingFormView').style.display = '';
+  document.getElementById('onboardingSuccessView').classList.remove('visible');
+  document.getElementById('onboardingModal').classList.add('visible');
+}
+
+function closeOnboardingModal() {
+  document.getElementById('onboardingModal').classList.remove('visible');
+}
+
+async function submitOnboardingComplete() {
+  const params = new URLSearchParams(window.location.search);
+  const clientName = params.get('name') || 'Your Restaurant';
+  const amName = params.get('am') || 'Your Account Manager';
+  const clientEmail = document.getElementById('modalClientEmail').value.trim();
+  const amEmail = document.getElementById('modalAmEmail').value.trim();
+
+  if (!clientEmail || !amEmail) {
+    alert('Please fill in both email fields.');
+    return;
+  }
+
+  const btn = document.getElementById('btnConfirmComplete');
+  const origHTML = btn.innerHTML;
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/onboarding-complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientName, clientEmail, amName, amEmail })
+    });
+
+    if (!res.ok) throw new Error('Request failed');
+
+    // Show success state
+    document.getElementById('onboardingFormView').style.display = 'none';
+    document.getElementById('onboardingSuccessView').classList.add('visible');
+
+    // Fire confetti celebration
+    fireCompletionConfetti();
+  } catch (err) {
+    btn.innerHTML = origHTML;
+    btn.disabled = false;
+    alert('Something went wrong. Please try again.');
+  }
+}
+
+function fireCompletionConfetti() {
+  const colors = ['#FFD900', '#009B00', '#0033A4', '#FFE644', '#00C700', '#0064E1'];
+  const container = document.body;
+  for (let i = 0; i < 100; i++) {
+    const piece = document.createElement('div');
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const size = 6 + Math.random() * 10;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 0.5;
+    const duration = 2 + Math.random() * 2;
+    piece.style.cssText = `
+      position: fixed;
+      top: -20px;
+      left: ${left}%;
+      width: ${size}px;
+      height: ${size}px;
+      background: ${color};
+      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      z-index: 10001;
+      pointer-events: none;
+      animation: confettiFall ${duration}s ease-in ${delay}s forwards;
+    `;
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), (duration + delay) * 1000 + 500);
+  }
+}
 
 </script>
 </body>

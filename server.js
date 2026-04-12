@@ -575,6 +575,34 @@ app.get('/onboarding', (req, res) => res.sendFile(path.join(__dirname, 'public',
 app.get('/onboarding/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'onboarding.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'dashboard.html')));
 
+// ── Onboarding Complete ─────────────────────────────────────────────────────
+// Logs the completion and returns success. Email sending is handled externally
+// (Gmail MCP, Slack webhook, etc.) — this endpoint records the event.
+app.post('/api/onboarding-complete', (req, res) => {
+  const { clientName, clientEmail, amName, amEmail } = req.body;
+  if (!clientName || !clientEmail) {
+    return res.status(400).json({ error: 'clientName and clientEmail are required' });
+  }
+  const record = {
+    id: uuidv4(),
+    clientName,
+    clientEmail,
+    amName: amName || '',
+    amEmail: amEmail || '',
+    completedAt: new Date().toISOString()
+  };
+  // Save completion record
+  const completionsDir = path.join(DATA_DIR, 'completions');
+  if (!fs.existsSync(completionsDir)) fs.mkdirSync(completionsDir, { recursive: true });
+  fs.writeFileSync(path.join(completionsDir, `${record.id}.json`), JSON.stringify(record, null, 2));
+  console.log(`[Onboarding] Complete: ${clientName} (${clientEmail})`);
+  res.json({
+    success: true,
+    message: `Onboarding complete for ${clientName}`,
+    record
+  });
+});
+
 // ── Remote MCP Server (Streamable HTTP) ─────────────────────────────────────
 // Lets media buyers connect Claude Desktop with just a URL — no local files.
 // Config: { "mcpServers": { "campaign-preview": { "url": "https://YOUR_URL/mcp" } } }
