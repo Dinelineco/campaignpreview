@@ -574,6 +574,7 @@ app.get('/preview/:id', (req, res) => res.sendFile(path.join(__dirname, 'public'
 app.get('/onboarding', (req, res) => res.sendFile(path.join(__dirname, 'public', 'onboarding.html')));
 app.get('/onboarding/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'onboarding.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'dashboard.html')));
+app.get('/roadmap', (req, res) => res.sendFile(path.join(__dirname, 'public', 'roadmap.html')));
 
 // ── Onboarding Complete ─────────────────────────────────────────────────────
 // Logs the completion and returns success. Email sending is handled externally

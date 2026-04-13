@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campaign Roadmap — Dish.io</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #FFD900;
+      --yellow-light: #FFE644;
+      --yellow-dim: rgba(255,217,0,0.10);
+      --blue: #0033A4;
+      --blue-light: #0064E1;
+      --blue-dim: rgba(0,51,164,0.08);
+      --green: #009B00;
+      --green-light: #00C700;
+      --green-bg: rgba(0,155,0,0.08);
+      --bg: #F5F5F7;
+      --card: #FFFFFF;
+      --card-border: #E5E7EB;
+      --text: #1A1A1A;
+      --text-muted: #6B7280;
+      --text-dim: #9CA3AF;
+      --header-h: 72px;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* -- KEYFRAMES -- */
+    @keyframes aurora {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes logoGlow {
+      0%, 100% {
+        filter: drop-shadow(0 0 20px rgba(255,217,0,0.3)) drop-shadow(0 0 60px rgba(255,217,0,0.1));
+      }
+      50% {
+        filter: drop-shadow(0 0 40px rgba(255,217,0,0.6)) drop-shadow(0 0 80px rgba(255,217,0,0.2));
+      }
+    }
+    @keyframes portalRing {
+      0% { transform: scale(0.8) rotate(0deg); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: scale(1) rotate(360deg); opacity: 1; }
+    }
+    @keyframes morphArrow {
+      0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.6; }
+      40% { transform: translateY(8px) scaleY(1.3); opacity: 1; }
+      60% { transform: translateY(12px) scaleY(0.8); opacity: 0.9; }
+      80% { transform: translateY(6px) scaleY(1.1); opacity: 0.7; }
+    }
+    @keyframes textGradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes borderShimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes beamFlow {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,217,0,0.15), 0 0 60px rgba(255,217,0,0.05); }
+      50% { box-shadow: 0 0 30px rgba(255,217,0,0.3), 0 0 80px rgba(255,217,0,0.1); }
+    }
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    @keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @keyframes flowPulse {
+      0%, 100% { opacity: 0.5; transform: scaleX(1); }
+      50% { opacity: 1; transform: scaleX(1.05); }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      font-feature-settings: 'ss01';
+    }
+
+    ::-webkit-scrollbar { width: 0; height: 0; }
+
+    /* -- PARTICLE CANVAS -- */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* -- GLASSMORPHISM UTILITY -- */
+    .glass {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    .glass-dark {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    /* -- HEADER -- */
+    #siteHeader {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(10,10,10,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 40px;
+    }
+    #siteHeader::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--yellow), rgba(0,100,225,0.6), var(--yellow), rgba(0,155,0,0.5), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 4s linear infinite;
+    }
+
+    .header-logo { display: flex; align-items: center; min-width: 160px; }
+    .header-logo svg {
+      height: 26px; width: auto; fill: var(--yellow);
+      filter: drop-shadow(0 0 8px rgba(255,217,0,0.4));
+      transition: filter 0.3s;
+    }
+    .header-logo svg:hover { filter: drop-shadow(0 0 16px rgba(255,217,0,0.6)); }
+
+    .header-nav { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center; }
+    .nav-link {
+      padding: 8px 16px; border-radius: 100px; font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px; font-weight: 600; cursor: pointer; border: none;
+      background: transparent; color: rgba(255,255,255,0.6);
+      transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .nav-link:hover { color: #FFFFFF; background: rgba(255,255,255,0.08); }
+    .nav-link.active { color: #FFFFFF; background: rgba(255,255,255,0.12); }
+
+    .header-right { display: flex; align-items: center; gap: 10px; min-width: 160px; justify-content: flex-end; }
+    .header-stage-label {
+      font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5);
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .header-stage-label span { color: var(--yellow); }
+
+    /* -- STAGE CONTAINER -- */
+    .stage-container {
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+    }
+    .stage-container::-webkit-scrollbar { display: none; }
+
+    .stage {
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: calc(var(--header-h) + 24px) 48px 48px;
+    }
+
+    /* Aurora wash per stage */
+    .stage::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-size: 200% 200%;
+      animation: aurora 20s ease-in-out infinite;
+    }
+    .stage > * { position: relative; z-index: 1; }
+
+    /* -- NAV DOTS -- */
+    .stage-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+    }
+    .stage-nav::before {
+      content: '';
+      position: absolute;
+      right: 5px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08) 20%, rgba(0,0,0,0.08) 80%, transparent);
+      z-index: -1;
+    }
+    .stage-dot {
+      height: 10px;
+      min-width: 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.12);
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      overflow: hidden;
+      padding: 0;
+    }
+    .stage-dot:hover {
+      background: rgba(0,0,0,0.25);
+      min-width: 14px;
+    }
+    .stage-dot.active {
+      background: var(--yellow);
+      min-width: 80px;
+      height: 22px;
+      border-radius: 11px;
+      padding: 0 10px;
+      box-shadow: 0 2px 12px rgba(255,217,0,0.3);
+    }
+    .stage-dot-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(0,0,0,0.7);
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .stage-dot.active .stage-dot-label {
+      opacity: 1;
+    }
+
+    /* -- SCROLL INDICATOR -- */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .scroll-indicator span {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+    .scroll-indicator .morph-arrow {
+      width: 24px;
+      height: 24px;
+      animation: morphArrow 2.5s ease-in-out infinite;
+    }
+    .scroll-indicator .morph-arrow path {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ===================================================
+       STAGE 0: WELCOME -- Cinematic Dark Hero
+    =================================================== */
+    #stage-welcome {
+      background: linear-gradient(145deg, #000000 0%, #0A0A0A 30%, #111111 60%, #050505 100%);
+    }
+    #stage-welcome::before {
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,217,0,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 80%, rgba(0,155,0,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 50% 0%, rgba(0,100,225,0.08) 0%, transparent 50%);
+    }
+
+    .welcome-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 28px;
+      max-width: 900px;
+    }
+
+    .welcome-logo-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .welcome-logo-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      background: conic-gradient(from 0deg, var(--yellow), var(--blue-light), var(--yellow-light), var(--yellow)) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+    }
+    .stage.active .welcome-logo-ring {
+      animation: portalRing 2s var(--ease-out-expo) 0.2s forwards;
+    }
+    .welcome-logo {
+      width: 90px;
+      height: auto;
+      fill: var(--yellow);
+      filter: drop-shadow(0 0 20px rgba(255,217,0,0.4));
+      animation: logoGlow 3s ease-in-out infinite;
+    }
+    .welcome-dineline {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: -12px;
+    }
+
+    .welcome-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #FFFFFF 0%, #E0E7FF 30%, var(--yellow-light) 60%, #FFFFFF 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGradientShift 6s ease-in-out infinite;
+    }
+
+    .welcome-subtitle {
+      font-size: clamp(16px, 2vw, 22px);
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: -0.01em;
+    }
+
+    .welcome-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .welcome-card {
+      padding: 24px 16px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .welcome-card-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+    .welcome-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 6px;
+    }
+    .welcome-card-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.5;
+    }
+
+    .welcome-restaurant {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--yellow) 0%, var(--yellow-light) 50%, #FFFFFF 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGradientShift 6s ease-in-out infinite;
+      min-height: 1.1em;
+    }
+    .welcome-restaurant .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--yellow);
+      margin-left: 4px;
+      vertical-align: baseline;
+      animation: cursorBlink 0.7s step-end infinite;
+      -webkit-text-fill-color: initial;
+    }
+
+    #stage-welcome .scroll-indicator span { color: rgba(255,255,255,0.3); }
+    #stage-welcome .scroll-indicator .morph-arrow path { stroke: rgba(255,255,255,0.3); }
+
+    /* Animate children */
+    .welcome-content > * {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .stage.active .welcome-content > * {
+      animation: fadeInUp 0.9s var(--ease-out-expo) forwards;
+    }
+    .stage.active .welcome-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .welcome-content > *:nth-child(2) { animation-delay: 0.25s; }
+    .stage.active .welcome-content > *:nth-child(3) { animation-delay: 0.4s; }
+    .stage.active .welcome-content > *:nth-child(4) { animation-delay: 0.55s; }
+    .stage.active .welcome-content > *:nth-child(5) { animation-delay: 0.7s; }
+    .stage.active .welcome-content > *:nth-child(6) { animation-delay: 0.85s; }
+    .stage.active .welcome-content > *:nth-child(7) { animation-delay: 1.0s; }
+
+    /* ===================================================
+       STAGE 1: 6-MONTH OVERVIEW
+    =================================================== */
+    #stage-overview::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 50%, rgba(0,51,164,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
+    }
+
+    .overview-content {
+      width: 100%;
+      max-width: 1200px;
+    }
+    .overview-title {
+      text-align: center;
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 40px;
+      letter-spacing: -0.03em;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 140px repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .overview-header {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 12px 8px;
+      text-align: center;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .overview-row-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      padding: 16px 12px;
+      display: flex;
+      align-items: center;
+      border-radius: 12px;
+    }
+    .overview-row-label.you { background: rgba(255,217,0,0.08); color: #B8960A; }
+    .overview-row-label.am { background: rgba(0,51,164,0.06); color: var(--blue); }
+    .overview-row-label.media { background: rgba(0,155,0,0.06); color: var(--green); }
+
+    .overview-cell {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 12px;
+      padding: 14px 12px;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text);
+      transition: all 0.3s var(--ease-out-expo);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .overview-cell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.9);
+    }
+
+    .overview-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: rgba(0,51,164,0.04);
+      border-radius: 12px;
+      border: 1px solid rgba(0,51,164,0.08);
+    }
+
+    /* Stagger */
+    .overview-cell, .overview-row-label {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    .stage.active .overview-cell,
+    .stage.active .overview-row-label {
+      animation: fadeInUp 0.6s var(--ease-out-expo) forwards;
+    }
+
+    /* ===================================================
+       PHASE STAGES (2, 5, 7) -- Magazine Editorial Layout
+    =================================================== */
+    .phase-stage {
+      background: var(--bg);
+    }
+    .phase-stage::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 50%, rgba(255,217,0,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 30%, rgba(0,51,164,0.04) 0%, transparent 50%);
+    }
+
+    .phase-content {
+      width: 100%;
+      max-width: 1100px;
+      position: relative;
+    }
+
+    .phase-watermark {
+      position: absolute;
+      top: -40px;
+      right: -20px;
+      font-size: clamp(200px, 25vw, 360px);
+      font-weight: 800;
+      color: rgba(0,0,0,0.03);
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+
+    .phase-header {
+      margin-bottom: 36px;
+    }
+    .phase-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 8px;
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 100px;
+    }
+    .phase-label.yellow { background: rgba(255,217,0,0.15); color: #8B7500; }
+    .phase-label.green { background: rgba(0,155,0,0.12); color: #006B00; }
+    .phase-label.blue { background: rgba(0,51,164,0.10); color: var(--blue); }
+
+    .phase-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .phase-card {
+      border-radius: 20px;
+      padding: 28px 24px;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .phase-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    .phase-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .phase-card-title svg {
+      width: 20px; height: 20px;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      fill: none;
+    }
+    .phase-card-title .icon-yellow { stroke: #B8960A; }
+    .phase-card-title .icon-green { stroke: var(--green); }
+    .phase-card-title .icon-blue { stroke: var(--blue); }
+
+    .phase-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .phase-card li {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+      padding-left: 20px;
+      position: relative;
+    }
+    .phase-card li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .phase-card.happening li::before { background: var(--yellow); }
+    .phase-card.you-do li::before { background: var(--blue); }
+    .phase-card.we-do li::before { background: var(--green); }
+
+    .phase-callout {
+      padding: 20px 28px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.6;
+      border-left: 4px solid;
+    }
+    .phase-callout.yellow { background: rgba(255,217,0,0.06); border-color: var(--yellow); color: var(--text); }
+    .phase-callout.green { background: rgba(0,155,0,0.05); border-color: var(--green); color: var(--text); }
+    .phase-callout.blue { background: rgba(0,51,164,0.05); border-color: var(--blue); color: var(--text); }
+
+    /* Phase animate */
+    .phase-content > * {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    .stage.active .phase-content > * {
+      animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+    }
+    .stage.active .phase-content > *:nth-child(1) { animation-delay: 0s; }
+    .stage.active .phase-content > *:nth-child(2) { animation-delay: 0.1s; }
+    .stage.active .phase-content > *:nth-child(3) { animation-delay: 0.2s; }
+    .stage.active .phase-content > *:nth-child(4) { animation-delay: 0.35s; }
+
+    /* ===================================================
+       STAGE 3: REVENUE TRACKING
+    =================================================== */
+    #stage-revenue::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 60%, rgba(0,155,0,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 70% 20%, rgba(255,217,0,0.04) 0%, transparent 50%);
+    }
+
+    .revenue-content {
+      width: 100%;
+      max-width: 1100px;
+      text-align: center;
+    }
+    .revenue-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .revenue-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+    }
+
+    /* Flow visualization */
+    .revenue-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .revenue-flow-step {
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #FFFFFF;
+      position: relative;
+    }
+    .revenue-flow-step.step1 { background: var(--blue); }
+    .revenue-flow-step.step2 { background: var(--blue-light); }
+    .revenue-flow-step.step3 { background: var(--green); }
+    .revenue-flow-step.step4 { background: #B8960A; }
+    .revenue-flow-arrow {
+      width: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-size: 18px;
+    }
+
+    /* Campaign type cards */
+    .revenue-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: left;
+    }
+    .revenue-card {
+      border-radius: 20px;
+      padding: 24px 20px;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .revenue-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    .revenue-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .revenue-card-icon svg {
+      width: 22px; height: 22px;
+      stroke: #FFFFFF; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .revenue-card-icon.rc-blue { background: linear-gradient(135deg, var(--blue), var(--blue-light)); }
+    .revenue-card-icon.rc-green { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+    .revenue-card-icon.rc-yellow { background: linear-gradient(135deg, #B8960A, var(--yellow)); }
+    .revenue-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .revenue-card-item {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .revenue-card-item strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .revenue-content > * {
+      opacity: 0; transform: translateY(24px);
+    }
+    .stage.active .revenue-content > * {
+      animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+    }
+    .stage.active .revenue-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .revenue-content > *:nth-child(2) { animation-delay: 0.2s; }
+    .stage.active .revenue-content > *:nth-child(3) { animation-delay: 0.35s; }
+    .stage.active .revenue-content > *:nth-child(4) { animation-delay: 0.5s; }
+
+    /* ===================================================
+       STAGE 4: HOW WE STAY CONNECTED
+    =================================================== */
+    #stage-connected::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 50%, rgba(0,51,164,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 40%, rgba(0,155,0,0.04) 0%, transparent 50%);
+    }
+
+    .connected-content {
+      width: 100%;
+      max-width: 1000px;
+      text-align: center;
+    }
+    .connected-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 40px;
+    }
+
+    .connected-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .connected-card {
+      border-radius: 24px;
+      padding: 32px 28px;
+      text-align: left;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .connected-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    .connected-card-num {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .connected-card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .connected-card-meta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .connected-card-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(0,51,164,0.06);
+      color: var(--blue);
+    }
+    .connected-card-tag.green-tag {
+      background: rgba(0,155,0,0.06);
+      color: var(--green);
+    }
+    .connected-card-topics {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .connected-refresh {
+      padding: 20px 28px;
+      border-radius: 16px;
+      background: rgba(255,217,0,0.06);
+      border: 1px solid rgba(255,217,0,0.12);
+      font-size: 14px;
+      color: var(--text);
+    }
+    .connected-refresh strong { color: #8B7500; }
+
+    .connected-content > * {
+      opacity: 0; transform: translateY(24px);
+    }
+    .stage.active .connected-content > * {
+      animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+    }
+    .stage.active .connected-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .connected-content > *:nth-child(2) { animation-delay: 0.25s; }
+    .stage.active .connected-content > *:nth-child(3) { animation-delay: 0.4s; }
+
+    /* ===================================================
+       STAGE 6: QBR
+    =================================================== */
+    #stage-qbr::before {
+      background:
+        radial-gradient(ellipse 70% 50% at 30% 50%, rgba(0,51,164,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 70% 30%, rgba(255,217,0,0.04) 0%, transparent 50%);
+    }
+
+    .qbr-content {
+      width: 100%;
+      max-width: 1000px;
+      text-align: center;
+    }
+    .qbr-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      margin-bottom: 8px;
+    }
+    .qbr-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 36px;
+    }
+
+    .qbr-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .qbr-grid-bottom {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 680px;
+      margin: 0 auto 24px;
+    }
+    .qbr-card {
+      border-radius: 20px;
+      padding: 28px 24px;
+      text-align: center;
+      transition: all 0.3s var(--ease-out-expo);
+    }
+    .qbr-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+    }
+    .qbr-card-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--blue);
+      margin-bottom: 8px;
+      opacity: 0.2;
+    }
+    .qbr-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .qbr-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .qbr-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 12px 24px;
+      background: rgba(0,51,164,0.04);
+      border-radius: 12px;
+      border: 1px solid rgba(0,51,164,0.08);
+    }
+
+    .qbr-content > * {
+      opacity: 0; transform: translateY(24px);
+    }
+    .stage.active .qbr-content > * {
+      animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+    }
+    .stage.active .qbr-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .qbr-content > *:nth-child(2) { animation-delay: 0.2s; }
+    .stage.active .qbr-content > *:nth-child(3) { animation-delay: 0.3s; }
+    .stage.active .qbr-content > *:nth-child(4) { animation-delay: 0.45s; }
+    .stage.active .qbr-content > *:nth-child(5) { animation-delay: 0.55s; }
+
+    /* ===================================================
+       STAGE 8: SUMMARY & CTA
+    =================================================== */
+    #stage-summary {
+      background: linear-gradient(145deg, #000000 0%, #0A0A0A 30%, #111111 60%, #050505 100%);
+    }
+    #stage-summary::before {
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 20%, rgba(255,217,0,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(0,155,0,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 50% at 80% 60%, rgba(0,100,225,0.06) 0%, transparent 50%);
+    }
+
+    .summary-content {
+      width: 100%;
+      max-width: 1000px;
+      text-align: center;
+    }
+
+    /* Summary table */
+    .summary-table-wrap {
+      margin-bottom: 48px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .summary-table th {
+      background: rgba(255,255,255,0.06);
+      padding: 14px 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.5);
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .summary-table td {
+      padding: 14px 20px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: left;
+    }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table .phase-name {
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .summary-table .phase-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .summary-table .phase-dot.yellow { background: var(--yellow); }
+    .summary-table .phase-dot.green { background: var(--green); }
+    .summary-table .phase-dot.blue { background: var(--blue); }
+
+    /* Referral section */
+    .referral-section {
+      margin-bottom: 48px;
+      padding: 32px;
+      border-radius: 20px;
+      text-align: center;
+    }
+    .referral-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+    .referral-emoji {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+    .referral-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      max-width: 500px;
+      margin: 0 auto 16px;
+      line-height: 1.6;
+    }
+    .referral-highlight {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 100px;
+      background: rgba(255,217,0,0.12);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--yellow);
+    }
+
+    /* CTA */
+    .summary-cta-title {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #FFFFFF 0%, var(--yellow-light) 40%, var(--yellow) 60%, #FFFFFF 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: textGradientShift 6s ease-in-out infinite;
+      margin-bottom: 16px;
+    }
+    .summary-cta-desc {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+
+    .summary-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .summary-brand svg {
+      height: 24px;
+      fill: rgba(255,255,255,0.4);
+    }
+    .summary-brand-divider {
+      width: 1px;
+      height: 20px;
+      background: rgba(255,255,255,0.15);
+    }
+    .summary-brand-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .summary-content > * {
+      opacity: 0; transform: translateY(24px);
+    }
+    .stage.active .summary-content > * {
+      animation: fadeInUp 0.9s var(--ease-out-expo) forwards;
+    }
+    .stage.active .summary-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .stage.active .summary-content > *:nth-child(2) { animation-delay: 0.3s; }
+    .stage.active .summary-content > *:nth-child(3) { animation-delay: 0.5s; }
+    .stage.active .summary-content > *:nth-child(4) { animation-delay: 0.65s; }
+    .stage.active .summary-content > *:nth-child(5) { animation-delay: 0.8s; }
+
+    #stage-summary .stage-dot { background: rgba(255,255,255,0.15); }
+
+    /* ===================================================
+       RESPONSIVE
+    =================================================== */
+    @media (max-width: 900px) {
+      .stage { padding: calc(var(--header-h) + 16px) 20px 32px; }
+      #siteHeader { padding: 0 16px; }
+      .header-logo svg { height: 20px; }
+      .header-logo { min-width: auto; }
+      .header-nav { display: none; }
+      .header-right { min-width: auto; }
+      .stage-nav { right: 12px; }
+
+      .welcome-cards { grid-template-columns: 1fr; max-width: 300px; }
+      .overview-grid { grid-template-columns: 100px repeat(5, 1fr); font-size: 10px; }
+      .overview-cell { padding: 10px 6px; font-size: 10px; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .revenue-flow { gap: 4px; }
+      .revenue-flow-step { padding: 10px 14px; font-size: 11px; }
+      .revenue-cards { grid-template-columns: repeat(2, 1fr); }
+      .connected-cards { grid-template-columns: 1fr; }
+      .qbr-grid { grid-template-columns: 1fr; }
+      .qbr-grid-bottom { grid-template-columns: 1fr; }
+      .summary-table th, .summary-table td { padding: 10px 12px; font-size: 11px; }
+    }
+
+    @media (max-width: 600px) {
+      .overview-grid { grid-template-columns: 1fr; }
+      .overview-header { display: none; }
+      .revenue-cards { grid-template-columns: 1fr; }
+      .revenue-flow { flex-direction: column; gap: 8px; }
+      .revenue-flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- PARTICLE CANVAS -->
+<canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+<!-- HEADER -->
+<header id="siteHeader">
+  <div class="header-logo">
+    <svg viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io">
+      <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+    </svg>
+  </div>
+
+  <nav class="header-nav">
+    <a href="/" class="nav-link">Admin</a>
+    <a href="/dashboard" class="nav-link">Dashboard</a>
+    <a href="/onboarding" class="nav-link">Onboarding</a>
+    <a href="/roadmap" class="nav-link active">Roadmap</a>
+  </nav>
+  <div class="header-right">
+    <div class="header-stage-label">Stage <span id="headerStageNum">1</span> / 9</div>
+  </div>
+</header>
+
+<!-- STAGE NAV DOTS -->
+<nav class="stage-nav" aria-label="Stage navigation">
+  <div class="stage-dot active" data-stage="0"><span class="stage-dot-label">Welcome</span></div>
+  <div class="stage-dot" data-stage="1"><span class="stage-dot-label">Overview</span></div>
+  <div class="stage-dot" data-stage="2"><span class="stage-dot-label">Phase 01</span></div>
+  <div class="stage-dot" data-stage="3"><span class="stage-dot-label">Revenue</span></div>
+  <div class="stage-dot" data-stage="4"><span class="stage-dot-label">Connected</span></div>
+  <div class="stage-dot" data-stage="5"><span class="stage-dot-label">Phase 02</span></div>
+  <div class="stage-dot" data-stage="6"><span class="stage-dot-label">QBR</span></div>
+  <div class="stage-dot" data-stage="7"><span class="stage-dot-label">Phase 03</span></div>
+  <div class="stage-dot" data-stage="8"><span class="stage-dot-label">Summary</span></div>
+</nav>
+
+<!-- STAGE CONTAINER -->
+<div class="stage-container" id="stageContainer">
+
+  <!-- ============== STAGE 0: WELCOME ============== -->
+  <section class="stage active" id="stage-welcome" aria-label="Welcome">
+    <div class="welcome-content">
+      <div class="welcome-logo-wrap">
+        <div class="welcome-logo-ring"></div>
+        <svg class="welcome-logo" viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io logo">
+          <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+        </svg>
+      </div>
+      <div class="welcome-dineline">Dish.io + Dineline</div>
+      <div class="welcome-title">Your Campaign Roadmap</div>
+      <div class="welcome-subtitle">What the Next 6 Months Look Like</div>
+      <div class="welcome-cards">
+        <div class="welcome-card glass-dark">
+          <div class="welcome-card-icon">&#128269;</div>
+          <div class="welcome-card-title">Full Transparency</div>
+          <div class="welcome-card-desc">You'll always know what we're doing, why we're doing it, and how it's performing.</div>
+        </div>
+        <div class="welcome-card glass-dark">
+          <div class="welcome-card-icon">&#128197;</div>
+          <div class="welcome-card-title">Clear Cadence</div>
+          <div class="welcome-card-desc">Regular touchpoints, quarterly reviews, and monthly creative refreshes keep everything on track.</div>
+        </div>
+        <div class="welcome-card glass-dark">
+          <div class="welcome-card-icon">&#128200;</div>
+          <div class="welcome-card-title">Revenue First</div>
+          <div class="welcome-card-desc">Every decision is measured against one metric: revenue impact on your restaurant.</div>
+        </div>
+      </div>
+      <div class="welcome-restaurant" id="welcomeRestaurant">Your Restaurant</div>
+    </div>
+    <div class="scroll-indicator" onclick="scrollToStage(1)">
+      <span>See the plan</span>
+      <svg class="morph-arrow" viewBox="0 0 24 24"><path d="M12 5 L12 19 M6 14 L12 19 L18 14" stroke="currentColor"/></svg>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 1: 6-MONTH OVERVIEW ============== -->
+  <section class="stage" id="stage-overview" aria-label="6-Month Overview">
+    <div class="overview-content">
+      <h2 class="overview-title">The Full 6-Month Journey</h2>
+
+      <div class="overview-grid">
+        <!-- Header row -->
+        <div class="overview-header"></div>
+        <div class="overview-header">Month 1</div>
+        <div class="overview-header">Months 2-3</div>
+        <div class="overview-header">Month 3 QBR</div>
+        <div class="overview-header">Months 4-6</div>
+        <div class="overview-header">Month 6 QBR</div>
+
+        <!-- YOU (Client) row -->
+        <div class="overview-row-label you">YOU (Client)</div>
+        <div class="overview-cell glass">Approve creatives, confirm QR placements, validate POS tracking</div>
+        <div class="overview-cell glass">Review biweekly reports, provide feedback on ad creative, approve budget shifts</div>
+        <div class="overview-cell glass">Attend QBR, discuss goals for next quarter, share seasonal plans</div>
+        <div class="overview-cell glass">Focus on your business -- we handle the rest. Flag new promotions or menu changes</div>
+        <div class="overview-cell glass">Review 6-month performance, plan growth expansion, set Year 2 goals</div>
+
+        <!-- Account Manager row -->
+        <div class="overview-row-label am">Account Manager</div>
+        <div class="overview-cell glass">Onboard restaurant, set up campaigns, configure tracking, coordinate creative</div>
+        <div class="overview-cell glass">Biweekly check-ins, performance reports, creative refresh coordination</div>
+        <div class="overview-cell glass">Prepare & present QBR deck, highlight wins, identify improvements</div>
+        <div class="overview-cell glass">Strategy optimization, new channel testing, seasonal campaign planning</div>
+        <div class="overview-cell glass">Full review, growth recommendations, present expansion roadmap</div>
+
+        <!-- Media Buying Team row -->
+        <div class="overview-row-label media">Media Buying</div>
+        <div class="overview-cell glass">Launch initial campaigns, set baselines, A/B test audiences and creatives</div>
+        <div class="overview-cell glass">Optimize bids, scale winners, pause underperformers, test new formats</div>
+        <div class="overview-cell glass">Deep-dive into channel ROI, reallocate budgets based on data</div>
+        <div class="overview-cell glass">Execute refined strategy, expand to new platforms, automate top performers</div>
+        <div class="overview-cell glass">Full performance audit, prepare data for next-phase scaling</div>
+      </div>
+
+      <div class="overview-note">QBRs happen every quarter -- Months 3, 6, 9, and 12</div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 2: PHASE 01 -- MONTH 1 ============== -->
+  <section class="stage phase-stage" id="stage-phase1" aria-label="Phase 01: Month 1">
+    <div class="phase-content">
+      <div class="phase-watermark">01</div>
+      <div class="phase-header">
+        <div class="phase-label yellow">Phase 01</div>
+        <h2 class="phase-title">Month 1: Learning Phase &amp; QR Optimization</h2>
+      </div>
+
+      <div class="phase-grid">
+        <div class="phase-card glass happening">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><circle class="icon-yellow" cx="12" cy="12" r="10"/><path class="icon-yellow" d="M12 16v-4M12 8h.01"/></svg>
+            What's Happening
+          </div>
+          <ul>
+            <li>Ad campaigns launch across Meta, Google, and programmatic</li>
+            <li>QR codes are placed and tracked for in-store attribution</li>
+            <li>Baseline performance data is being collected</li>
+            <li>A/B testing begins on audiences, creatives, and messaging</li>
+          </ul>
+        </div>
+
+        <div class="phase-card glass you-do">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><path class="icon-blue" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle class="icon-blue" cx="12" cy="7" r="4"/></svg>
+            What You'll Do
+          </div>
+          <ul>
+            <li>Approve initial ad creatives and messaging</li>
+            <li>Confirm QR code placements in-store</li>
+            <li>Validate that POS tracking is connected and accurate</li>
+          </ul>
+        </div>
+
+        <div class="phase-card glass we-do">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><path class="icon-green" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            What We're Doing
+          </div>
+          <ul>
+            <li>Setting up and monitoring all ad campaigns daily</li>
+            <li>Configuring QR tracking and conversion attribution</li>
+            <li>Building your first performance dashboards</li>
+            <li>Testing multiple audience segments to find winners</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-callout yellow">Everything from Month 2 forward is built on the data we collect now.</div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 3: REVENUE TRACKING ============== -->
+  <section class="stage" id="stage-revenue" aria-label="Revenue Tracking">
+    <div class="revenue-content">
+      <h2 class="revenue-title">How We Prove ROI</h2>
+      <p class="revenue-subtitle">Every ad dollar is tracked from impression to revenue in your POS</p>
+
+      <div class="revenue-flow">
+        <div class="revenue-flow-step step1">Ad Impression</div>
+        <div class="revenue-flow-arrow">&#8594;</div>
+        <div class="revenue-flow-step step2">Click</div>
+        <div class="revenue-flow-arrow">&#8594;</div>
+        <div class="revenue-flow-step step3">Conversion Action</div>
+        <div class="revenue-flow-arrow">&#8594;</div>
+        <div class="revenue-flow-step step4">Revenue in Your POS</div>
+      </div>
+
+      <div class="revenue-cards">
+        <div class="revenue-card glass">
+          <div class="revenue-card-icon rc-blue">
+            <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+          </div>
+          <div class="revenue-card-title">Reservations</div>
+          <div class="revenue-card-item"><strong>Conversion:</strong> Booking completed</div>
+          <div class="revenue-card-item"><strong>Revenue Tie:</strong> Avg. check per cover x party size</div>
+          <div class="revenue-card-item"><strong>In Reports:</strong> Cost per reservation, revenue per ad dollar</div>
+        </div>
+
+        <div class="revenue-card glass">
+          <div class="revenue-card-icon rc-green">
+            <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+          <div class="revenue-card-title">Online Orders</div>
+          <div class="revenue-card-item"><strong>Conversion:</strong> Order placed</div>
+          <div class="revenue-card-item"><strong>Revenue Tie:</strong> Direct order value from POS</div>
+          <div class="revenue-card-item"><strong>In Reports:</strong> ROAS, avg. order value, repeat rate</div>
+        </div>
+
+        <div class="revenue-card glass">
+          <div class="revenue-card-icon rc-yellow">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="revenue-card-title">Store Visits</div>
+          <div class="revenue-card-item"><strong>Conversion:</strong> QR scan or foot traffic</div>
+          <div class="revenue-card-item"><strong>Revenue Tie:</strong> POS transactions within visit window</div>
+          <div class="revenue-card-item"><strong>In Reports:</strong> Cost per visit, attributed revenue</div>
+        </div>
+
+        <div class="revenue-card glass">
+          <div class="revenue-card-icon rc-blue">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="revenue-card-title">Catering &amp; Events</div>
+          <div class="revenue-card-item"><strong>Conversion:</strong> Form submission or call</div>
+          <div class="revenue-card-item"><strong>Revenue Tie:</strong> Catering invoice value</div>
+          <div class="revenue-card-item"><strong>In Reports:</strong> Lead cost, close rate, revenue per lead</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 4: HOW WE STAY CONNECTED ============== -->
+  <section class="stage" id="stage-connected" aria-label="How We Stay Connected">
+    <div class="connected-content">
+      <h2 class="connected-title">How We Stay Connected</h2>
+
+      <div class="connected-cards">
+        <div class="connected-card glass">
+          <div class="connected-card-num">Touchbase #1</div>
+          <div class="connected-card-title">Performance Review</div>
+          <div class="connected-card-meta">
+            <span class="connected-card-tag">Biweekly</span>
+            <span class="connected-card-tag green-tag">15 Minutes</span>
+          </div>
+          <div class="connected-card-topics">
+            Ad performance metrics, QR scan data, POS-attributed revenue, what's working and what's being adjusted. Quick, data-focused, no fluff.
+          </div>
+        </div>
+
+        <div class="connected-card glass">
+          <div class="connected-card-num">Touchbase #2</div>
+          <div class="connected-card-title">Strategy &amp; Opportunities</div>
+          <div class="connected-card-meta">
+            <span class="connected-card-tag">Biweekly</span>
+            <span class="connected-card-tag green-tag">15 Minutes</span>
+          </div>
+          <div class="connected-card-topics">
+            Forward-looking strategy, upcoming promotions, seasonal opportunities, new creative ideas, budget recommendations, and growth initiatives.
+          </div>
+        </div>
+      </div>
+
+      <div class="connected-refresh">
+        <strong>Monthly Creative Refresh:</strong> Every month, we update your ad creatives with fresh imagery, copy, and seasonal messaging to keep your campaigns performing at their peak and prevent ad fatigue.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 5: PHASE 02 -- MONTHS 2-3 ============== -->
+  <section class="stage phase-stage" id="stage-phase2" aria-label="Phase 02: Months 2-3">
+    <div class="phase-content">
+      <div class="phase-watermark">02</div>
+      <div class="phase-header">
+        <div class="phase-label green">Phase 02</div>
+        <h2 class="phase-title">Months 2-3: Scaling &amp; Budget Optimization</h2>
+      </div>
+
+      <div class="phase-grid">
+        <div class="phase-card glass happening">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><circle class="icon-yellow" cx="12" cy="12" r="10"/><path class="icon-yellow" d="M12 16v-4M12 8h.01"/></svg>
+            What's Happening
+          </div>
+          <ul>
+            <li>Month 1 data informs budget reallocation and targeting refinements</li>
+            <li>Winning audiences and creatives are scaled up</li>
+            <li>Underperforming campaigns are paused or restructured</li>
+            <li>New ad formats and placements are tested</li>
+          </ul>
+        </div>
+
+        <div class="phase-card glass you-do">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><path class="icon-blue" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle class="icon-blue" cx="12" cy="7" r="4"/></svg>
+            What You'll Do
+          </div>
+          <ul>
+            <li>Review biweekly performance reports</li>
+            <li>Provide feedback on updated ad creatives</li>
+            <li>Share any upcoming promotions or seasonal events</li>
+            <li>Approve budget adjustments based on performance data</li>
+          </ul>
+        </div>
+
+        <div class="phase-card glass we-do">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><path class="icon-green" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            What We're Doing
+          </div>
+          <ul>
+            <li>Optimizing bids and budgets across all channels</li>
+            <li>Scaling proven audience segments and lookalikes</li>
+            <li>Running monthly creative refreshes</li>
+            <li>Building detailed attribution models for revenue tracking</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-callout green">By end of Month 3, we'll have a strong, data-backed picture of what's driving revenue.</div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 6: MONTH 3 QBR ============== -->
+  <section class="stage" id="stage-qbr" aria-label="Month 3 QBR">
+    <div class="qbr-content">
+      <div class="qbr-label">Month 3</div>
+      <h2 class="qbr-title">Quarterly Business Review</h2>
+
+      <div class="qbr-grid">
+        <div class="qbr-card glass">
+          <div class="qbr-card-num">01</div>
+          <div class="qbr-card-title">Full Performance Review</div>
+          <div class="qbr-card-desc">Complete analysis of all campaigns, channels, and revenue attribution across the first quarter.</div>
+        </div>
+        <div class="qbr-card glass">
+          <div class="qbr-card-num">02</div>
+          <div class="qbr-card-title">Areas of Improvement</div>
+          <div class="qbr-card-desc">Honest assessment of what underperformed and the specific actions we're taking to fix it.</div>
+        </div>
+        <div class="qbr-card glass">
+          <div class="qbr-card-num">03</div>
+          <div class="qbr-card-title">Year-Over-Year Revenue Impact</div>
+          <div class="qbr-card-desc">Side-by-side comparison of revenue before and after campaign launch, adjusted for seasonality.</div>
+        </div>
+      </div>
+      <div class="qbr-grid-bottom">
+        <div class="qbr-card glass">
+          <div class="qbr-card-num">04</div>
+          <div class="qbr-card-title">New Opportunities</div>
+          <div class="qbr-card-desc">Emerging channels, audience segments, and creative formats we recommend testing next quarter.</div>
+        </div>
+        <div class="qbr-card glass">
+          <div class="qbr-card-num">05</div>
+          <div class="qbr-card-title">Growth Planning</div>
+          <div class="qbr-card-desc">Budget recommendations, expansion targets, and strategic roadmap for the next 90 days.</div>
+        </div>
+      </div>
+
+      <div class="qbr-note">QBRs happen every quarter -- Months 3, 6, 9, and 12. Each one builds on the last.</div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 7: PHASE 03 -- MONTHS 4-6 ============== -->
+  <section class="stage phase-stage" id="stage-phase3" aria-label="Phase 03: Months 4-6">
+    <div class="phase-content">
+      <div class="phase-watermark">03</div>
+      <div class="phase-header">
+        <div class="phase-label blue">Phase 03</div>
+        <h2 class="phase-title">Months 4-6: Execution &amp; Expansion</h2>
+      </div>
+
+      <div class="phase-grid">
+        <div class="phase-card glass happening">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><circle class="icon-yellow" cx="12" cy="12" r="10"/><path class="icon-yellow" d="M12 16v-4M12 8h.01"/></svg>
+            What's Happening
+          </div>
+          <ul>
+            <li>Proven strategies are running at full scale</li>
+            <li>New channels and platforms are being tested and expanded</li>
+            <li>Automated campaigns are compounding results</li>
+            <li>Seasonal campaigns are pre-planned and executed</li>
+          </ul>
+        </div>
+
+        <div class="phase-card glass you-do">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><path class="icon-blue" d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle class="icon-blue" cx="12" cy="7" r="4"/></svg>
+            What You'll Do
+          </div>
+          <ul>
+            <li>Continue biweekly check-ins (they get shorter as systems mature)</li>
+            <li>Share any new menu items, events, or promotions</li>
+            <li>Attend the Month 6 QBR to review full half-year performance</li>
+          </ul>
+        </div>
+
+        <div class="phase-card glass we-do">
+          <div class="phase-card-title">
+            <svg viewBox="0 0 24 24"><path class="icon-green" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            What We're Doing
+          </div>
+          <ul>
+            <li>Executing refined multi-channel strategy at scale</li>
+            <li>Testing new platforms (TikTok, YouTube, Connected TV)</li>
+            <li>Automating top-performing campaign workflows</li>
+            <li>Preparing comprehensive 6-month performance review</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-callout blue">By Month 6, your system is compounding results across all channels.</div>
+    </div>
+  </section>
+
+  <!-- ============== STAGE 8: SUMMARY & CTA ============== -->
+  <section class="stage" id="stage-summary" aria-label="Summary">
+    <div class="summary-content">
+      <div class="summary-table-wrap glass-dark">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Phase</th>
+              <th>Timeline</th>
+              <th>Focus</th>
+              <th>Key Milestone</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="phase-dot yellow"></span><span class="phase-name">Phase 01</span></td>
+              <td>Month 1</td>
+              <td>Learning & QR Optimization</td>
+              <td>Baseline data collected</td>
+            </tr>
+            <tr>
+              <td><span class="phase-dot green"></span><span class="phase-name">Phase 02</span></td>
+              <td>Months 2-3</td>
+              <td>Scaling & Budget Optimization</td>
+              <td>Month 3 QBR</td>
+            </tr>
+            <tr>
+              <td><span class="phase-dot blue"></span><span class="phase-name">Phase 03</span></td>
+              <td>Months 4-6</td>
+              <td>Execution & Expansion</td>
+              <td>Month 6 QBR</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="referral-section glass-dark">
+        <div class="referral-emoji">&#9995;</div>
+        <div class="referral-title">High Five Referral Program</div>
+        <div class="referral-desc">Refer 5 restaurants and use the service completely free. Every referral earns you a 20% monthly fee reduction.</div>
+        <div class="referral-highlight">5 Referrals = Free Service</div>
+      </div>
+
+      <div class="summary-cta-title">Let's Drive Revenue.</div>
+      <div class="summary-cta-desc">Your system is live. Your ads are running. We're with you every step.</div>
+
+      <div class="summary-brand">
+        <svg viewBox="0 0 537.52 126.38" xmlns="http://www.w3.org/2000/svg" aria-label="Dish.io">
+          <path d="M505.64,95.07c-17.58,0-31.88-14.3-31.88-31.88s14.3-31.88,31.88-31.88,31.88,14.3,31.88,31.88-14.3,31.88-31.88,31.88ZM505.64,42.5c-11.41,0-20.69,9.28-20.69,20.69s9.28,20.69,20.69,20.69,20.69-9.28,20.69-20.69-9.28-20.69-20.69-20.69ZM279.3,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM455.67,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM249.54,63.19c0-17.04-13.87-30.91-30.91-30.91h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c10.87,0,19.72,8.85,19.72,19.72s-8.85,19.72-19.72,19.72h-3.41c-3.09,0-5.59,2.51-5.59,5.59s2.51,5.59,5.59,5.59h3.41c17.04,0,30.91-13.87,30.91-30.91ZM201.77,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM377.64,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM422.53,88.26v-50.15c0-3.22-2.61-5.84-5.84-5.84h0c-3.22,0-5.84,2.61-5.84,5.84v50.15c0,3.22,2.61,5.84,5.84,5.84h0c3.22,0,5.84-2.61,5.84-5.84ZM398.72,57.35h-8.95c-3.22,0-5.84,2.61-5.84,5.84h0c0,3.22,2.61,5.84,5.84,5.84h8.95c3.22,0,5.84-2.61,5.84-5.84h0c0-3.22-2.61-5.84-5.84-5.84ZM334.71,92.37c3.45-1.49,6.25-3.65,8.32-6.43,2.09-2.8,3.15-6.1,3.15-9.8,0-3.92-.78-7.12-2.32-9.52-1.54-2.39-3.85-4.31-6.88-5.69-2.98-1.36-6.99-2.48-11.91-3.34-4.25-.78-7.4-1.8-9.36-3.01-1.87-1.16-2.77-2.82-2.77-5.09,0-1.99.89-3.56,2.71-4.8,1.87-1.27,4.57-1.92,8.04-1.92,2.03,0,4.37.49,6.96,1.46,2.59.97,4.62,2.05,6.07,3.22.78.59,1.67.88,2.65.88,1.46,0,2.75-.56,3.83-1.67,1.07-1.1,1.62-2.4,1.62-3.86,0-1.89-.91-3.56-2.69-4.97-2.16-1.81-4.88-3.28-8.1-4.39-3.22-1.1-6.69-1.66-10.34-1.66-4.06,0-7.79.72-11.1,2.15-3.34,1.44-6.01,3.55-7.95,6.27-1.95,2.74-2.93,6.01-2.93,9.71,0,10.1,6.48,16.17,19.24,18.04,4.87.73,8.45,1.81,10.66,3.22,2.13,1.36,3.17,3.18,3.17,5.56,0,1.92-1.05,3.5-3.2,4.83-2.21,1.37-4.89,2.06-7.97,2.06-2.89,0-5.41-.42-7.5-1.25-2.11-.83-4.3-2.18-6.54-4.03-.96-.76-2.05-1.15-3.27-1.15-1.52,0-2.84.56-3.92,1.67-1.07,1.1-1.62,2.4-1.62,3.86,0,1.82.84,3.49,2.51,4.96,2.84,2.5,5.94,4.29,9.2,5.34,3.24,1.04,6.99,1.57,11.14,1.57s7.68-.75,11.1-2.23ZM43.56,97.02h0c2.79,1.62,3.75,5.19,2.13,7.99l-6.2,10.71c-1.62,2.79-5.19,3.75-7.99,2.13h0c-2.79-1.62-3.75-5.19-2.13-7.99l6.2-10.71c1.62-2.79,5.19-3.75,7.99-2.13ZM18.22,57.3H5.85C2.62,57.28,0,59.9,0,63.12h0c0,3.23,2.61,5.85,5.84,5.85h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85ZM45.78,21.34l-6.17-10.72c-1.61-2.8-5.18-3.76-7.98-2.15h0c-2.8,1.61-3.76,5.18-2.15,7.98l6.17,10.72c1.61,2.8,5.18,3.76,7.98,2.15h0c2.8-1.61,3.76-5.18,2.15-7.98ZM90.7,27.23l6.2-10.71c1.62-2.79.66-6.37-2.13-7.99h0c-2.79-1.62-6.37-.66-7.99,2.13l-6.2,10.71c-1.62,2.79-.66,6.37,2.13,7.99h0c2.79,1.62,6.37.66,7.99-2.13ZM108.06,69.08h12.37c3.23.02,5.85-2.6,5.85-5.83h0c0-3.23-2.61-5.85-5.84-5.85h-12.37c-3.23-.02-5.85,2.6-5.85,5.83h0c0,3.23,2.61,5.85,5.84,5.85ZM51.11,114.35c0,6.64,5.39,12.03,12.03,12.03s12.03-5.39,12.03-12.03-5.39-12.03-12.03-12.03-12.03,5.39-12.03,12.03ZM29.25,82.75c3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11,1.35-16.43-4.4-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4ZM29.25,43.62c-3.32,5.75-10.68,7.72-16.43,4.4-5.75-3.32-7.72-10.68-4.4-16.43,3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43ZM63.14,24.06c-6.64,0-12.03-5.39-12.03-12.03S56.5,0,63.14,0s12.03,5.39,12.03,12.03-5.39,12.03-12.03,12.03ZM97.03,43.62c-3.32-5.75-1.35-13.11,4.4-16.43,5.75-3.32,13.11-1.35,16.43,4.4,3.32,5.75,1.35,13.11-4.4,16.43-5.75,3.32-13.11-1.35-16.43-4.4ZM97.03,82.75c3.32-5.75,10.68-7.72,16.43-4.4,5.75,3.32,7.72,10.68,4.4,16.43-3.32,5.75-10.68,7.72-16.43,4.4s-7.72-10.68-4.4-16.43ZM82.65,97.05h0c2.8-1.61,6.37-.65,7.98,2.15l6.17,10.72c1.61,2.8.65,6.37-2.15,7.98h0c-2.8,1.61-6.37.65-7.98-2.15l-6.17-10.72c-1.61-2.8-.65-6.37,2.15-7.98Z"/>
+        </svg>
+        <div class="summary-brand-divider"></div>
+        <span class="summary-brand-text">Dineline</span>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end stage-container -->
+
+<script>
+/* ===================================================
+   DATA LOADING -- URL params
+=================================================== */
+(function loadData() {
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('name') || 'Your Restaurant';
+  const am = params.get('am') || 'Your Account Manager';
+
+  document.title = name + ' -- Campaign Roadmap -- Dish.io';
+
+  // Typewriter effect for restaurant name
+  const el = document.getElementById('welcomeRestaurant');
+  el.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typewriter-cursor';
+  el.appendChild(cursor);
+  let i = 0;
+  const speed = 80;
+  function typeNext() {
+    if (i < name.length) {
+      el.insertBefore(document.createTextNode(name[i]), cursor);
+      i++;
+      setTimeout(typeNext, speed + Math.random() * 40);
+    } else {
+      setTimeout(() => { cursor.style.animation = 'none'; cursor.style.opacity = '0'; cursor.style.transition = 'opacity 0.5s'; }, 1500);
+    }
+  }
+  setTimeout(typeNext, 600);
+})();
+
+/* ===================================================
+   STAGE NAVIGATION & INTERSECTION OBSERVER
+=================================================== */
+const container = document.getElementById('stageContainer');
+const stages = document.querySelectorAll('.stage');
+const dots = document.querySelectorAll('.stage-dot');
+const headerStageNum = document.getElementById('headerStageNum');
+let currentStage = 0;
+let isScrolling = false;
+
+function scrollToStage(index) {
+  if (index < 0 || index >= stages.length) return;
+  isScrolling = true;
+  stages[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => { isScrolling = false; }, 800);
+}
+
+// Dot click navigation
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    scrollToStage(parseInt(dot.dataset.stage));
+  });
+});
+
+// IntersectionObserver for active stage detection
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
+      const index = Array.from(stages).indexOf(entry.target);
+      if (index !== -1 && index !== currentStage) {
+        currentStage = index;
+        updateActiveStage(index);
+      }
+    }
+  });
+}, {
+  root: container,
+  threshold: [0.4, 0.6]
+});
+
+stages.forEach(stage => observer.observe(stage));
+
+function updateActiveStage(index) {
+  // Update dots
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === index);
+  });
+
+  // Update header counter
+  headerStageNum.textContent = index + 1;
+
+  // Add/remove active class for animations
+  stages.forEach((stage, i) => {
+    if (i === index) {
+      stage.classList.add('active');
+    }
+  });
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+    e.preventDefault();
+    scrollToStage(currentStage + 1);
+  } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault();
+    scrollToStage(currentStage - 1);
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    scrollToStage(0);
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    scrollToStage(stages.length - 1);
+  }
+});
+
+/* ===================================================
+   PARTICLE CANVAS
+=================================================== */
+(function initParticles() {
+  const canvas = document.getElementById('particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  const particles = [];
+  const PARTICLE_COUNT = 50;
+  const CONNECT_DIST = 130;
+  const CELL_SIZE = CONNECT_DIST;
+  let mouseX = -1000, mouseY = -1000;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+  document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
+
+  function isWelcomeOrSummaryVisible() {
+    return currentStage === 0 || currentStage === stages.length - 1;
+  }
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push({
+      x: Math.random() * (w || 1200),
+      y: Math.random() * (h || 800),
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      size: 1.2 + Math.random() * 2,
+      colorIdx: Math.floor(Math.random() * 4)
+    });
+  }
+
+  const lightColors = [
+    { dot: 'rgba(255,217,0,0.15)', line: 'rgba(255,217,0,' },
+    { dot: 'rgba(0,51,164,0.12)', line: 'rgba(0,51,164,' },
+    { dot: 'rgba(0,155,0,0.12)', line: 'rgba(0,155,0,' },
+    { dot: 'rgba(0,100,225,0.10)', line: 'rgba(0,100,225,' }
+  ];
+  const darkColors = [
+    { dot: 'rgba(255,217,0,0.4)', line: 'rgba(255,217,0,' },
+    { dot: 'rgba(100,180,255,0.3)', line: 'rgba(100,180,255,' },
+    { dot: 'rgba(0,237,126,0.3)', line: 'rgba(0,237,126,' },
+    { dot: 'rgba(255,230,100,0.25)', line: 'rgba(255,230,100,' }
+  ];
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const grid = {};
+    const isDark = isWelcomeOrSummaryVisible();
+    const palette = isDark ? darkColors : lightColors;
+
+    particles.forEach((p, idx) => {
+      const dx = p.x - mouseX, dy = p.y - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 150 && dist > 0) {
+        const force = (150 - dist) / 150;
+        p.vx += (dx / dist) * force * 0.25;
+        p.vy += (dy / dist) * force * 0.25;
+      }
+      p.vx *= 0.99; p.vy *= 0.99;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -10) p.x = w + 10;
+      if (p.x > w + 10) p.x = -10;
+      if (p.y < -10) p.y = h + 10;
+      if (p.y > h + 10) p.y = -10;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, isDark ? p.size * 1.3 : p.size, 0, Math.PI * 2);
+      ctx.fillStyle = palette[p.colorIdx].dot;
+      ctx.fill();
+
+      const gx = Math.floor(p.x / CELL_SIZE), gy = Math.floor(p.y / CELL_SIZE);
+      const key = gx + ',' + gy;
+      if (!grid[key]) grid[key] = [];
+      grid[key].push(idx);
+    });
+
+    ctx.lineWidth = isDark ? 0.8 : 0.5;
+    const checked = new Set();
+    particles.forEach((a, i) => {
+      const gx = Math.floor(a.x / CELL_SIZE), gy = Math.floor(a.y / CELL_SIZE);
+      for (let ox = -1; ox <= 1; ox++) {
+        for (let oy = -1; oy <= 1; oy++) {
+          const neighbors = grid[(gx + ox) + ',' + (gy + oy)];
+          if (!neighbors) continue;
+          for (const j of neighbors) {
+            if (j <= i) continue;
+            const pairKey = i + ',' + j;
+            if (checked.has(pairKey)) continue;
+            checked.add(pairKey);
+            const b = particles[j];
+            const dx2 = a.x - b.x, dy2 = a.y - b.y;
+            const d = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+            if (d < CONNECT_DIST) {
+              const alpha = (1 - d / CONNECT_DIST) * (isDark ? 0.12 : 0.06);
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = palette[a.colorIdx].line + alpha + ')';
+              ctx.stroke();
+            }
+          }
+        }
+      }
+    });
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ===================================================
+   STAGGER ANIMATION FOR OVERVIEW GRID
+=================================================== */
+(function staggerOverviewCells() {
+  const cells = document.querySelectorAll('.overview-cell, .overview-row-label');
+  cells.forEach((cell, i) => {
+    cell.style.animationDelay = (0.05 * i) + 's';
+  });
+})();
+</script>
+
+</body>
+</html>
